@@ -126,7 +126,7 @@ export default function InstructorsToFooter() {
                 </div>
                 <div className="flex items-center gap-3">
                   <Icon name="MapPin" size={18} className="text-yellow-400 flex-shrink-0" fallback="Circle" />
-                  <span>ул. Киевская, 41, Симферополь</span>
+                  <a href="https://yandex.ru/maps/-/CPBAfQLi" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition-colors">Киевская ул., 41, Симферополь</a>
                 </div>
                 <div className="flex items-center gap-3">
                   <Icon name="Clock" size={18} className="text-yellow-400 flex-shrink-0" fallback="Circle" />
@@ -160,7 +160,7 @@ export default function InstructorsToFooter() {
             </a>
           </div>
           <div className="border-t border-white/10 pt-5 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-white/30">
-            <p>© 2026 Автошкола ГОСАШ · г. Симферополь, ул. Киевская, 41</p>
+            <p>© 2026 Автошкола ГОСАШ · г. Симферополь, Киевская ул., 41</p>
             <p>Городская. Открытая. Современная.</p>
             <div className="flex gap-4">
               <a href="#" className="hover:text-white/60 transition-colors">Политика конфиденциальности</a>

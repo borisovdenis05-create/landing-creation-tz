@@ -277,12 +277,11 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               {[
-                { name: "Филиал на Киевской", addr: "ул. Киевская, 41", rating: 5.0, map: "https://yandex.ru/maps/146/simferopol/?ll=34.0802%2C44.9523&z=17&pt=34.0802,44.9523,pm2rdm" },
-                { name: "Филиал на Гагарина", addr: "ул. Гагарина, 20А", rating: 5.0, map: "https://yandex.ru/maps/146/simferopol/?ll=34.1093%2C44.9432&z=17&pt=34.1093,44.9432,pm2rdm" },
-                { name: "Филиал на Залесской", addr: "ул. Залесская, 121", rating: 4.8, map: "https://yandex.ru/maps/146/simferopol/?ll=34.0650%2C44.9750&z=17&pt=34.0650,44.9750,pm2rdm" },
-                { name: "Филиал на Самокиша", addr: "ул. Самокиша, 4", rating: 4.9, map: "https://yandex.ru/maps/146/simferopol/?ll=34.0920%2C44.9580&z=17&pt=34.0920,44.9580,pm2rdm" },
-                { name: "Филиал на Лермонтова", addr: "ул. Лермонтова, 13А", rating: 5.0, map: "https://yandex.ru/maps/146/simferopol/?ll=34.1020%2C44.9490&z=17&pt=34.1020,44.9490,pm2rdm" },
-                { name: "Филиал на Севастопольской", addr: "ул. Дм. Ульянова, 1А", rating: 4.9, map: "https://yandex.ru/maps/146/simferopol/?ll=34.0750%2C44.9420&z=17&pt=34.0750,44.9420,pm2rdm" },
+                { name: "Филиал на Гагарина", addr: "ул. Гагарина, 20А, Симферополь", rating: 5.0, map: "https://yandex.ru/maps/-/CPBAb-1K" },
+                { name: "Филиал на Киевской", addr: "Киевская ул., 41, Симферополь", rating: 5.0, map: "https://yandex.ru/maps/-/CPBAfQLi" },
+                { name: "Филиал на Залесской", addr: "Залесская ул., 121, Симферополь", rating: 4.8, map: "https://yandex.ru/maps/-/CPBAjU2Y" },
+                { name: "Филиал на Самокиша", addr: "ул. Самокиша, 4, Симферополь", rating: 4.9, map: "https://yandex.ru/maps/-/CPBAnA6k" },
+                { name: "Филиал на Лермонтова", addr: "ул. Лермонтова, 13А, Симферополь", rating: 5.0, map: "https://yandex.ru/maps/-/CPBArZ88" },
               ].map((branch) => (
                 <div key={branch.name} className="bg-white border border-gray-200 rounded-2xl p-5 hover:border-yellow-400 hover:shadow-md transition-all">
                   <div className="flex items-start justify-between gap-3 mb-3">
@@ -318,7 +317,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div>
                   <p className="font-bold text-navy text-sm">Автодром на Титова</p>
-                  <p className="text-gray-500 text-xs mt-0.5">ул. Титова, 77</p>
+                  <p className="text-gray-500 text-xs mt-0.5">ул. Титова, 77, Симферополь</p>
                 </div>
                 <div className="flex items-center gap-1 flex-shrink-0 bg-yellow-50 border border-yellow-200 rounded-lg px-2 py-1">
                   <span className="text-red-500 text-xs">📍</span>
@@ -331,7 +330,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                 </div>
               </div>
               <a
-                href="https://yandex.ru/maps/146/simferopol/?ll=34.0600%2C44.9380&z=17&pt=34.0600,44.9380,pm2rdm"
+                href="https://yandex.ru/maps/-/CPBAvA4B"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 transition-colors"
