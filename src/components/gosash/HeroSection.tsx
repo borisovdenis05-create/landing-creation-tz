@@ -16,12 +16,12 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
             <img src={LOGO_URL} alt="ГОСАШ Автошкола" className="h-12 object-contain" style={{ filter: "brightness(10)" }} />
           </a>
 
-          <nav className="hidden lg:flex items-center gap-7 text-sm font-bold text-white/70 uppercase tracking-wider">
-            <a href="#tariffs" className="hover:text-red-500 transition-colors">Тарифы</a>
-            <a href="#instructors" className="hover:text-red-500 transition-colors">Инструкторы</a>
-            <a href="#reviews" className="hover:text-red-500 transition-colors">Отзывы</a>
-            <a href="#about" className="hover:text-red-500 transition-colors">Филиалы</a>
-            <a href="#contacts" className="hover:text-red-500 transition-colors">Контакты</a>
+          <nav className="hidden lg:flex items-center gap-4 text-xs font-bold text-white/70 uppercase tracking-wide">
+            <a href="#tariffs" className="hover:text-red-500 transition-colors whitespace-nowrap">Тарифы</a>
+            <a href="https://автошкола82.рф/instruktory/" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors whitespace-nowrap">Инструкторы</a>
+            <a href="#reviews" className="hover:text-red-500 transition-colors whitespace-nowrap">Отзывы</a>
+            <a href="#about" className="hover:text-red-500 transition-colors whitespace-nowrap">Филиалы</a>
+            <a href="#contacts" className="hover:text-red-500 transition-colors whitespace-nowrap">Контакты</a>
           </nav>
 
           <div className="hidden md:flex flex-col items-end gap-0.5">

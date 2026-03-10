@@ -309,7 +309,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
           {/* Филиалы */}
           <div className="mb-10">
             <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-2 text-center uppercase">
-              6 филиалов в разных районах Симферополя
+              Филиалы в разных районах Симферополя
             </h3>
             <p className="text-gray-600 text-center text-sm mb-8">Пн–Пт: 10:00–18:30 · Обед: 13:30–14:00 · <a href={`tel:${PHONE}`} className="text-red-500 font-bold hover:text-red-400">{PHONE_DISPLAY}</a></p>
 
