@@ -15,10 +15,10 @@ function BranchMap() {
   const [active, setActive] = useState(0);
   const branch = BRANCHES[active];
   return (
-    <div className="rounded-2xl overflow-hidden border border-white/10" style={{ background: "#1a1a1a" }}>
+    <div className="rounded-2xl overflow-hidden border border-white/10" style={{ background: "#2e2e2e" }}>
       <div className="flex flex-col md:flex-row h-[480px]">
         {/* Список филиалов */}
-        <div className="md:w-64 flex-shrink-0 overflow-y-auto border-b md:border-b-0 md:border-r border-white/10 flex flex-col" style={{ background: "#161616" }}>
+        <div className="md:w-64 flex-shrink-0 overflow-y-auto border-b md:border-b-0 md:border-r border-white/10 flex flex-col" style={{ background: "#3a3a3a" }}>
           {BRANCHES.map((b, i) => (
             <button
               key={b.name}
@@ -51,7 +51,7 @@ function BranchMap() {
             target="_blank"
             rel="noopener noreferrer"
             className="absolute bottom-3 right-3 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-md hover:shadow-lg flex items-center gap-1.5 transition-all border border-white/10"
-            style={{ background: "#1a1a1a" }}
+            style={{ background: "#2e2e2e" }}
           >
             <Icon name="ExternalLink" size={12} fallback="Circle" />
             Открыть в Яндекс Картах
@@ -74,8 +74,8 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
 
-            <h2 className="text-3xl md:text-4xl font-black text-white mb-3 uppercase">Выберите свою программу обучения</h2>
-            <p className="text-white/60 max-w-xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3 uppercase">Выберите свою программу обучения</h2>
+            <p className="text-gray-600 max-w-xl mx-auto">
               Все цены фиксируются в договоре. ГСМ (бензин) — отдельно. Никаких скрытых платежей.
             </p>
           </div>
@@ -87,7 +87,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                 className={`tariff-card p-6 flex flex-col ${t.featured ? "featured" : ""} ${
                   t.color === "navy" ? "border-red-500" : ""
                 } ${t.color === "pink" ? "border-pink-300" : ""}`}
-                style={{ background: "#1a1a1a" }}
+                style={{ background: "#2e2e2e" }}
               >
                 <div className="flex items-start justify-between mb-4">
                   <h3 className="text-lg font-black text-white">
@@ -147,7 +147,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                   )}
 
                   {t.extras.length > 0 && (
-                    <div className="rounded-lg px-3 py-2 mt-2 space-y-1 border border-white/10" style={{ background: "#111111" }}>
+                    <div className="rounded-lg px-3 py-2 mt-2 space-y-1 border border-white/10" style={{ background: "#222222" }}>
                       <p className="text-xs text-white/40 font-semibold uppercase tracking-wide mb-1">Доп. курсы</p>
                       {t.extras.map((e) => (
                         <div key={e} className="flex items-start gap-2 text-xs">
@@ -212,7 +212,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
       </section>
 
       {/* ============ FINANCE ============ */}
-      <section id="finance" className="py-20 text-white" style={{ background: "#0d0d0d" }}>
+      <section id="finance" className="py-20 text-white" style={{ background: "#2e2e2e" }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
 
@@ -221,7 +221,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div className="rounded-2xl p-8 border border-white/15" style={{ background: "#1a1a1a" }}>
+            <div className="rounded-2xl p-8 border border-white/15" style={{ background: "#3a3a3a" }}>
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center">
                   <Icon name="Percent" size={22} className="text-white" fallback="Star" />
@@ -247,7 +247,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
               </div>
             </div>
 
-            <div className="rounded-2xl p-8 border border-white/15" style={{ background: "#1a1a1a" }}>
+            <div className="rounded-2xl p-8 border border-white/15" style={{ background: "#3a3a3a" }}>
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center">
                   <Icon name="CreditCard" size={22} className="text-white" fallback="Star" />
@@ -273,7 +273,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
             </div>
           </div>
 
-          <div className="rounded-2xl p-8 border border-white/15 mb-8" style={{ background: "#1a1a1a" }}>
+          <div className="rounded-2xl p-8 border border-white/15 mb-8" style={{ background: "#3a3a3a" }}>
             <h3 className="text-xl font-black mb-6 text-center uppercase">Как оформить за 3 шага</h3>
             <div className="grid md:grid-cols-3 gap-6">
               {[
@@ -306,14 +306,14 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
       </section>
 
       {/* ============ ABOUT ============ */}
-      <section id="about" className="py-20" style={{ background: "#111111" }}>
+      <section id="about" className="py-20" style={{ background: "#f4f4f4" }}>
         <div className="max-w-7xl mx-auto px-4">
           {/* Филиалы */}
           <div className="mb-10">
-            <h3 className="text-2xl md:text-3xl font-black text-white mb-2 text-center uppercase">
+            <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-2 text-center uppercase">
               6 филиалов в разных районах Симферополя
             </h3>
-            <p className="text-white/60 text-center text-sm mb-8">Пн–Пт: 10:00–18:30 · Обед: 13:30–14:00 · <a href={`tel:${PHONE}`} className="text-red-500 font-bold hover:text-red-400">{PHONE_DISPLAY}</a></p>
+            <p className="text-gray-600 text-center text-sm mb-8">Пн–Пт: 10:00–18:30 · Обед: 13:30–14:00 · <a href={`tel:${PHONE}`} className="text-red-500 font-bold hover:text-red-400">{PHONE_DISPLAY}</a></p>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               {[
@@ -323,13 +323,13 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                 { name: "Филиал на Самокиша", addr: "ул. Самокиша, 4, Симферополь", rating: 4.9, map: "https://yandex.ru/maps/-/CPBAnA6k" },
                 { name: "Филиал на Лермонтова", addr: "ул. Лермонтова, 13А, Симферополь", rating: 5.0, map: "https://yandex.ru/maps/-/CPBArZ88" },
               ].map((branch) => (
-                <div key={branch.name} className="border border-white/10 rounded-2xl p-5 hover:border-red-500 hover:shadow-md transition-all" style={{ background: "#1a1a1a" }}>
+                <div key={branch.name} className="border border-white/10 rounded-2xl p-5 hover:border-red-500 hover:shadow-md transition-all" style={{ background: "#2e2e2e" }}>
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
                       <p className="font-bold text-white text-sm">{branch.name}</p>
                       <p className="text-white/50 text-xs mt-0.5">{branch.addr}</p>
                     </div>
-                    <div className="flex items-center gap-1 flex-shrink-0 border border-white/15 rounded-lg px-2 py-1" style={{ background: "#111111" }}>
+                    <div className="flex items-center gap-1 flex-shrink-0 border border-white/15 rounded-lg px-2 py-1" style={{ background: "#222222" }}>
                       <span className="text-red-500 text-xs">📍</span>
                       <span className="font-black text-sm text-white">{branch.rating.toFixed(1)}</span>
                       <div className="flex gap-0.5 ml-1">

@@ -8,7 +8,7 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
   return (
     <>
       {/* ============ HEADER ============ */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10" style={{ background: "#0d0d0d" }}>
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10" style={{ background: "#2e2e2e" }}>
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <a href="#hero" className="flex-shrink-0">
             <img src={LOGO_URL} alt="ГОСАШ Автошкола" className="h-12 object-contain" style={{ filter: "brightness(10)" }} />
@@ -41,7 +41,7 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
       </header>
 
       {/* ============ HERO ============ */}
-      <section id="hero" className="relative min-h-screen flex items-center pt-20 overflow-hidden" style={{ background: "#111111" }}>
+      <section id="hero" className="relative min-h-screen flex items-center pt-20 overflow-hidden" style={{ background: "#2e2e2e" }}>
         {/* Красная диагональная полоса */}
         <div className="absolute top-0 right-0 w-1/2 h-full pointer-events-none overflow-hidden">
           <div className="absolute -top-20 -right-20 w-[120%] h-[120%]" style={{ background: "linear-gradient(135deg, transparent 40%, rgba(227,0,0,0.08) 100%)" }} />
@@ -101,7 +101,7 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
                   style={{ filter: "drop-shadow(0 20px 60px rgba(227,0,0,0.2))" }}
                 />
               </div>
-              <div className="p-6 border border-white/10" style={{ background: "#1a1a1a", borderRadius: "4px" }}>
+              <div className="p-6 border border-white/10" style={{ background: "#2e2e2e", borderRadius: "4px" }}>
                 <LeadForm
                   title="Записаться на пробное занятие"
                   subtitle="Бесплатная консультация · Ответим за 15 минут"

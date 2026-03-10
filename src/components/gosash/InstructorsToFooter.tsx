@@ -8,10 +8,10 @@ export default function InstructorsToFooter() {
 
 
       {/* ============ REVIEWS ============ */}
-      <section id="reviews" className="py-20" style={{ background: "#111111" }}>
+      <section id="reviews" className="py-20" style={{ background: "#f4f4f4" }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-black text-white uppercase">Довольные выпускники о нас</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 uppercase">Довольные выпускники о нас</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
             {[
@@ -20,7 +20,7 @@ export default function InstructorsToFooter() {
               { name: "Валентина Власенко", source: "Яндекс карты", text: "Идеальное сочетание профессионализма и человеческого подхода! Я прошла обучение в данной автошколе и могу с уверенностью сказать: это был лучший выбор! Организация на высоте — это заслуга менеджера Кузнецовой Анны Игоревны. Отдельная похвала преподавателю теории Юрса Богдану Юлиановичу — ПДД превратились в простую и понятную логику. Настоящий восторг — инструктор по вождению Ускач Андрей Михайлович! Процесс обучения был максимально комфортным, и я полюбила водить автомобиль!", stars: 5 },
               { name: "Алина Тодорская", source: "Яндекс карты", text: "Хочется выразить благодарность Госавтошколе за высокий уровень профессионализма! Ни капли не пожалела, что выбрала именно эту школу. Спасибо большое Богдану Юлиановичу — ни одну тему я не заучивала, всё просто запоминалось благодаря примерам и интересному объяснению! Отдельное огромнейшее спасибо инструктору Ускач Андрей Михайлович — это человек с даром от бога обучать людей вождению. Благодаря ему я не боюсь ездить!", stars: 5 },
             ].map((r) => (
-              <div key={r.name} className="border border-white/10 rounded-2xl p-6" style={{ background: "#1a1a1a" }}>
+              <div key={r.name} className="border border-white/10 rounded-2xl p-6" style={{ background: "#2e2e2e" }}>
                 <div className="flex gap-1 mb-3">
                   {Array.from({ length: r.stars }).map((_, i) => (
                     <span key={i} className="text-red-500 text-lg">★</span>
@@ -43,7 +43,7 @@ export default function InstructorsToFooter() {
       </section>
 
       {/* ============ LEAD FORM (FOOTER CTA) ============ */}
-      <section id="lead-form" className="py-20" style={{ background: "#0d0d0d" }}>
+      <section id="lead-form" className="py-20" style={{ background: "#2e2e2e" }}>
         <div className="max-w-5xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -67,7 +67,7 @@ export default function InstructorsToFooter() {
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl p-7 border border-white/10" style={{ background: "#1a1a1a" }}>
+            <div className="rounded-2xl p-7 border border-white/10" style={{ background: "#3a3a3a" }}>
               <LeadForm
                 title="Отправить заявку"
                 subtitle="Перезвоним в течение 15 минут"
@@ -78,7 +78,7 @@ export default function InstructorsToFooter() {
       </section>
 
       {/* ============ FOOTER ============ */}
-      <footer className="border-t border-white/10 py-8" style={{ background: "#0d0d0d" }}>
+      <footer className="border-t border-white/10 py-8" style={{ background: "#2e2e2e" }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
             <img src={LOGO_URL} alt="ГОСАШ" className="h-10 object-contain" />
