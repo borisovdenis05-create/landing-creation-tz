@@ -81,27 +81,53 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tariffs.map((t) => (
+            {tariffs.map((t) => {
+              const carAssets: Record<string, { img: string; letter: string }> = {
+                base:    { img: "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/files/77cf30ce-b6b0-4604-9797-6e760151b868.jpg", letter: "Б" },
+                priority:{ img: "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/files/7d50d21a-0bbe-4f17-ad4f-e7bafc493196.jpg", letter: "Б" },
+                deep:    { img: "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/files/dd94d5f5-99e4-4a83-a46a-476d69ef0e03.jpg", letter: "Б" },
+                matcap:  { img: "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/files/2c1bb51f-d9dd-42c0-ae3d-51cbf61c0aa9.jpg", letter: "Б" },
+                vip:     { img: "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/files/7d50d21a-0bbe-4f17-ad4f-e7bafc493196.jpg", letter: "Б" },
+                lady:    { img: "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/files/77cf30ce-b6b0-4604-9797-6e760151b868.jpg", letter: "Б" },
+              };
+              const asset = carAssets[t.id] ?? carAssets.base;
+              return (
               <div
                 key={t.id}
-                className={`tariff-card p-6 flex flex-col ${t.featured ? "featured" : ""} ${
+                className={`tariff-card flex flex-col overflow-visible ${t.featured ? "featured" : ""} ${
                   t.color === "navy" ? "border-red-500" : ""
                 } ${t.color === "pink" ? "border-pink-300" : ""}`}
                 style={{ background: "#2e2e2e" }}
               >
-                <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-lg font-black text-white">
-                    {t.name}
-                  </h3>
+                {/* Верхняя часть: большая буква + авто */}
+                <div className="relative h-44 overflow-hidden rounded-t-xl flex items-end justify-center" style={{ background: "#f4f4f4" }}>
+                  {/* Большая буква Б */}
+                  <span className="absolute top-0 left-0 right-0 text-center font-black text-red-500 select-none leading-none"
+                    style={{ fontSize: "clamp(100px, 14vw, 140px)", opacity: 1, lineHeight: 1 }}>
+                    {asset.letter}
+                  </span>
+                  {/* Авто поверх буквы */}
+                  <img
+                    src={asset.img}
+                    alt={`KIA RIO — ${t.name}`}
+                    className="relative z-10 w-full object-contain"
+                    style={{ height: "140px", objectPosition: "center bottom", filter: "drop-shadow(0 4px 16px rgba(0,0,0,0.18))" }}
+                  />
+                  {/* Бейдж */}
                   {t.badge && (
-                    <span className={`badge-hit flex-shrink-0 ml-2 ${
+                    <span className={`absolute top-3 right-3 z-20 badge-hit ${
                       t.color === "navy" ? "bg-red-500 text-white" :
-                      t.color === "pink" ? "bg-pink-100 text-pink-700" :
-                      t.color === "green" ? "bg-green-100 text-green-700" : ""
+                      t.color === "pink" ? "bg-pink-500 text-white" :
+                      t.color === "green" ? "bg-green-600 text-white" : "bg-red-500 text-white"
                     }`}>
                       {t.badge}
                     </span>
                   )}
+                </div>
+                {/* Контент карточки */}
+                <div className="p-6 flex flex-col flex-1">
+                <div className="mb-4">
+                  <h3 className="text-lg font-black text-white uppercase">{t.name}</h3>
                 </div>
 
                 <div className="space-y-1.5 mb-4 flex-1">
@@ -203,8 +229,10 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                 >
                   Выбрать тариф
                 </button>
+                </div>
               </div>
-            ))}
+              );
+            })}
           </div>
 
 
