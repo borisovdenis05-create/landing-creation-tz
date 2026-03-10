@@ -1,5 +1,6 @@
 import Icon from "@/components/ui/icon";
 import { instructors, LOGO_URL, PHONE, PHONE_DISPLAY, LeadForm } from "./shared";
+import { FooterPolicyButtons } from "./PolicyModals";
 
 export default function InstructorsToFooter() {
 
@@ -95,9 +96,8 @@ export default function InstructorsToFooter() {
           <div className="border-t border-white/10 pt-5 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-white/30">
             <p>© 2026 Автошкола ГОСАШ · г. Симферополь, Киевская ул., 41</p>
             <p>Городская. Открытая. Современная.</p>
-            <div className="flex gap-4">
-              <a href="#" className="hover:text-white/60 transition-colors">Политика конфиденциальности</a>
-              <a href="#" className="hover:text-white/60 transition-colors">Оферта</a>
+            <div className="flex flex-wrap gap-4">
+              <FooterPolicyButtons />
             </div>
           </div>
         </div>

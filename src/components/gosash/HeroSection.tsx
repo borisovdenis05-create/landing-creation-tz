@@ -31,9 +31,10 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
             <span className="text-white/40 text-xs uppercase tracking-wider">Пн–Пт: 10:00–18:30</span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button onClick={onCallbackOpen} className="btn-accent text-sm py-2 px-5 whitespace-nowrap">
-              Обратный звонок
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button onClick={onCallbackOpen} className="btn-accent text-xs sm:text-sm py-2 px-3 sm:px-5 whitespace-nowrap">
+              <span className="hidden sm:inline">Обратный звонок</span>
+              <span className="sm:hidden">Перезвоните</span>
             </button>
           </div>
         </div>

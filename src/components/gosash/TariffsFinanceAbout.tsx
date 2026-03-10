@@ -16,9 +16,21 @@ function BranchMap() {
   const branch = BRANCHES[active];
   return (
     <div className="rounded-2xl overflow-hidden border border-white/10" style={{ background: "#2e2e2e" }}>
-      <div className="flex flex-col md:flex-row h-[480px]">
-        {/* Список филиалов */}
-        <div className="md:w-64 flex-shrink-0 overflow-y-auto border-b md:border-b-0 md:border-r border-white/10 flex flex-col" style={{ background: "#3a3a3a" }}>
+      {/* Мобильный переключатель */}
+      <div className="md:hidden overflow-x-auto flex gap-0 border-b border-white/10" style={{ background: "#3a3a3a" }}>
+        {BRANCHES.map((b, i) => (
+          <button
+            key={b.name}
+            onClick={() => setActive(i)}
+            className={`flex-shrink-0 px-3 py-2.5 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${active === i ? "border-red-500 text-white bg-red-500/10" : "border-transparent text-white/50 hover:text-white/80"}`}
+          >
+            {b.name}
+          </button>
+        ))}
+      </div>
+      <div className="flex flex-col md:flex-row" style={{ height: "480px" }}>
+        {/* Список филиалов (только desktop) */}
+        <div className="hidden md:flex md:w-64 flex-shrink-0 overflow-y-auto border-r border-white/10 flex-col" style={{ background: "#3a3a3a" }}>
           {BRANCHES.map((b, i) => (
             <button
               key={b.name}
