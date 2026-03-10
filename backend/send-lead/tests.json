@@ -1,0 +1,20 @@
+{
+  "tests": [
+    {
+      "name": "Создание лида в Bitrix24",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "Тест Тестов",
+        "phone": "+79001234567",
+        "comment": "Тариф Стандарт",
+        "utm_source": "google",
+        "utm_medium": "cpc",
+        "utm_campaign": "avto2026"
+      },
+      "expectedStatus": 200,
+      "expectedBody": { "ok": true },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

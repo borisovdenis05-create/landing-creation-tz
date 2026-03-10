@@ -1,5 +1,26 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Icon from "@/components/ui/icon";
+
+const SEND_LEAD_URL = "https://functions.poehali.dev/d8995d2d-80a5-44fe-b27d-99cdaca844e6";
+
+function getUtmParams() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    utm_source: params.get("utm_source") || "",
+    utm_medium: params.get("utm_medium") || "",
+    utm_campaign: params.get("utm_campaign") || "",
+    utm_content: params.get("utm_content") || "",
+    utm_term: params.get("utm_term") || "",
+  };
+}
+
+async function sendLead(name: string, phone: string, comment = "") {
+  await fetch(SEND_LEAD_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, phone, comment, ...getUtmParams() }),
+  });
+}
 
 export const LOGO_URL = "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/bucket/403b7c35-5e7e-4b24-939e-e08d2f087325.png";
 export const HERO_IMAGE = "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/files/a841006b-bf62-46ed-b518-e807c74e8004.jpg";
@@ -262,12 +283,16 @@ export function LeadForm({ title, subtitle, defaultTariff = "", dark = false }: 
   const [phone, setPhone] = useState("");
   const [comment, setComment] = useState(defaultTariff);
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !phone) return;
+    setLoading(true);
+    await sendLead(name, phone, comment);
+    setLoading(false);
     setSent(true);
-  };
+  }, [name, phone, comment]);
 
   const inputClass = `w-full rounded-lg px-4 py-3 text-sm font-medium outline-none transition-colors border-2 ${
     dark
@@ -312,8 +337,8 @@ export function LeadForm({ title, subtitle, defaultTariff = "", dark = false }: 
         onChange={e => setComment(e.target.value)}
         className={inputClass}
       />
-      <button type="submit" className="btn-accent w-full text-base py-4 font-bold">
-        Записаться на обучение →
+      <button type="submit" disabled={loading} className="btn-accent w-full text-base py-4 font-bold disabled:opacity-60">
+        {loading ? "Отправка..." : "Записаться на обучение →"}
       </button>
       <p className={`text-xs text-center ${dark ? "text-white/40" : "text-gray-400"}`}>
         Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
@@ -330,6 +355,15 @@ export function CallbackModal({ onClose }: CallbackModalProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSend = useCallback(async () => {
+    if (!name || !phone) return;
+    setLoading(true);
+    await sendLead(name, phone, "Обратный звонок");
+    setLoading(false);
+    setSent(true);
+  }, [name, phone]);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -353,8 +387,8 @@ export function CallbackModal({ onClose }: CallbackModalProps) {
                 className="w-full rounded-lg px-4 py-3 text-sm border-2 border-gray-200 outline-none focus:border-yellow-400" />
               <input type="tel" placeholder="+7 (___) ___ __ __" value={phone} onChange={e => setPhone(e.target.value)}
                 className="w-full rounded-lg px-4 py-3 text-sm border-2 border-gray-200 outline-none focus:border-yellow-400" />
-              <button onClick={() => name && phone && setSent(true)} className="btn-primary w-full text-base py-4">
-                Жду звонка
+              <button onClick={handleSend} disabled={loading} className="btn-primary w-full text-base py-4 disabled:opacity-60">
+                {loading ? "Отправка..." : "Жду звонка"}
               </button>
             </div>
           </>
