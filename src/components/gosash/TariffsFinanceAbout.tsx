@@ -71,7 +71,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
       <section id="tariffs" className="py-20 section-alt">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <p className="text-yellow-500 text-sm font-bold uppercase tracking-widest mb-2">Категория B · 2026</p>
+
             <h2 className="text-3xl md:text-4xl font-black text-navy mb-3">Выберите свою программу обучения</h2>
             <p className="text-gray-500 max-w-xl mx-auto">
               Все цены фиксируются в договоре. ГСМ (бензин) — отдельно. Никаких скрытых платежей.
@@ -212,7 +212,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
       <section id="finance" className="py-20 bg-navy text-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <p className="text-yellow-400 text-sm font-bold uppercase tracking-widest mb-2">Т-Банк</p>
+
             <h2 className="text-3xl md:text-4xl font-black mb-3">Платите как удобно</h2>
             <p className="text-white/70 max-w-xl mx-auto">Рассрочка 0% или кредит от Т-Банка</p>
           </div>
@@ -305,32 +305,10 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
       {/* ============ ABOUT ============ */}
       <section id="about" className="py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="mb-14">
-            <p className="text-yellow-500 text-sm font-bold uppercase tracking-widest mb-2">Почему мы</p>
-            <h2 className="text-3xl md:text-4xl font-black text-navy mb-8">Почему выбирают ГОСАШ?</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                { icon: "Heart", title: "Вдумчивые инструкторы", desc: "Подбираем подход к каждому ученику. Помогаем преодолеть страх и обрести уверенность на дороге." },
-                { icon: "Shield", title: "Полная прозрачность", desc: "Никаких скрытых платежей. Цена фиксируется в договоре. ГСМ — отдельно, по факту." },
-                { icon: "Car", title: "Современный автопарк", desc: "Комфортные KIA RIO с АКПП и МКПП. Учебные авто в отличном техническом состоянии." },
-              ].map((item) => (
-                <div key={item.title} className="flex items-start gap-5">
-                  <div className="w-12 h-12 bg-yellow-400/15 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Icon name={item.icon} size={22} className="text-yellow-500" fallback="Star" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-navy text-lg mb-1">{item.title}</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Филиалы */}
           <div className="mb-10">
             <h3 className="text-2xl md:text-3xl font-black text-navy mb-2 text-center">
-              Автошкола ГОСАШ предлагает на выбор один из 6 классов в разных районах
+              6 филиалов в разных районах Симферополя
             </h3>
             <p className="text-gray-500 text-center text-sm mb-8">Пн–Пт: 10:00–18:30 · Обед: 13:30–14:00 · <a href={`tel:${PHONE}`} className="text-yellow-500 font-bold hover:text-yellow-600">{PHONE_DISPLAY}</a></p>
 
