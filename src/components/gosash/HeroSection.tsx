@@ -11,7 +11,7 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
       <header className="fixed top-0 left-0 right-0 z-50 bg-navy shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <a href="#hero" className="flex-shrink-0">
-            <img src={LOGO_URL} alt="ГОСАШ Автошкола" className="h-12 object-contain" />
+            <img src={LOGO_URL} alt="ГОСАШ Автошкола" className="h-12 object-contain" style={{ filter: "brightness(10)" }} />
           </a>
 
           <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-white/80">
@@ -49,7 +49,8 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${HERO_IMAGE})` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-navy/90 via-navy/75 to-navy/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/85 to-navy/60" />
+        <div className="absolute inset-0 bg-navy/30" />
 
         <div className="relative max-w-7xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-center">
           <div className="animate-fade-up" style={{ opacity: 0, animationFillMode: 'forwards' }}>

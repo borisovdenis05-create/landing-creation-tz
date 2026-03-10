@@ -7,35 +7,6 @@ export default function InstructorsToFooter() {
 
   return (
     <>
-      {/* ============ INSTRUCTORS ============ */}
-      <section id="instructors" className="py-20 section-alt">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <p className="text-yellow-500 text-sm font-bold uppercase tracking-widest mb-2">Команда</p>
-            <h2 className="text-3xl md:text-4xl font-black text-navy mb-3">Наши инструкторы</h2>
-            <p className="text-gray-500">Ваши проводники в мир безопасного вождения</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {instructors.map((inst) => (
-              <div key={inst.name} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow text-center">
-                <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl mb-4 font-black ${
-                  inst.lady ? "bg-pink-100 text-pink-600" : "bg-navy/10 text-navy"
-                }`}>
-                  {inst.lady ? "👩" : "👨"}
-                </div>
-                <div className="flex items-center justify-center gap-2 mb-1">
-                  <h3 className="font-bold text-navy text-sm">{inst.name}</h3>
-                  {inst.top && <span className="badge-hit text-[10px]">ТОП</span>}
-                  {inst.lady && <span className="text-xs bg-pink-100 text-pink-600 px-2 py-0.5 rounded-full font-bold">🌸</span>}
-                </div>
-                <p className="text-yellow-500 font-bold text-sm mb-1">Стаж: {inst.exp}</p>
-                <p className="text-gray-500 text-xs">{inst.spec}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ============ REVIEWS ============ */}
       <section id="reviews" className="py-20">

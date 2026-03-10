@@ -145,18 +145,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
             ))}
           </div>
 
-          <div className="mt-8 bg-pink-50 border border-pink-200 rounded-2xl p-6">
-            <p className="text-pink-700 font-bold mb-1">🌸 Партнёры тарифа «Леди Драйв»</p>
-            <p className="text-pink-600 text-sm mb-3">Спецпредложения от партнёров при оформлении карты (в разработке)</p>
-            <div className="flex flex-wrap gap-3">
-              {partners.map(p => (
-                <div key={p.name} className="bg-white border border-pink-200 rounded-lg px-4 py-2 text-sm">
-                  <span className="font-bold text-navy">{p.name}</span>
-                  <span className="text-gray-500 ml-2">{p.desc}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+
         </div>
       </section>
 
