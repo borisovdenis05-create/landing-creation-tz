@@ -32,13 +32,10 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
           <div className="flex items-center gap-2">
             <button
               onClick={onCallbackOpen}
-              className="btn-outline-yellow text-sm py-2 px-4 hidden sm:inline-block"
+              className="btn-accent text-sm py-2 px-4 whitespace-nowrap"
             >
               Обратный звонок
             </button>
-            <a href="#lead-form" className="btn-accent text-sm py-2 px-4 whitespace-nowrap">
-              Записаться
-            </a>
           </div>
         </div>
       </header>
