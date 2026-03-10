@@ -1,6 +1,7 @@
 import json
 import urllib.request
 import urllib.parse
+import urllib.error
 
 BITRIX_WEBHOOK = "https://gosavtoschool.bitrix24.ru/rest/45768/9nij678yep7wc72c/"
 
@@ -45,6 +46,7 @@ def handler(event: dict, context) -> dict:
         "FIELDS[UF_CRM_1612510024]": "702",
         "FIELDS[SOURCE_ID]": "11",
         "FIELDS[UF_CRM_1611737507]": "646",
+        "FIELDS[ASSIGNED_BY_ID]": "45768",
     }
 
     if utm_source:
@@ -63,8 +65,14 @@ def handler(event: dict, context) -> dict:
     with urllib.request.urlopen(req, timeout=10) as resp:
         result = json.loads(resp.read())
 
+    lead_id = result.get("result")
+
+
+
+
+
     return {
         "statusCode": 200,
         "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": json.dumps({"ok": True, "lead_id": result.get("result")}),
+        "body": json.dumps({"ok": True, "lead_id": lead_id}),
     }
