@@ -16,7 +16,7 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-white font-montserrat">
+    <div className="min-h-screen font-montserrat" style={{ background: "#111111", color: "#ffffff" }}>
 
       {showCallback && <CallbackModal onClose={() => setShowCallback(false)} />}
 
@@ -39,7 +39,7 @@ export default function Index() {
       <HeroSection onCallbackOpen={() => setShowCallback(true)} />
 
       {/* Разделитель с дорожными знаками */}
-      <div className="bg-navy/5 border-y border-navy/10 py-4 overflow-hidden">
+      <div className="border-y border-white/10 py-4 overflow-hidden" style={{ background: "#0d0d0d" }}>
         <div className="flex items-center gap-10 animate-[marquee_30s_linear_infinite] whitespace-nowrap w-max">
           {[
             { shape: "circle", label: "Обучение ПДД" },
@@ -57,7 +57,7 @@ export default function Index() {
             { shape: "circle", label: "Симферополь" },
             { shape: "square", label: "6 филиалов" },
           ].map((item, i) => (
-            <span key={i} className="inline-flex items-center gap-2 text-navy/60 text-sm font-semibold uppercase tracking-widest flex-shrink-0">
+            <span key={i} className="inline-flex items-center gap-2 text-white/30 text-xs font-bold uppercase tracking-widest flex-shrink-0">
               {item.shape === "circle" && (
                 <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="none" stroke="currentColor" strokeWidth="2.5"/><line x1="5" y1="11" x2="17" y2="11" stroke="currentColor" strokeWidth="2.5"/></svg>
               )}
