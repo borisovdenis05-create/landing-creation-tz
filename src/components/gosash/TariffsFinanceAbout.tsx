@@ -1,5 +1,64 @@
+import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { tariffs, partners, PHONE, PHONE_DISPLAY } from "./shared";
+
+const BRANCHES = [
+  { name: "Гагарина", addr: "ул. Гагарина, 20А", type: "Учебный класс", mapUrl: "https://yandex.ru/maps/-/CPBAb-1K", embedUrl: "https://yandex.ru/map-widget/v1/?ll=34.0993%2C44.9354&z=17&pt=34.0993,44.9354,pm2rdm" },
+  { name: "Киевская", addr: "Киевская ул., 41", type: "Учебный класс", mapUrl: "https://yandex.ru/maps/-/CPBAfQLi", embedUrl: "https://yandex.ru/map-widget/v1/?ll=34.0869%2C44.9527&z=17&pt=34.0869,44.9527,pm2rdm" },
+  { name: "Залесская", addr: "Залесская ул., 121", type: "Учебный класс", mapUrl: "https://yandex.ru/maps/-/CPBAjU2Y", embedUrl: "https://yandex.ru/map-widget/v1/?ll=34.0417%2C44.9763&z=17&pt=34.0417,44.9763,pm2rdm" },
+  { name: "Самокиша", addr: "ул. Самокиша, 4", type: "Учебный класс", mapUrl: "https://yandex.ru/maps/-/CPBAnA6k", embedUrl: "https://yandex.ru/map-widget/v1/?ll=34.0950%2C44.9480&z=17&pt=34.0950,44.9480,pm2rdm" },
+  { name: "Лермонтова", addr: "ул. Лермонтова, 13А", type: "Учебный класс", mapUrl: "https://yandex.ru/maps/-/CPBArZ88", embedUrl: "https://yandex.ru/map-widget/v1/?ll=34.0807%2C44.9434&z=17&pt=34.0807,44.9434,pm2rdm" },
+  { name: "Автодром Титова", addr: "ул. Титова, 77", type: "Автодром", mapUrl: "https://yandex.ru/maps/-/CPBAvA4B", embedUrl: "https://yandex.ru/map-widget/v1/?ll=34.0700%2C44.9310&z=17&pt=34.0700,44.9310,pm2rdm" },
+];
+
+function BranchMap() {
+  const [active, setActive] = useState(0);
+  const branch = BRANCHES[active];
+  return (
+    <div className="rounded-2xl overflow-hidden border border-gray-200 bg-white">
+      <div className="flex flex-col md:flex-row h-[480px]">
+        {/* Список филиалов */}
+        <div className="md:w-64 flex-shrink-0 overflow-y-auto border-b md:border-b-0 md:border-r border-gray-100 flex flex-col">
+          {BRANCHES.map((b, i) => (
+            <button
+              key={b.name}
+              onClick={() => setActive(i)}
+              className={`text-left px-4 py-3.5 border-b border-gray-100 last:border-b-0 transition-all flex items-start gap-3 ${active === i ? "bg-yellow-50 border-l-4 border-l-yellow-400" : "hover:bg-gray-50 border-l-4 border-l-transparent"}`}
+            >
+              <span className="text-base mt-0.5">{b.type === "Автодром" ? "🏁" : "🏫"}</span>
+              <div>
+                <p className={`font-bold text-sm ${active === i ? "text-navy" : "text-gray-700"}`}>{b.name}</p>
+                <p className="text-gray-400 text-xs mt-0.5">{b.addr}</p>
+                <span className={`text-xs px-1.5 py-0.5 rounded-full mt-1 inline-block ${b.type === "Автодром" ? "bg-blue-50 text-blue-600" : "bg-yellow-50 text-yellow-700"}`}>{b.type}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+        {/* Карта */}
+        <div className="flex-1 relative">
+          <iframe
+            key={branch.embedUrl}
+            src={branch.embedUrl}
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            title={branch.name}
+            allowFullScreen
+          />
+          <a
+            href={branch.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute bottom-3 right-3 bg-white text-navy text-xs font-bold px-3 py-2 rounded-xl shadow-md hover:shadow-lg flex items-center gap-1.5 transition-all"
+          >
+            <Icon name="ExternalLink" size={12} fallback="Circle" />
+            Открыть в Яндекс Картах
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface TariffsFinanceAboutProps {
   onTariffSelect: (tariffName: string) => void;
@@ -312,45 +371,10 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
               ))}
             </div>
 
-            {/* Автодром */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-5 hover:border-yellow-400 hover:shadow-md transition-all max-w-sm">
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <div>
-                  <p className="font-bold text-navy text-sm">Автодром на Титова</p>
-                  <p className="text-gray-500 text-xs mt-0.5">ул. Титова, 77, Симферополь</p>
-                </div>
-                <div className="flex items-center gap-1 flex-shrink-0 bg-yellow-50 border border-yellow-200 rounded-lg px-2 py-1">
-                  <span className="text-red-500 text-xs">📍</span>
-                  <span className="font-black text-sm text-navy">4.7</span>
-                  <div className="flex gap-0.5 ml-1">
-                    {[1,2,3,4,5].map(s => (
-                      <span key={s} className={`text-xs ${s <= 4 ? "text-yellow-400" : "text-gray-300"}`}>★</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <a
-                href="https://yandex.ru/maps/-/CPBAvA4B"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 transition-colors"
-              >
-                <Icon name="Map" size={12} fallback="Circle" />
-                Карта проезда
-              </a>
-            </div>
           </div>
 
-          {/* Общая карта */}
-          <div className="rounded-2xl overflow-hidden border border-gray-200 h-80">
-            <iframe
-              src="https://yandex.ru/map-widget/v1/?ll=34.0900%2C44.9500&z=13&pt=34.0802,44.9523,pm2rdm~34.1093,44.9432,pm2rdm~34.0650,44.9750,pm2rdm~34.0920,44.9580,pm2rdm~34.1020,44.9490,pm2rdm~34.0750,44.9420,pm2rdm~34.0600,44.9380,pm2rdm"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              title="Все филиалы ГОСАШ на карте"
-            />
-          </div>
+          {/* Интерактивная карта */}
+          <BranchMap />
         </div>
       </section>
     </>
