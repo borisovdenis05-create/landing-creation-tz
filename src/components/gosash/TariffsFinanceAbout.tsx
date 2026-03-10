@@ -198,7 +198,12 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                   )}
                   {t.installment && (
                     <div className="mt-2 border border-red-500/30 rounded-lg px-3 py-1.5" style={{ background: "rgba(227,0,0,0.08)" }}>
-                      <p className="text-xs text-red-400 font-semibold">Рассрочка: {t.installment}</p>
+                      <p className="text-xs text-red-400 font-semibold flex flex-wrap gap-x-1">
+                        <span className="whitespace-nowrap">Рассрочка:</span>
+                        {t.installment.split("/").map((part, i, arr) => (
+                          <span key={i} className="whitespace-nowrap">{part.trim()}{i < arr.length - 1 ? " /" : ""}</span>
+                        ))}
+                      </p>
                     </div>
                   )}
                 </div>
