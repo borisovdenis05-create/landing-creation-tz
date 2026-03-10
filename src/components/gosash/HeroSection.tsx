@@ -43,56 +43,71 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
       </header>
 
       {/* ============ HERO ============ */}
-      <section id="hero" className="relative min-h-screen flex items-center pt-20">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${HERO_IMAGE})` }}
-        />
-        <div className="absolute inset-0 bg-navy/80" />
-        <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/90 to-navy/70" />
+      <section id="hero" className="relative min-h-screen flex items-center pt-20 bg-navy overflow-hidden">
+        {/* Декоративная сетка */}
+        <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "radial-gradient(circle, #fdbb30 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+        {/* Жёлтый акцент-блок справа */}
+        <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-l from-yellow-400/10 to-transparent pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-center">
-          <div className="animate-fade-up" style={{ opacity: 0, animationFillMode: 'forwards' }}>
-            <div className="inline-flex items-center gap-2 bg-yellow-400/20 border border-yellow-400/40 rounded-full px-4 py-1.5 mb-6">
-              <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
-              <span className="text-yellow-400 text-sm font-semibold">Набор 2026 открыт</span>
+        <div className="relative max-w-7xl mx-auto px-4 py-16 w-full">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            {/* Левая колонка — текст */}
+            <div className="animate-fade-up z-10" style={{ opacity: 0, animationFillMode: 'forwards' }}>
+              <div className="inline-flex items-center gap-2 bg-yellow-400/20 border border-yellow-400/40 rounded-full px-4 py-1.5 mb-6">
+                <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+                <span className="text-yellow-400 text-sm font-semibold">Набор 2026 открыт</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-5">
+                Стань уверенным<br />
+                <span className="text-yellow-400">водителем</span><br />
+                в Симферополе
+              </h1>
+              <p className="text-white/90 text-lg mb-5 leading-relaxed font-medium">
+                Городская автошкола с вдумчивым подходом и&nbsp;6&nbsp;программами обучения.
+              </p>
+              <div className="flex flex-wrap gap-2 mb-8 text-sm">
+                <span className="flex items-center gap-1.5 bg-white/10 border border-white/15 rounded-full px-3 py-1.5 text-white font-medium"><span className="text-yellow-400 font-black">✓</span> Прозрачные платежи</span>
+                <span className="flex items-center gap-1.5 bg-white/10 border border-white/15 rounded-full px-3 py-1.5 text-white font-medium"><span className="text-yellow-400 font-black">✓</span> Рассрочка 0%</span>
+                <span className="flex items-center gap-1.5 bg-white/10 border border-white/15 rounded-full px-3 py-1.5 text-white font-medium"><span className="text-yellow-400 font-black">✓</span> KIA RIO АКПП/МКПП</span>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4 mb-10">
+                <a href="#tariffs" className="btn-accent text-base py-4 px-8 font-bold">
+                  Выбрать тариф
+                </a>
+                <button onClick={onCallbackOpen} className="btn-outline-yellow text-base py-4 px-8">
+                  Записаться на пробное
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-8">
+                {[["56–70", "часов вождения"], ["6", "тарифов"], ["0%", "рассрочка"]].map(([num, label]) => (
+                  <div key={label}>
+                    <p className="text-3xl font-black text-yellow-400">{num}</p>
+                    <p className="text-white/70 text-xs font-semibold uppercase tracking-wide mt-0.5">{label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-5 drop-shadow-lg">
-              Стань уверенным<br />
-              <span className="text-yellow-400 drop-shadow-md">водителем</span><br />
-              в Симферополе
-            </h1>
-            <p className="text-white text-lg mb-4 leading-relaxed font-medium drop-shadow">
-              Городская автошкола с вдумчивым подходом и&nbsp;6&nbsp;программами обучения.
-            </p>
-            <div className="flex flex-wrap gap-3 mb-8 text-sm text-white font-semibold">
-              <span className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1"><span className="text-yellow-400">✓</span> Полная прозрачность платежей</span>
-              <span className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1"><span className="text-yellow-400">✓</span> Рассрочка 0% от Т-Банка</span>
-              <span className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1"><span className="text-yellow-400">✓</span> KIA RIO (АКПП/МКПП)</span>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <a href="#tariffs" className="btn-accent text-base py-4 px-8 font-bold">
-                Выбрать тариф
-              </a>
-              <button onClick={onCallbackOpen} className="btn-outline-yellow text-base py-4 px-8">
-                Записаться на пробное
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-6">
-              {[["56–70", "часов вождения"], ["6", "тарифов обучения"], ["0%", "рассрочка"]].map(([num, label]) => (
-                <div key={label}>
-                  <p className="text-3xl font-black text-yellow-400 drop-shadow">{num}</p>
-                  <p className="text-white text-xs font-semibold">{label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-2xl">
-            <LeadForm
-              title="Записаться на пробное занятие"
-              subtitle="Бесплатная консультация · Ответим за 15 минут"
-            />
+            {/* Правая колонка — авто + форма */}
+            <div className="flex flex-col gap-6 z-10">
+              {/* Автомобиль */}
+              <div className="relative flex items-center justify-center">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-yellow-400/15 to-transparent" />
+                <img
+                  src={HERO_IMAGE}
+                  alt="Учебный автомобиль KIA RIO"
+                  className="w-full max-w-lg object-contain drop-shadow-2xl relative z-10"
+                  style={{ filter: "drop-shadow(0 20px 60px rgba(253,187,48,0.25))" }}
+                />
+              </div>
+              {/* Форма */}
+              <div className="bg-white rounded-2xl p-6 shadow-2xl">
+                <LeadForm
+                  title="Записаться на пробное занятие"
+                  subtitle="Бесплатная консультация · Ответим за 15 минут"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>

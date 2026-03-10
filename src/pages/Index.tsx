@@ -37,6 +37,42 @@ export default function Index() {
       )}
 
       <HeroSection onCallbackOpen={() => setShowCallback(true)} />
+
+      {/* Разделитель с дорожными знаками */}
+      <div className="bg-navy/5 border-y border-navy/10 py-4 overflow-hidden">
+        <div className="flex items-center gap-10 animate-[marquee_30s_linear_infinite] whitespace-nowrap w-max">
+          {[
+            { shape: "circle", label: "Обучение ПДД" },
+            { shape: "triangle", label: "Безопасное вождение" },
+            { shape: "circle", label: "Категория B" },
+            { shape: "square", label: "Автодром" },
+            { shape: "triangle", label: "Практика вождения" },
+            { shape: "circle", label: "Симферополь" },
+            { shape: "square", label: "6 филиалов" },
+            { shape: "circle", label: "Обучение ПДД" },
+            { shape: "triangle", label: "Безопасное вождение" },
+            { shape: "circle", label: "Категория B" },
+            { shape: "square", label: "Автодром" },
+            { shape: "triangle", label: "Практика вождения" },
+            { shape: "circle", label: "Симферополь" },
+            { shape: "square", label: "6 филиалов" },
+          ].map((item, i) => (
+            <span key={i} className="inline-flex items-center gap-2 text-navy/60 text-sm font-semibold uppercase tracking-widest flex-shrink-0">
+              {item.shape === "circle" && (
+                <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="none" stroke="currentColor" strokeWidth="2.5"/><line x1="5" y1="11" x2="17" y2="11" stroke="currentColor" strokeWidth="2.5"/></svg>
+              )}
+              {item.shape === "triangle" && (
+                <svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 20,19 2,19" fill="none" stroke="#fdbb30" strokeWidth="2.5"/><line x1="11" y1="10" x2="11" y2="16" stroke="#fdbb30" strokeWidth="2.5"/><circle cx="11" cy="7" r="1.2" fill="#fdbb30"/></svg>
+              )}
+              {item.shape === "square" && (
+                <svg width="22" height="22" viewBox="0 0 22 22"><rect x="2" y="2" width="18" height="18" rx="3" fill="none" stroke="currentColor" strokeWidth="2.5"/><text x="11" y="15" textAnchor="middle" fontSize="9" fill="currentColor" fontWeight="bold">P</text></svg>
+              )}
+              {item.label}
+            </span>
+          ))}
+        </div>
+      </div>
+
       <TariffsFinanceAbout onTariffSelect={openTariffForm} />
       <InstructorsToFooter />
     </div>

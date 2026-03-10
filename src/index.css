@@ -177,6 +177,32 @@
     background-color: #f5f7fa;
   }
 
+  /* Дорожные знаки — декоративный паттерн */
+  .signs-pattern {
+    position: relative;
+    overflow: hidden;
+  }
+  .signs-pattern::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image:
+      url("data:image/svg+xml,%3Csvg width='60' height='80' viewBox='0 0 60 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='26' fill='none' stroke='%231a2e40' stroke-width='4'/%3E%3Cline x1='30' y1='56' x2='30' y2='75' stroke='%231a2e40' stroke-width='4'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg width='60' height='80' viewBox='0 0 60 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='30,4 56,56 4,56' fill='none' stroke='%231a2e40' stroke-width='4'/%3E%3Cline x1='30' y1='56' x2='30' y2='75' stroke='%231a2e40' stroke-width='4'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg width='60' height='80' viewBox='0 0 60 80' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='4' y='4' width='52' height='52' rx='6' fill='none' stroke='%231a2e40' stroke-width='4'/%3E%3Cline x1='30' y1='56' x2='30' y2='75' stroke='%231a2e40' stroke-width='4'/%3E%3C/svg%3E");
+    background-size:
+      180px 180px,
+      180px 180px,
+      180px 180px;
+    background-position:
+      0 0,
+      90px 90px,
+      45px 45px;
+    background-repeat: repeat;
+    pointer-events: none;
+  }
+
   .animate-fade-up {
     animation: fadeUp 0.7s ease forwards;
   }
@@ -189,6 +215,15 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
     }
   }
 
