@@ -43,8 +43,9 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
       {/* ============ HERO ============ */}
       <section
         id="hero"
-        className="relative min-h-screen flex flex-col pt-20 overflow-hidden"
+        className="relative flex flex-col pt-20 overflow-hidden"
         style={{
+          minHeight: "100vh",
           backgroundImage: `url(${BG_IMAGE})`,
           backgroundSize: "cover",
           backgroundPosition: "center top",
@@ -53,51 +54,56 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
         {/* Затемнение */}
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.75) 100%)" }} />
 
-        {/* Верхний контент */}
-        <div className="relative flex-1 flex items-start">
-          <div className="max-w-7xl mx-auto px-4 pt-12 pb-8 w-full">
-            <div className="max-w-xl">
-              {/* Заголовок */}
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-none mb-5 uppercase drop-shadow-lg" style={{ letterSpacing: "-0.02em" }}>
-                Стань<br />
-                <span className="text-orange-400">уверенным</span><br />
-                водителем
-              </h1>
+        {/* Контент — прибит к низу */}
+        <div className="relative flex-1 flex items-end">
+          <div className="max-w-7xl mx-auto px-4 pb-10 w-full">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
 
-              {/* Описание */}
-              <p className="text-white/90 text-lg mb-6 leading-relaxed font-medium drop-shadow">
-                Городская автошкола Симферополя с вдумчивым подходом и 6 программами обучения.
-              </p>
+              {/* Левый блок — текст */}
+              <div className="max-w-xl">
+                {/* Заголовок */}
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-none mb-5 uppercase drop-shadow-lg" style={{ letterSpacing: "-0.02em" }}>
+                  Стань<br />
+                  <span className="text-orange-400">уверенным</span><br />
+                  водителем
+                </h1>
 
-              {/* Преимущества */}
-              <div className="flex flex-wrap gap-2 mb-8">
-                {["Прозрачные платежи", "Рассрочка 0%", "KIA RIO АКПП/МКПП"].map(t => (
-                  <span key={t} className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm border border-white/20 px-3 py-1.5 text-white text-sm font-semibold rounded-sm">
-                    <span className="text-orange-400 font-black">✓</span> {t}
-                  </span>
-                ))}
+                {/* Описание */}
+                <p className="text-white/90 text-lg mb-6 leading-relaxed font-medium drop-shadow">
+                  Городская автошкола Симферополя с вдумчивым подходом и 6 программами обучения.
+                </p>
+
+                {/* Преимущества */}
+                <div className="flex flex-wrap gap-2 mb-8">
+                  {["Прозрачные платежи", "Рассрочка 0%", "KIA RIO АКПП/МКПП"].map(t => (
+                    <span key={t} className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm border border-white/20 px-3 py-1.5 text-white text-sm font-semibold rounded-sm">
+                      <span className="text-orange-400 font-black">✓</span> {t}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Кнопки */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <a href="#tariffs" className="btn-accent text-base py-4 px-8">
+                    Выбрать тариф
+                  </a>
+                  <button onClick={onCallbackOpen} className="btn-outline-yellow text-base py-4 px-8">
+                    Записаться на пробное
+                  </button>
+                </div>
               </div>
 
-              {/* Кнопки */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <a href="#tariffs" className="btn-accent text-base py-4 px-8">
-                  Выбрать тариф
-                </a>
-                <button onClick={onCallbackOpen} className="btn-outline-yellow text-base py-4 px-8">
-                  Записаться на пробное
-                </button>
+              {/* Правый блок — форма */}
+              <div className="w-full lg:w-auto lg:min-w-[360px] flex-shrink-0">
+                <div className="w-full p-6 border border-white/15 backdrop-blur-md shadow-2xl" style={{ background: "rgba(0,0,0,0.55)", borderRadius: "8px" }}>
+                  <LeadForm
+                    title="Записаться на пробное занятие"
+                    subtitle="Бесплатная консультация · Ответим за 15 минут"
+                  />
+                </div>
               </div>
+
             </div>
-          </div>
-        </div>
-
-        {/* Нижний правый угол — форма */}
-        <div className="relative max-w-7xl mx-auto px-4 pb-10 w-full flex justify-end">
-          <div className="w-full max-w-sm p-6 border border-white/15 backdrop-blur-md shadow-2xl" style={{ background: "rgba(0,0,0,0.55)", borderRadius: "8px" }}>
-            <LeadForm
-              title="Записаться на пробное занятие"
-              subtitle="Бесплатная консультация · Ответим за 15 минут"
-            />
           </div>
         </div>
       </section>
