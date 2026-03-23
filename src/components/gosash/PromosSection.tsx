@@ -123,11 +123,11 @@ function PromoCard({ promo, onApply }: { promo: PromoCardData; onApply: () => vo
   return (
     <div className="rounded-2xl overflow-hidden flex flex-col" style={{ background: "#fff", boxShadow: "0 4px 24px rgba(0,0,0,0.10)" }}>
       {/* Изображение */}
-      <div style={{ height: "210px", flexShrink: 0 }}>
+      <div style={{ height: "210px", flexShrink: 0, background: "#111" }}>
         <img
           src={promo.image_url}
           alt={promo.title}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
         />
       </div>
 
