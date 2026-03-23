@@ -3,6 +3,7 @@ import Icon from "@/components/ui/icon";
 import { CallbackModal, LeadForm } from "@/components/gosash/shared";
 import HeroSection from "@/components/gosash/HeroSection";
 import TariffsFinanceAbout from "@/components/gosash/TariffsFinanceAbout";
+import PromosSection from "@/components/gosash/PromosSection";
 import InstructorsToFooter from "@/components/gosash/InstructorsToFooter";
 
 export default function Index() {
@@ -74,6 +75,7 @@ export default function Index() {
       </div>
 
       <TariffsFinanceAbout onTariffSelect={openTariffForm} />
+      <PromosSection />
       <InstructorsToFooter />
     </div>
   );

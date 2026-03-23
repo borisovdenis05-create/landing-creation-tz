@@ -242,6 +242,34 @@ def handler(event: dict, context) -> dict:
                 conn.commit()
                 return json_response({"ok": True})
 
+        # ── PROMOS ────────────────────────────────────────────────────────────
+        if "/promos" in path:
+            if method == "GET":
+                cur.execute(f"SELECT * FROM {SCHEMA}.gosash_promos ORDER BY sort_order, id")
+                return json_response({"items": [dict(r) for r in cur.fetchall()]})
+            if method == "POST":
+                d = body
+                cur.execute(
+                    f"INSERT INTO {SCHEMA}.gosash_promos (title, subtitle, description, image_url, badge, active, sort_order) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
+                    (d.get("title",""), d.get("subtitle",""), d.get("description",""), d.get("image_url",""), d.get("badge",""), d.get("active",True), d.get("sort_order",0))
+                )
+                new_id = cur.fetchone()["id"]
+                conn.commit()
+                return json_response({"ok": True, "id": new_id})
+            if method == "PUT":
+                d = body
+                cur.execute(
+                    f"UPDATE {SCHEMA}.gosash_promos SET title=%s, subtitle=%s, description=%s, image_url=%s, badge=%s, active=%s, sort_order=%s WHERE id=%s",
+                    (d.get("title",""), d.get("subtitle",""), d.get("description",""), d.get("image_url",""), d.get("badge",""), d.get("active",True), d.get("sort_order",0), d.get("id"))
+                )
+                conn.commit()
+                return json_response({"ok": True})
+            if method == "DELETE":
+                pid = body.get("id") or (event.get("queryStringParameters") or {}).get("id")
+                cur.execute(f"DELETE FROM {SCHEMA}.gosash_promos WHERE id=%s", (pid,))
+                conn.commit()
+                return json_response({"ok": True})
+
         return error("Маршрут не найден", 404)
 
     except Exception as e:

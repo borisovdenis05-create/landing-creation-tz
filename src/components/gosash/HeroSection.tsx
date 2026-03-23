@@ -18,6 +18,7 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
 
           <nav className="hidden lg:flex items-center gap-4 text-xs font-bold text-white/70 uppercase tracking-wide">
             <a href="#tariffs" className="hover:text-orange-400 transition-colors whitespace-nowrap">Тарифы</a>
+            <a href="#promos" className="hover:text-orange-400 transition-colors whitespace-nowrap text-orange-400">Акции</a>
             <a href="https://автошкола82.рф/instruktory/" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors whitespace-nowrap">Инструкторы</a>
             <a href="#reviews" className="hover:text-orange-400 transition-colors whitespace-nowrap">Отзывы</a>
             <a href="#about" className="hover:text-orange-400 transition-colors whitespace-nowrap">Филиалы</a>

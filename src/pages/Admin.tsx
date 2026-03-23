@@ -2,12 +2,13 @@ import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { LoginForm } from "@/components/admin/AdminUi";
 import { SettingsTab, BlocksTab } from "@/components/admin/AdminSettingsTabs";
-import { TariffsTab, BranchesTab, InstructorsTab, ReviewsTab } from "@/components/admin/AdminCrudTabs";
+import { TariffsTab, BranchesTab, InstructorsTab, ReviewsTab, PromosTab } from "@/components/admin/AdminCrudTabs";
 
 const TABS = [
   { id: "settings", label: "Настройки", icon: "Settings" },
   { id: "blocks", label: "Блоки", icon: "Layout" },
   { id: "tariffs", label: "Тарифы", icon: "Tag" },
+  { id: "promos", label: "Акции", icon: "Megaphone" },
   { id: "branches", label: "Филиалы", icon: "MapPin" },
   { id: "instructors", label: "Инструкторы", icon: "Users" },
   { id: "reviews", label: "Отзывы", icon: "Star" },
@@ -80,6 +81,7 @@ export default function Admin() {
           {activeTab === "settings" && <SettingsTab token={token} />}
           {activeTab === "blocks" && <BlocksTab token={token} />}
           {activeTab === "tariffs" && <TariffsTab token={token} />}
+          {activeTab === "promos" && <PromosTab token={token} />}
           {activeTab === "branches" && <BranchesTab token={token} />}
           {activeTab === "instructors" && <InstructorsTab token={token} />}
           {activeTab === "reviews" && <ReviewsTab token={token} />}
