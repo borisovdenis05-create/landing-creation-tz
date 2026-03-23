@@ -17,15 +17,15 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
           </a>
 
           <nav className="hidden lg:flex items-center gap-4 text-xs font-bold text-white/70 uppercase tracking-wide">
-            <a href="#tariffs" className="hover:text-red-500 transition-colors whitespace-nowrap">Тарифы</a>
-            <a href="https://автошкола82.рф/instruktory/" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors whitespace-nowrap">Инструкторы</a>
-            <a href="#reviews" className="hover:text-red-500 transition-colors whitespace-nowrap">Отзывы</a>
-            <a href="#about" className="hover:text-red-500 transition-colors whitespace-nowrap">Филиалы</a>
-            <a href="#contacts" className="hover:text-red-500 transition-colors whitespace-nowrap">Контакты</a>
+            <a href="#tariffs" className="hover:text-orange-400 transition-colors whitespace-nowrap">Тарифы</a>
+            <a href="https://автошкола82.рф/instruktory/" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors whitespace-nowrap">Инструкторы</a>
+            <a href="#reviews" className="hover:text-orange-400 transition-colors whitespace-nowrap">Отзывы</a>
+            <a href="#about" className="hover:text-orange-400 transition-colors whitespace-nowrap">Филиалы</a>
+            <a href="#contacts" className="hover:text-orange-400 transition-colors whitespace-nowrap">Контакты</a>
           </nav>
 
           <div className="hidden md:flex flex-col items-end gap-0.5">
-            <a href={`tel:${PHONE}`} className="text-red-500 font-black text-base hover:text-red-400 transition-colors tracking-wide">
+            <a href={`tel:${PHONE}`} className="text-orange-400 font-black text-base hover:text-orange-300 transition-colors tracking-wide">
               {PHONE_DISPLAY}
             </a>
             <span className="text-white/40 text-xs uppercase tracking-wider">Пн–Пт: 10:00–18:30</span>
@@ -60,7 +60,7 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
               {/* Заголовок */}
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-none mb-5 uppercase drop-shadow-lg" style={{ letterSpacing: "-0.02em" }}>
                 Стань<br />
-                <span className="text-red-500">уверенным</span><br />
+                <span className="text-orange-400">уверенным</span><br />
                 водителем
               </h1>
 
@@ -73,7 +73,7 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
               <div className="flex flex-wrap gap-2 mb-8">
                 {["Прозрачные платежи", "Рассрочка 0%", "KIA RIO АКПП/МКПП"].map(t => (
                   <span key={t} className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm border border-white/20 px-3 py-1.5 text-white text-sm font-semibold rounded-sm">
-                    <span className="text-red-400 font-black">✓</span> {t}
+                    <span className="text-orange-400 font-black">✓</span> {t}
                   </span>
                 ))}
               </div>

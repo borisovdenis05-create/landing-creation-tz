@@ -22,7 +22,7 @@ function BranchMap() {
           <button
             key={b.name}
             onClick={() => setActive(i)}
-            className={`flex-shrink-0 px-3 py-2.5 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${active === i ? "border-red-500 text-white bg-red-500/10" : "border-transparent text-white/50 hover:text-white/80"}`}
+            className={`flex-shrink-0 px-3 py-2.5 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${active === i ? "border-orange-400 text-white bg-orange-500/10" : "border-transparent text-white/50 hover:text-white/80"}`}
           >
             {b.name}
           </button>
@@ -35,14 +35,14 @@ function BranchMap() {
             <button
               key={b.name}
               onClick={() => setActive(i)}
-              className={`text-left px-4 py-3.5 border-b border-white/10 last:border-b-0 transition-all flex items-start gap-3 ${active === i ? "border-l-4 border-l-red-500" : "hover:bg-white/5 border-l-4 border-l-transparent"}`}
-              style={active === i ? { background: "rgba(227,0,0,0.08)" } : undefined}
+              className={`text-left px-4 py-3.5 border-b border-white/10 last:border-b-0 transition-all flex items-start gap-3 ${active === i ? "border-l-4 border-l-orange-400" : "hover:bg-white/5 border-l-4 border-l-transparent"}`}
+              style={active === i ? { background: "rgba(232,146,26,0.08)" } : undefined}
             >
               <span className="text-base mt-0.5">{b.type === "Автодром" ? "🏁" : "🏫"}</span>
               <div>
                 <p className={`font-bold text-sm ${active === i ? "text-white" : "text-white/70"}`}>{b.name}</p>
                 <p className="text-white/40 text-xs mt-0.5">{b.addr}</p>
-                <span className={`text-xs px-1.5 py-0.5 rounded-full mt-1 inline-block ${b.type === "Автодром" ? "bg-red-500/10 text-red-400" : "bg-white/10 text-white/60"}`}>{b.type}</span>
+                <span className={`text-xs px-1.5 py-0.5 rounded-full mt-1 inline-block ${b.type === "Автодром" ? "bg-orange-500/10 text-orange-400" : "bg-white/10 text-white/60"}`}>{b.type}</span>
               </div>
             </button>
           ))}
@@ -97,7 +97,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
               <div
                 key={t.id}
                 className={`tariff-card p-6 flex flex-col ${t.featured ? "featured" : ""} ${
-                  t.color === "navy" ? "border-red-500" : ""
+                  t.color === "navy" ? "border-orange-400" : ""
                 } ${t.color === "pink" ? "border-pink-300" : ""}`}
                 style={{ background: "#2e2e2e" }}
               >
@@ -105,7 +105,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                   <h3 className="text-lg font-black text-white">{t.name}</h3>
                   {t.badge && (
                     <span className={`badge-hit flex-shrink-0 ml-2 ${
-                      t.color === "navy" ? "bg-red-500 text-white" :
+                      t.color === "navy" ? "bg-orange-500 text-white" :
                       t.color === "pink" ? "bg-pink-100 text-pink-700" :
                       t.color === "green" ? "bg-green-100 text-green-700" : ""
                     }`}>
@@ -116,20 +116,20 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
 
                 <div className="space-y-1.5 mb-4 flex-1">
                   <div className="flex items-center gap-2 text-sm">
-                    <Icon name="Car" size={15} className="text-red-500 flex-shrink-0" fallback="Circle" />
+                    <Icon name="Car" size={15} className="text-orange-400 flex-shrink-0" fallback="Circle" />
                     <span className="text-white font-semibold">{t.hoursLabel}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <Icon name="BookOpen" size={15} className="text-red-500 flex-shrink-0" fallback="Circle" />
+                    <Icon name="BookOpen" size={15} className="text-orange-400 flex-shrink-0" fallback="Circle" />
                     <span className="text-white/60">Теория: {t.theory}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <Icon name="User" size={15} className="text-red-500 flex-shrink-0" fallback="Circle" />
+                    <Icon name="User" size={15} className="text-orange-400 flex-shrink-0" fallback="Circle" />
                     <span className="text-white/60">{t.instructor}</span>
                   </div>
                   {t.duration && (
                     <div className="flex items-center gap-2 text-sm">
-                      <Icon name="Clock" size={15} className="text-red-500 flex-shrink-0" fallback="Circle" />
+                      <Icon name="Clock" size={15} className="text-orange-400 flex-shrink-0" fallback="Circle" />
                       <span className="text-white/60">Срок: {t.duration}</span>
                     </div>
                   )}
@@ -149,7 +149,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                     <div className="space-y-1 mt-1">
                       {t.restrictions.map((r) => (
                         <div key={r} className="flex items-start gap-2 text-xs">
-                          <Icon name="X" size={12} className="text-red-400 flex-shrink-0 mt-0.5" fallback="Circle" />
+                          <Icon name="X" size={12} className="text-orange-400 flex-shrink-0 mt-0.5" fallback="Circle" />
                           <span className="text-white/40">{r}</span>
                         </div>
                       ))}
@@ -182,7 +182,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                 </div>
 
                 <div className="border-t border-white/10 pt-4 mb-4">
-                  <p className={`text-3xl font-black ${t.featured ? "text-red-500" : t.color === "pink" ? "text-pink-400" : "text-white"}`}>
+                  <p className={`text-3xl font-black ${t.featured ? "text-orange-400" : t.color === "pink" ? "text-pink-400" : "text-white"}`}>
                     {t.price.toLocaleString()} ₽
                   </p>
                   {t.gsm > 0 ? (
@@ -197,8 +197,8 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                     <p className="text-xs text-white/40 mt-0.5">включая все курсы программы</p>
                   )}
                   {t.installment && (
-                    <div className="mt-2 border border-red-500/30 rounded-lg px-3 py-1.5" style={{ background: "rgba(227,0,0,0.08)" }}>
-                      <p className="text-xs text-red-400 font-semibold flex flex-wrap gap-x-1">
+                    <div className="mt-2 border border-orange-500/30 rounded-lg px-3 py-1.5" style={{ background: "rgba(232,146,26,0.08)" }}>
+                      <p className="text-xs text-orange-400 font-semibold flex flex-wrap gap-x-1">
                         <span className="whitespace-nowrap">Рассрочка:</span>
                         {t.installment.split("/").map((part, i, arr) => (
                           <span key={i} className="whitespace-nowrap">{part.trim()}{i < arr.length - 1 ? " /" : ""}</span>
@@ -223,7 +223,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                   onClick={() => onTariffSelect(t.name)}
                   className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${
                     t.featured
-                      ? "bg-red-500 text-white hover:bg-red-600"
+                      ? "bg-orange-500 text-white hover:bg-orange-600"
                       : "bg-white/10 text-white hover:bg-white/20"
                   }`}
                 >
@@ -234,6 +234,66 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
           </div>
 
 
+        </div>
+      </section>
+
+      {/* ============ FLEET ============ */}
+      <section id="fleet" className="py-20" style={{ background: "#f4f4f4" }}>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <p className="text-orange-500 text-sm font-bold uppercase tracking-widest mb-2">Автомобили</p>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3 uppercase">Учитесь на современных автомобилях KIA RIO</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto text-sm">
+              Весь учебный парк автошколы ГОСАШ — одна марка, одна модель. Никаких «сюрпризов» со старыми машинами.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              {
+                num: "01",
+                title: "Только брендированные машины не старше 2019 года",
+                desc: "Во всех автомобилях работают кондиционер и отопление — комфортные условия обучения в любую погоду.",
+                icon: "Car",
+              },
+              {
+                num: "02",
+                title: "Равные условия для всех учеников",
+                desc: "Разница между машинами минимальная — только год выпуска. Все KIA RIO одинаково оснащены и обслуживаются.",
+                icon: "Users",
+              },
+              {
+                num: "03",
+                title: "Выбор коробки передач",
+                desc: "Можно учиться на АКПП или МКПП — выбирайте тот тип коробки, который подходит именно вам.",
+                icon: "Settings",
+              },
+              {
+                num: "04",
+                title: "Своевременное техническое обслуживание",
+                desc: "Техническое состояние по регламенту — никаких срывов занятий из-за поломки автомобиля.",
+                icon: "Wrench",
+              },
+            ].map((item) => (
+              <div
+                key={item.num}
+                className="flex gap-5 p-6 rounded-2xl border border-white/10 hover:border-orange-400/40 transition-all"
+                style={{ background: "#2e2e2e" }}
+              >
+                <div className="flex-shrink-0">
+                  <div className="w-14 h-14 rounded-xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20">
+                    <span className="text-orange-400 font-black text-xl">{item.num}</span>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Icon name={item.icon as Parameters<typeof Icon>[0]["name"]} size={16} className="text-orange-400" fallback="Circle" />
+                    <h3 className="text-white font-black text-sm uppercase">{item.title}</h3>
+                  </div>
+                  <p className="text-white/60 text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -249,7 +309,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="rounded-2xl p-8 border border-white/15" style={{ background: "#3a3a3a" }}>
               <div className="flex items-center gap-3 mb-5">
-                <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
                   <Icon name="Percent" size={22} className="text-white" fallback="Star" />
                 </div>
                 <div>
@@ -275,7 +335,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
 
             <div className="rounded-2xl p-8 border border-white/15" style={{ background: "#3a3a3a" }}>
               <div className="flex items-center gap-3 mb-5">
-                <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
                   <Icon name="CreditCard" size={22} className="text-white" fallback="Star" />
                 </div>
                 <div>
@@ -308,7 +368,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                 { num: "3", text: "Заключите договор и начните обучение" },
               ].map(s => (
                 <div key={s.num} className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white font-black text-lg flex-shrink-0">
+                  <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-black text-lg flex-shrink-0">
                     {s.num}
                   </div>
                   <p className="text-white/80 text-sm leading-relaxed pt-1.5">{s.text}</p>
@@ -331,6 +391,66 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
         </div>
       </section>
 
+      {/* ============ FAQ ============ */}
+      <section id="faq" className="py-20 section-alt">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <p className="text-orange-500 text-sm font-bold uppercase tracking-widest mb-2">Частые вопросы</p>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3 uppercase">Всё что нужно знать об обучении в ГОСАШ</h2>
+          </div>
+          <div className="space-y-3">
+            {[
+              {
+                q: "Сколько стоит обучение в автошколе ГОСАШ в Симферополе?",
+                a: "Стоимость обучения на права категории B — от 39 900 ₽ (программа Базовый Онлайн). Цены зафиксированы в договоре, скрытых платежей нет. ГСМ (бензин) оплачивается отдельно по факту — от 10 000 ₽. Доступна рассрочка 0% на 3–6 месяцев.",
+              },
+              {
+                q: "Нужна ли медицинская справка для записи в автошколу?",
+                a: "Да, медицинская справка формы 003-В/у обязательна до начала вождения. Пройти медосмотр можно в любой аккредитованной клинике Симферополя. Теоретические занятия можно начать и без справки.",
+              },
+              {
+                q: "Можно ли оплатить обучение в рассрочку?",
+                a: "Да. Рассрочка 0% на 3, 4 или 6 месяцев без переплат — проценты за вас платит автошкола. Первый платёж через месяц. Доступна для программ Приоритет, Углублённый и ВИП. Также доступен кредит от Т-Банка на срок до 24 месяцев.",
+              },
+              {
+                q: "Можно ли выбрать инструктора по вождению?",
+                a: "Да, в программах Приоритет, Углублённый, ВИП, Леди Драйв и Материнский капитал вы можете выбрать инструктора. В программах Базовый и Базовый Онлайн инструктор назначается автошколой.",
+              },
+              {
+                q: "Как проходит теория — онлайн или офлайн?",
+                a: "В большинстве программ доступен выбор: онлайн через личный кабинет или офлайн в учебном классе. Программа Базовый Онлайн предусматривает только онлайн-теорию — это удобно, если сложно приезжать в класс по расписанию.",
+              },
+              {
+                q: "Что будет, если не сдам экзамен в ГИБДД с первого раза?",
+                a: "Можно записаться на дополнительные занятия по вождению. В программе Материнский капитал включено 3 бесплатные пересдачи экзамена в ГИБДД. В среднем наши ученики сдают вождение за 1,9 попытки.",
+              },
+              {
+                q: "На каких автомобилях проходит обучение?",
+                a: "Обучение проводится на KIA RIO — не старше 2019 года. Все автомобили брендированы, оснащены кондиционером и отоплением. Доступен выбор коробки передач: АКПП или МКПП.",
+              },
+              {
+                q: "Сколько длится обучение в автошколе?",
+                a: "Продолжительность зависит от программы. Стандартный курс — около 3 месяцев. Программа Леди Драйв рассчитана на 3,5 месяца. Расписание гибкое: утро, день, вечер, в том числе выходные.",
+              },
+              {
+                q: "Где находятся филиалы автошколы ГОСАШ?",
+                a: "В Симферополе работают 5 учебных классов: на Гагарина, Киевской, Залесской, Самокиша и Лермонтова. Плюс собственный автодром на ул. Титова, 77. Режим работы: Пн–Пт с 10:00 до 18:30.",
+              },
+            ].map((item, i) => (
+              <details key={i} className="group rounded-xl border border-gray-200 overflow-hidden" style={{ background: "#ffffff" }}>
+                <summary className="flex items-center justify-between gap-4 px-6 py-4 cursor-pointer select-none font-bold text-gray-900 text-sm md:text-base group-open:text-orange-500 transition-colors list-none">
+                  <span>{item.q}</span>
+                  <Icon name="ChevronDown" size={18} className="flex-shrink-0 text-gray-400 group-open:rotate-180 transition-transform duration-200" fallback="Circle" />
+                </summary>
+                <div className="px-6 pb-5 pt-1 text-gray-600 text-sm leading-relaxed border-t border-gray-100">
+                  {item.a}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ============ ABOUT ============ */}
       <section id="about" className="py-20" style={{ background: "#f4f4f4" }}>
         <div className="max-w-7xl mx-auto px-4">
@@ -339,7 +459,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
             <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-2 text-center uppercase">
               Филиалы в разных районах Симферополя
             </h3>
-            <p className="text-gray-600 text-center text-sm mb-8">Пн–Пт: 10:00–18:30 · Обед: 13:30–14:00 · <a href={`tel:${PHONE}`} className="text-red-500 font-bold hover:text-red-400">{PHONE_DISPLAY}</a></p>
+            <p className="text-gray-600 text-center text-sm mb-8">Пн–Пт: 10:00–18:30 · Обед: 13:30–14:00 · <a href={`tel:${PHONE}`} className="text-orange-500 font-bold hover:text-orange-400">{PHONE_DISPLAY}</a></p>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               {[
@@ -349,18 +469,18 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                 { name: "Филиал на Самокиша", addr: "ул. Самокиша, 4, Симферополь", rating: 4.9, map: "https://yandex.ru/maps/-/CPBAnA6k" },
                 { name: "Филиал на Лермонтова", addr: "ул. Лермонтова, 13А, Симферополь", rating: 5.0, map: "https://yandex.ru/maps/-/CPBArZ88" },
               ].map((branch) => (
-                <div key={branch.name} className="border border-white/10 rounded-2xl p-5 hover:border-red-500 hover:shadow-md transition-all" style={{ background: "#2e2e2e" }}>
+                <div key={branch.name} className="border border-white/10 rounded-2xl p-5 hover:border-orange-400 hover:shadow-md transition-all" style={{ background: "#2e2e2e" }}>
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
                       <p className="font-bold text-white text-sm">{branch.name}</p>
                       <p className="text-white/50 text-xs mt-0.5">{branch.addr}</p>
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0 border border-white/15 rounded-lg px-2 py-1" style={{ background: "#222222" }}>
-                      <span className="text-red-500 text-xs">📍</span>
+                      <span className="text-orange-400 text-xs">📍</span>
                       <span className="font-black text-sm text-white">{branch.rating.toFixed(1)}</span>
                       <div className="flex gap-0.5 ml-1">
                         {[1,2,3,4,5].map(s => (
-                          <span key={s} className={`text-xs ${s <= Math.round(branch.rating) ? "text-red-500" : "text-white/20"}`}>★</span>
+                          <span key={s} className={`text-xs ${s <= Math.round(branch.rating) ? "text-orange-400" : "text-white/20"}`}>★</span>
                         ))}
                       </div>
                     </div>
@@ -369,7 +489,7 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                     href={branch.map}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-red-400 hover:text-red-300 font-medium flex items-center gap-1 transition-colors"
+                    className="text-xs text-orange-400 hover:text-orange-300 font-medium flex items-center gap-1 transition-colors"
                   >
                     <Icon name="Map" size={12} fallback="Circle" />
                     Карта проезда
@@ -403,11 +523,11 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
             ].map((stat) => (
               <div
                 key={stat.value}
-                className="rounded-2xl p-6 flex flex-col items-center text-center border border-white/10 hover:border-red-500/40 transition-all"
+                className="rounded-2xl p-6 flex flex-col items-center text-center border border-white/10 hover:border-orange-400/40 transition-all"
                 style={{ background: "#3a3a3a" }}
               >
-                <div className="w-12 h-12 bg-red-500/10 rounded-xl flex items-center justify-center mb-4">
-                  <Icon name={stat.icon as Parameters<typeof Icon>[0]["name"]} size={22} className="text-red-500" fallback="Circle" />
+                <div className="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-4">
+                  <Icon name={stat.icon as Parameters<typeof Icon>[0]["name"]} size={22} className="text-orange-400" fallback="Circle" />
                 </div>
                 <p className="text-3xl md:text-4xl font-black text-white mb-2 leading-none">{stat.value}</p>
                 <p className="text-white/50 text-xs md:text-sm leading-relaxed">{stat.label}</p>

@@ -24,12 +24,12 @@ export default function InstructorsToFooter() {
               <div key={r.name} className="border border-white/10 rounded-2xl p-6" style={{ background: "#2e2e2e" }}>
                 <div className="flex gap-1 mb-3">
                   {Array.from({ length: r.stars }).map((_, i) => (
-                    <span key={i} className="text-red-500 text-lg">★</span>
+                    <span key={i} className="text-orange-400 text-lg">★</span>
                   ))}
                 </div>
                 <p className="text-white/60 text-sm leading-relaxed mb-5">"{r.text}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
                     {r.name[0]}
                   </div>
                   <div>
@@ -48,22 +48,22 @@ export default function InstructorsToFooter() {
         <div className="max-w-5xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <p className="text-red-500 text-sm font-bold uppercase tracking-widest mb-3">Начните сегодня</p>
+              <p className="text-orange-400 text-sm font-bold uppercase tracking-widest mb-3">Начните сегодня</p>
               <h2 className="text-3xl md:text-4xl font-black text-white mb-5">
                 Остались вопросы?<br />
-                <span className="text-red-500">Запишитесь</span> на бесплатную консультацию
+                <span className="text-orange-400">Запишитесь</span> на бесплатную консультацию
               </h2>
               <div className="space-y-3 text-white/70 text-sm">
                 <div className="flex items-center gap-3">
-                  <Icon name="Phone" size={18} className="text-red-500 flex-shrink-0" fallback="Circle" />
-                  <a href={`tel:${PHONE}`} className="text-red-500 font-bold text-lg hover:text-red-400">{PHONE_DISPLAY}</a>
+                  <Icon name="Phone" size={18} className="text-orange-400 flex-shrink-0" fallback="Circle" />
+                  <a href={`tel:${PHONE}`} className="text-orange-400 font-bold text-lg hover:text-orange-300">{PHONE_DISPLAY}</a>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Icon name="MapPin" size={18} className="text-red-500 flex-shrink-0" fallback="Circle" />
-                  <a href="https://yandex.ru/maps/-/CPBAfQLi" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors">Киевская ул., 41, Симферополь</a>
+                  <Icon name="MapPin" size={18} className="text-orange-400 flex-shrink-0" fallback="Circle" />
+                  <a href="https://yandex.ru/maps/-/CPBAfQLi" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Киевская ул., 41, Симферополь</a>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Icon name="Clock" size={18} className="text-red-500 flex-shrink-0" fallback="Circle" />
+                  <Icon name="Clock" size={18} className="text-orange-400 flex-shrink-0" fallback="Circle" />
                   <span>Пн–Пт: 10:00–18:30</span>
                 </div>
               </div>
@@ -85,8 +85,8 @@ export default function InstructorsToFooter() {
           <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
             {/* Logo + contact */}
             <div className="flex-shrink-0">
-              <img src={LOGO_URL} alt="ГОСАШ" className="h-10 object-contain mb-4" />
-              <a href={`tel:${PHONE}`} className="text-red-500 font-bold text-lg hover:text-red-400 transition-colors block mb-1">
+              <img src={LOGO_URL} alt="ГОСАШ" className="h-10 object-contain mb-4" style={{ filter: "brightness(10)" }} />
+              <a href={`tel:${PHONE}`} className="text-orange-400 font-bold text-lg hover:text-orange-300 transition-colors block mb-1">
                 {PHONE_DISPLAY}
               </a>
               <a href="mailto:gosavtosimf+111385@mail.ru" className="text-white/50 text-sm hover:text-white/80 transition-colors block">
@@ -107,7 +107,7 @@ export default function InstructorsToFooter() {
                   { name: "Автодром Титова", addr: "ул. Титова, 77" },
                 ].map(b => (
                   <div key={b.name} className="flex items-center gap-1.5 text-sm">
-                    <span className="text-red-500 text-xs">📍</span>
+                    <span className="text-orange-400 text-xs">📍</span>
                     <span className="text-white/70">{b.name}:</span>
                     <span className="text-white/40">{b.addr}</span>
                   </div>
@@ -119,11 +119,11 @@ export default function InstructorsToFooter() {
             <div>
               <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-3">Навигация</p>
               <div className="flex flex-col gap-2 text-sm text-white/60">
-                <a href="#tariffs" className="hover:text-red-500 transition-colors">Тарифы</a>
-                <a href="#instructors" className="hover:text-red-500 transition-colors">Инструкторы</a>
-                <a href="#about" className="hover:text-red-500 transition-colors">Филиалы</a>
-                <a href="#finance" className="hover:text-red-500 transition-colors">Рассрочка</a>
-                <a href="#lead-form" className="hover:text-red-500 transition-colors">Записаться</a>
+                <a href="#tariffs" className="hover:text-orange-400 transition-colors">Тарифы</a>
+                <a href="#instructors" className="hover:text-orange-400 transition-colors">Инструкторы</a>
+                <a href="#about" className="hover:text-orange-400 transition-colors">Филиалы</a>
+                <a href="#finance" className="hover:text-orange-400 transition-colors">Рассрочка</a>
+                <a href="#lead-form" className="hover:text-orange-400 transition-colors">Записаться</a>
               </div>
             </div>
           </div>

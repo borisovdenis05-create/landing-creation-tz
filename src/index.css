@@ -22,7 +22,7 @@
     --muted: 0 0% 92%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 0 100% 44%;
+    --accent: 33 90% 53%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
@@ -30,23 +30,23 @@
 
     --border: 0 0% 85%;
     --input: 0 0% 85%;
-    --ring: 0 100% 44%;
+    --ring: 33 90% 53%;
 
     --radius: 0.25rem;
 
     --brand-navy: #2e2e2e;
     --brand-navy-light: #3a3a3a;
-    --brand-yellow: #e30000;
-    --brand-yellow-dark: #b80000;
+    --brand-yellow: #e8921a;
+    --brand-yellow-dark: #c77a10;
 
     --sidebar-background: 0 0% 7%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 0 100% 44%;
+    --sidebar-primary: 33 90% 53%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 15%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 0 100% 44%;
+    --sidebar-ring: 33 90% 53%;
   }
 }
 
@@ -114,7 +114,7 @@
     letter-spacing: 0.05em;
   }
   .btn-primary:hover {
-    background-color: #e30000;
+    background-color: #e8921a;
     color: white;
     transform: translateY(-1px);
   }
@@ -166,12 +166,12 @@
   }
   .tariff-card:hover {
     border-color: var(--brand-yellow);
-    box-shadow: 0 8px 32px rgba(227, 0, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(232, 146, 26, 0.2);
     transform: translateY(-4px);
   }
   .tariff-card.featured {
     border-color: var(--brand-yellow);
-    box-shadow: 0 8px 32px rgba(227, 0, 0, 0.25);
+    box-shadow: 0 8px 32px rgba(232, 146, 26, 0.25);
   }
 
   .badge-hit {

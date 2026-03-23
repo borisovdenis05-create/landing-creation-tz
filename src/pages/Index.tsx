@@ -62,7 +62,7 @@ export default function Index() {
                 <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="none" stroke="currentColor" strokeWidth="2.5"/><line x1="5" y1="11" x2="17" y2="11" stroke="currentColor" strokeWidth="2.5"/></svg>
               )}
               {item.shape === "triangle" && (
-                <svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 20,19 2,19" fill="none" stroke="#e30000" strokeWidth="2.5"/><line x1="11" y1="10" x2="11" y2="16" stroke="#e30000" strokeWidth="2.5"/><circle cx="11" cy="7" r="1.2" fill="#e30000"/></svg>
+                <svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,2 20,19 2,19" fill="none" stroke="#e8921a" strokeWidth="2.5"/><line x1="11" y1="10" x2="11" y2="16" stroke="#e8921a" strokeWidth="2.5"/><circle cx="11" cy="7" r="1.2" fill="#e8921a"/></svg>
               )}
               {item.shape === "square" && (
                 <svg width="22" height="22" viewBox="0 0 22 22"><rect x="2" y="2" width="18" height="18" rx="3" fill="none" stroke="currentColor" strokeWidth="2.5"/><text x="11" y="15" textAnchor="middle" fontSize="9" fill="currentColor" fontWeight="bold">P</text></svg>
