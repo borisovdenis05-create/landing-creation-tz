@@ -208,6 +208,17 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
                   )}
                 </div>
 
+                {"ladyUrl" in t && t.ladyUrl && (
+                  <a
+                    href={t.ladyUrl as string}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3 rounded-xl font-bold text-sm transition-all bg-pink-500/20 text-pink-300 hover:bg-pink-500/30 border border-pink-500/40 flex items-center justify-center gap-2 mb-2"
+                  >
+                    <Icon name="ExternalLink" size={14} fallback="Circle" />
+                    Узнать подробнее
+                  </a>
+                )}
                 <button
                   onClick={() => onTariffSelect(t.name)}
                   className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${
@@ -371,6 +382,38 @@ export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAb
 
           {/* Интерактивная карта */}
           <BranchMap />
+        </div>
+      </section>
+
+      {/* ============ STATS ============ */}
+      <section className="py-20" style={{ background: "#2e2e2e" }}>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-3 uppercase">ГОСАШ в цифрах</h2>
+            <p className="text-white/50 max-w-xl mx-auto text-sm">Факты, которые говорят сами за себя</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+            {[
+              { value: "94,5%", label: "учеников сдают теорию в ГИБДД с первого раза", icon: "GraduationCap" },
+              { value: "19", label: "лицензированных инструкторов в штате", icon: "Users" },
+              { value: "1,9", label: "попытки нужно в среднем для сдачи вождения в городе", icon: "Car" },
+              { value: "356 лет", label: "общий опыт работы инструкторов", icon: "Award" },
+              { value: "9,4/10", label: "оценка качества услуг учениками", icon: "Star" },
+              { value: "122", label: "ученика в год обучает каждый инструктор", icon: "BookOpen" },
+            ].map((stat) => (
+              <div
+                key={stat.value}
+                className="rounded-2xl p-6 flex flex-col items-center text-center border border-white/10 hover:border-red-500/40 transition-all"
+                style={{ background: "#3a3a3a" }}
+              >
+                <div className="w-12 h-12 bg-red-500/10 rounded-xl flex items-center justify-center mb-4">
+                  <Icon name={stat.icon as Parameters<typeof Icon>[0]["name"]} size={22} className="text-red-500" fallback="Circle" />
+                </div>
+                <p className="text-3xl md:text-4xl font-black text-white mb-2 leading-none">{stat.value}</p>
+                <p className="text-white/50 text-xs md:text-sm leading-relaxed">{stat.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </>

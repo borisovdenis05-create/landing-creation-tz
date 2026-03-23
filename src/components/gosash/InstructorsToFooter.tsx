@@ -79,25 +79,73 @@ export default function InstructorsToFooter() {
       </section>
 
       {/* ============ FOOTER ============ */}
-      <footer className="border-t border-white/10 py-8" style={{ background: "#2e2e2e" }}>
+      <footer className="border-t border-white/10 pt-10 pb-6" style={{ background: "#1e1e1e" }}>
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-            <img src={LOGO_URL} alt="ГОСАШ" className="h-10 object-contain" />
-            <div className="flex flex-wrap gap-6 text-sm text-white/60">
-              <a href="#tariffs" className="hover:text-red-500 transition-colors">Тарифы</a>
-              <a href="#instructors" className="hover:text-red-500 transition-colors">Инструкторы</a>
-              <a href="#about" className="hover:text-red-500 transition-colors">Филиалы</a>
-              <a href="#contacts" className="hover:text-red-500 transition-colors">Контакты</a>
+          {/* Top row */}
+          <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
+            {/* Logo + contact */}
+            <div className="flex-shrink-0">
+              <img src={LOGO_URL} alt="ГОСАШ" className="h-10 object-contain mb-4" />
+              <a href={`tel:${PHONE}`} className="text-red-500 font-bold text-lg hover:text-red-400 transition-colors block mb-1">
+                {PHONE_DISPLAY}
+              </a>
+              <a href="mailto:gosavtosimf+111385@mail.ru" className="text-white/50 text-sm hover:text-white/80 transition-colors block">
+                gosavtosimf+111385@mail.ru
+              </a>
             </div>
-            <a href={`tel:${PHONE}`} className="text-red-500 font-bold hover:text-red-400 transition-colors">
-              {PHONE_DISPLAY}
-            </a>
+
+            {/* Branches */}
+            <div>
+              <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-3">Филиалы · Пн–Пт: 10:00–18:30</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1.5">
+                {[
+                  { name: "Гагарина", addr: "ул. Гагарина, 20А" },
+                  { name: "Киевская", addr: "Киевская ул., 41" },
+                  { name: "Залесская", addr: "Залесская ул., 121" },
+                  { name: "Самокиша", addr: "ул. Самокиша, 4" },
+                  { name: "Лермонтова", addr: "ул. Лермонтова, 13А" },
+                  { name: "Автодром Титова", addr: "ул. Титова, 77" },
+                ].map(b => (
+                  <div key={b.name} className="flex items-center gap-1.5 text-sm">
+                    <span className="text-red-500 text-xs">📍</span>
+                    <span className="text-white/70">{b.name}:</span>
+                    <span className="text-white/40">{b.addr}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Nav */}
+            <div>
+              <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-3">Навигация</p>
+              <div className="flex flex-col gap-2 text-sm text-white/60">
+                <a href="#tariffs" className="hover:text-red-500 transition-colors">Тарифы</a>
+                <a href="#instructors" className="hover:text-red-500 transition-colors">Инструкторы</a>
+                <a href="#about" className="hover:text-red-500 transition-colors">Филиалы</a>
+                <a href="#finance" className="hover:text-red-500 transition-colors">Рассрочка</a>
+                <a href="#lead-form" className="hover:text-red-500 transition-colors">Записаться</a>
+              </div>
+            </div>
           </div>
-          <div className="border-t border-white/10 pt-5 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-white/30">
-            <p>© 2026 Автошкола ГОСАШ · г. Симферополь, Киевская ул., 41</p>
-            <p>Городская. Открытая. Современная.</p>
-            <div className="flex flex-wrap gap-4">
-              <FooterPolicyButtons />
+
+          {/* Legal info */}
+          <div className="border-t border-white/10 pt-5">
+            <div className="grid md:grid-cols-2 gap-4 mb-4">
+              <div className="text-xs text-white/30 space-y-1">
+                <p><span className="text-white/50 font-semibold">Юр. лицо:</span> ООО «СВЕТОФОР»</p>
+                <p><span className="text-white/50 font-semibold">ИНН:</span> 9102062316 · <span className="text-white/50 font-semibold">КПП:</span> 910201001 · <span className="text-white/50 font-semibold">ОГРН:</span> 1149102136875</p>
+                <p><span className="text-white/50 font-semibold">Банк:</span> ФИЛИАЛ «ЦЕНТРАЛЬНЫЙ» БАНКА ВТБ (ПАО)</p>
+              </div>
+              <div className="text-xs text-white/30 space-y-1 md:text-right">
+                <p>г. Симферополь, Киевская ул., 41</p>
+                <p>Городская. Открытая. Современная.</p>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/20">
+              <p>© 2026 Автошкола ГОСАШ · Все права защищены</p>
+              <div className="flex flex-wrap gap-4">
+                <FooterPolicyButtons />
+              </div>
             </div>
           </div>
         </div>
