@@ -94,8 +94,8 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
               </div>
 
               {/* Правый блок — форма */}
-              <div className="hero-form w-full lg:w-auto lg:min-w-[360px] flex-shrink-0">
-                <div className="w-full p-6 border border-white/15 backdrop-blur-md shadow-2xl" style={{ background: "rgba(0,0,0,0.55)", borderRadius: "8px" }}>
+              <div className="hero-form w-full lg:w-auto flex-shrink-0 lg:pr-6">
+                <div className="w-full lg:w-[380px] p-6 border border-white/15 backdrop-blur-md shadow-2xl" style={{ background: "rgba(0,0,0,0.55)", borderRadius: "8px" }}>
                   <LeadForm
                     title="Записаться на пробное занятие"
                     subtitle="Бесплатная консультация · Ответим за 15 минут"
