@@ -1,6 +1,6 @@
 import { LOGO_URL, PHONE, PHONE_DISPLAY, LeadForm } from "./shared";
 
-const BG_IMAGE = "https://cdn.poehali.dev/files/b056ef9e-5ddc-40e9-ae9c-be43ba9a34b0.jpg";
+const BG_IMAGE = "https://cdn.poehali.dev/files/e3619330-6419-457e-8867-8459672dfecb.jpg";
 
 interface HeroSectionProps {
   onCallbackOpen: () => void;
