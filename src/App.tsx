@@ -10,7 +10,7 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const isAdmin = new URLSearchParams(window.location.search).has("admin");
+const isAdmin = new URLSearchParams(window.location.search).has("cp");
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

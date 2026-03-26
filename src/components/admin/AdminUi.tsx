@@ -70,29 +70,124 @@ export function ImageUpload({ value, onChange, token }: { value: string; onChang
   );
 }
 
+// ─── DiagModal ────────────────────────────────────────────────────────────────
+type LogEntry = { time: string; level: "info" | "ok" | "warn" | "err"; text: string };
+
+function DiagModal({ logs, onClose }: { logs: LogEntry[]; onClose: () => void }) {
+  const levelColor: Record<string, string> = {
+    info: "#60a5fa", ok: "#4ade80", warn: "#facc15", err: "#f87171",
+  };
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.75)" }}>
+      <div className="w-full max-w-lg mx-4 rounded-2xl border border-white/10 overflow-hidden" style={{ background: "#1e1e1e" }}>
+        <div className="flex items-center justify-between px-5 py-3 border-b border-white/10">
+          <span className="text-white font-bold text-sm flex items-center gap-2">
+            <Icon name="Terminal" size={14} fallback="Circle" />
+            Диагностика авторизации
+          </span>
+          <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
+            <Icon name="X" size={16} fallback="Circle" />
+          </button>
+        </div>
+        <div className="p-4 space-y-1.5 max-h-80 overflow-y-auto font-mono text-xs">
+          {logs.map((l, i) => (
+            <div key={i} className="flex gap-2">
+              <span className="text-white/30 shrink-0">{l.time}</span>
+              <span style={{ color: levelColor[l.level] }}>[{l.level.toUpperCase()}]</span>
+              <span className="text-white/80 break-all">{l.text}</span>
+            </div>
+          ))}
+          {logs.length === 0 && <p className="text-white/30">Логи появятся после попытки входа</p>}
+        </div>
+        <div className="px-5 py-3 border-t border-white/10 text-white/30 text-xs">
+          Endpoint: {new URL("https://functions.poehali.dev/941d16d5-04a2-4995-833a-9b8becab97a8/login").href}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── LoginForm ────────────────────────────────────────────────────────────────
 export function LoginForm({ onLogin }: { onLogin: (token: string) => void }) {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showDiag, setShowDiag] = useState(false);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
+
+  const addLog = (level: LogEntry["level"], text: string) => {
+    const time = new Date().toLocaleTimeString("ru", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    setLogs(prev => [...prev, { time, level, text }]);
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const res = await api("/login", "POST", { login, password });
-    if (res.ok) {
-      localStorage.setItem("gosash_admin_token", res.token);
-      onLogin(res.token);
-    } else {
-      setError(res.error || "Ошибка");
+    setLogs([]);
+
+    const endpoint = "https://functions.poehali.dev/941d16d5-04a2-4995-833a-9b8becab97a8/login";
+    const redirectUrl = `${window.location.origin}${window.location.pathname}?cp`;
+
+    addLog("info", `POST → ${endpoint}`);
+    addLog("info", `redirectUrl после входа: ${redirectUrl}`);
+
+    let res: Response | null = null;
+    let data: Record<string, unknown> = {};
+
+    try {
+      res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ login, password }),
+      });
+
+      addLog(
+        res.status === 200 ? "ok" : res.status >= 500 ? "err" : "warn",
+        `HTTP статус ответа: ${res.status} ${res.statusText}`
+      );
+
+      const contentType = res.headers.get("content-type") || "";
+      addLog("info", `Content-Type: ${contentType}`);
+
+      const text = await res.text();
+      addLog("info", `Тело ответа: ${text.slice(0, 300)}`);
+
+      try {
+        data = JSON.parse(text);
+      } catch {
+        addLog("err", "Ответ не является валидным JSON");
+      }
+
+      if (res.status === 302 || res.redirected) {
+        addLog("warn", `Обнаружен редирект → ${res.url}`);
+      }
+
+      const setCookie = res.headers.get("set-cookie");
+      if (setCookie) addLog("info", `Set-Cookie: ${setCookie}`);
+
+    } catch (err) {
+      addLog("err", `Сетевая ошибка: ${String(err)}`);
     }
+
+    if (data && data.ok) {
+      addLog("ok", "Аутентификация успешна, токен получен");
+      localStorage.setItem("gosash_admin_token", data.token as string);
+      onLogin(data.token as string);
+    } else {
+      const errMsg = (data?.error as string) || (res ? `HTTP ${res.status}` : "Нет соединения");
+      addLog("err", `Ошибка: ${errMsg}`);
+      setError(errMsg);
+      setShowDiag(true);
+    }
+
     setLoading(false);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: "#1a1a1a" }}>
+      {showDiag && <DiagModal logs={logs} onClose={() => setShowDiag(false)} />}
       <div className="w-full max-w-sm p-8 rounded-2xl border border-white/10" style={{ background: "#2e2e2e" }}>
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -120,7 +215,16 @@ export function LoginForm({ onLogin }: { onLogin: (token: string) => void }) {
               placeholder="Введите пароль"
             />
           </div>
-          {error && <p className="text-red-400 text-sm">{error}</p>}
+          {error && (
+            <div className="rounded-lg border border-red-500/30 p-3" style={{ background: "rgba(239,68,68,0.08)" }}>
+              <p className="text-red-400 text-sm">{error}</p>
+              <button type="button" onClick={() => setShowDiag(true)}
+                className="text-xs text-orange-400 hover:text-orange-300 mt-1.5 flex items-center gap-1">
+                <Icon name="Terminal" size={11} fallback="Circle" />
+                Показать диагностику
+              </button>
+            </div>
+          )}
           <button
             type="submit" disabled={loading}
             className="w-full py-3 rounded-xl bg-orange-500 text-white font-black text-sm uppercase hover:bg-orange-600 transition-colors disabled:opacity-50"
@@ -128,6 +232,10 @@ export function LoginForm({ onLogin }: { onLogin: (token: string) => void }) {
             {loading ? "Вход..." : "Войти"}
           </button>
         </form>
+        <button type="button" onClick={() => { setLogs([]); setShowDiag(true); }}
+          className="mt-4 w-full text-xs text-white/20 hover:text-white/50 transition-colors text-center">
+          Диагностика
+        </button>
       </div>
     </div>
   );
