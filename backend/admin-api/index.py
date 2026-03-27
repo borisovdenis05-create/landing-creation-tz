@@ -63,12 +63,22 @@ def handler(event: dict, context) -> dict:
 
     method = event.get("httpMethod", "GET")
     path = event.get("path", "/")
+    content_type = event.get("headers", {}).get("content-type", "") or event.get("headers", {}).get("Content-Type", "")
     body = {}
-    if event.get("body"):
-        try:
-            body = json.loads(event["body"])
-        except Exception:
-            body = {}
+    raw_body = event.get("body", "") or ""
+    if raw_body:
+        if "application/json" in content_type:
+            try:
+                body = json.loads(raw_body)
+            except Exception:
+                body = {}
+        elif "application/x-www-form-urlencoded" in content_type or "multipart/form-data" in content_type or not content_type:
+            try:
+                body = json.loads(raw_body)
+            except Exception:
+                from urllib.parse import parse_qs
+                parsed = parse_qs(raw_body)
+                body = {k: v[0] for k, v in parsed.items()}
 
     # ── AUTH ──────────────────────────────────────────────────────────────────
     if path.endswith("/login"):

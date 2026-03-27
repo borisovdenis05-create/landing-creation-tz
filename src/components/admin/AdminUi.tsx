@@ -137,10 +137,12 @@ export function LoginForm({ onLogin }: { onLogin: (token: string) => void }) {
     let data: Record<string, unknown> = {};
 
     try {
+      const formData = new URLSearchParams();
+      formData.append("login", login);
+      formData.append("password", password);
       res = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ login, password }),
+        body: formData,
       });
 
       addLog(
