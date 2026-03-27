@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import Icon from "@/components/ui/icon";
-import { api, useToast, useImageUpload } from "./adminApi";
+import { api, useToast, useImageUpload, ADMIN_API } from "./adminApi";
 
 // ─── Field ────────────────────────────────────────────────────────────────────
 export function Field({ label, value, onChange, type = "text", rows }: {
@@ -100,7 +100,7 @@ function DiagModal({ logs, onClose }: { logs: LogEntry[]; onClose: () => void })
           {logs.length === 0 && <p className="text-white/30">Логи появятся после попытки входа</p>}
         </div>
         <div className="px-5 py-3 border-t border-white/10 text-white/30 text-xs">
-          Endpoint: {new URL("https://functions.poehali.dev/941d16d5-04a2-4995-833a-9b8becab97a8/login").href}
+          Endpoint: {ADMIN_API}?action=login
         </div>
       </div>
     </div>
@@ -127,7 +127,7 @@ export function LoginForm({ onLogin }: { onLogin: (token: string) => void }) {
     setError("");
     setLogs([]);
 
-    const endpoint = "https://functions.poehali.dev/941d16d5-04a2-4995-833a-9b8becab97a8/login";
+    const endpoint = `${ADMIN_API}?action=login`;
     const redirectUrl = `${window.location.origin}${window.location.pathname}?cp`;
 
     addLog("info", `POST → ${endpoint}`);
@@ -137,12 +137,10 @@ export function LoginForm({ onLogin }: { onLogin: (token: string) => void }) {
     let data: Record<string, unknown> = {};
 
     try {
-      const formData = new URLSearchParams();
-      formData.append("login", login);
-      formData.append("password", password);
       res = await fetch(endpoint, {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ login, password }),
       });
 
       addLog(

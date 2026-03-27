@@ -1,6 +1,7 @@
 """
 Административный API для лендинга ГОСАШ.
 Поддерживает: авторизацию, управление настройками, тарифами, филиалами, инструкторами, отзывами, загрузку фото.
+Маршрутизация через ?action= (path-based не поддерживается платформой).
 """
 import json
 import os
@@ -62,26 +63,21 @@ def handler(event: dict, context) -> dict:
         return {"statusCode": 200, "headers": CORS_HEADERS, "body": ""}
 
     method = event.get("httpMethod", "GET")
-    path = event.get("path", "/")
-    content_type = event.get("headers", {}).get("content-type", "") or event.get("headers", {}).get("Content-Type", "")
+    qs = event.get("queryStringParameters") or {}
+    action = qs.get("action", "")
+
     body = {}
     raw_body = event.get("body", "") or ""
     if raw_body:
-        if "application/json" in content_type:
-            try:
-                body = json.loads(raw_body)
-            except Exception:
-                body = {}
-        elif "application/x-www-form-urlencoded" in content_type or "multipart/form-data" in content_type or not content_type:
-            try:
-                body = json.loads(raw_body)
-            except Exception:
-                from urllib.parse import parse_qs
-                parsed = parse_qs(raw_body)
-                body = {k: v[0] for k, v in parsed.items()}
+        try:
+            body = json.loads(raw_body)
+        except Exception:
+            from urllib.parse import parse_qs
+            parsed = parse_qs(raw_body)
+            body = {k: v[0] for k, v in parsed.items()}
 
     # ── AUTH ──────────────────────────────────────────────────────────────────
-    if path.endswith("/login"):
+    if action == "login":
         login = body.get("login", "")
         password = body.get("password", "")
         pw_hash = hashlib.sha256(password.encode()).hexdigest()
@@ -99,14 +95,14 @@ def handler(event: dict, context) -> dict:
 
     try:
         # ── UPLOAD IMAGE ──────────────────────────────────────────────────────
-        if path.endswith("/upload"):
+        if action == "upload":
             img_b64 = body.get("image", "")
             filename = body.get("filename", "photo.jpg")
             url = upload_image(img_b64, filename)
             return json_response({"url": url})
 
         # ── SETTINGS ──────────────────────────────────────────────────────────
-        if "/settings" in path:
+        if action == "settings":
             if method == "GET":
                 cur.execute(f"SELECT key, value FROM {SCHEMA}.gosash_settings ORDER BY key")
                 rows = cur.fetchall()
@@ -124,7 +120,7 @@ def handler(event: dict, context) -> dict:
                 return json_response({"ok": True})
 
         # ── TARIFFS ───────────────────────────────────────────────────────────
-        if "/tariffs" in path:
+        if action == "tariffs":
             if method == "GET":
                 cur.execute(f"SELECT * FROM {SCHEMA}.gosash_tariffs ORDER BY sort_order, id")
                 return json_response({"items": [dict(r) for r in cur.fetchall()]})
@@ -163,13 +159,13 @@ def handler(event: dict, context) -> dict:
                 conn.commit()
                 return json_response({"ok": True})
             if method == "DELETE":
-                tid = body.get("id") or (event.get("queryStringParameters") or {}).get("id")
+                tid = body.get("id") or qs.get("id")
                 cur.execute(f"DELETE FROM {SCHEMA}.gosash_tariffs WHERE id=%s", (tid,))
                 conn.commit()
                 return json_response({"ok": True})
 
         # ── BRANCHES ──────────────────────────────────────────────────────────
-        if "/branches" in path:
+        if action == "branches":
             if method == "GET":
                 cur.execute(f"SELECT * FROM {SCHEMA}.gosash_branches ORDER BY sort_order, id")
                 return json_response({"items": [dict(r) for r in cur.fetchall()]})
@@ -184,107 +180,113 @@ def handler(event: dict, context) -> dict:
                 return json_response({"ok": True, "id": new_id})
             if method == "PUT":
                 d = body
+                bid = d.get("id")
                 cur.execute(
-                    f"UPDATE {SCHEMA}.gosash_branches SET name=%s, addr=%s, rating=%s, map_url=%s, active=%s, sort_order=%s WHERE id=%s",
-                    (d.get("name",""), d.get("addr",""), d.get("rating",5.0), d.get("map_url",""), d.get("active",True), d.get("sort_order",0), d.get("id"))
+                    f"UPDATE {SCHEMA}.gosash_branches SET name=%s, addr=%s, rating=%s, map_url=%s, active=%s, sort_order=%s, updated_at=NOW() WHERE id=%s",
+                    (d.get("name",""), d.get("addr",""), d.get("rating",5.0), d.get("map_url",""), d.get("active",True), d.get("sort_order",0), bid)
                 )
                 conn.commit()
                 return json_response({"ok": True})
             if method == "DELETE":
-                bid = body.get("id") or (event.get("queryStringParameters") or {}).get("id")
+                bid = body.get("id") or qs.get("id")
                 cur.execute(f"DELETE FROM {SCHEMA}.gosash_branches WHERE id=%s", (bid,))
                 conn.commit()
                 return json_response({"ok": True})
 
         # ── INSTRUCTORS ───────────────────────────────────────────────────────
-        if "/instructors" in path:
+        if action == "instructors":
             if method == "GET":
                 cur.execute(f"SELECT * FROM {SCHEMA}.gosash_instructors ORDER BY sort_order, id")
                 return json_response({"items": [dict(r) for r in cur.fetchall()]})
             if method == "POST":
                 d = body
                 cur.execute(
-                    f"INSERT INTO {SCHEMA}.gosash_instructors (name, experience, specialization, photo_url, is_top, is_lady, active, sort_order) VALUES (%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id",
-                    (d.get("name",""), d.get("experience",""), d.get("specialization",""), d.get("photo_url",""), d.get("is_top",False), d.get("is_lady",False), d.get("active",True), d.get("sort_order",0))
+                    f"INSERT INTO {SCHEMA}.gosash_instructors (name, photo, experience, cars, rating, reviews_count, active, sort_order) VALUES (%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id",
+                    (d.get("name",""), d.get("photo",""), d.get("experience",""), d.get("cars",""),
+                     d.get("rating",5.0), d.get("reviews_count",0), d.get("active",True), d.get("sort_order",0))
                 )
                 new_id = cur.fetchone()["id"]
                 conn.commit()
                 return json_response({"ok": True, "id": new_id})
             if method == "PUT":
                 d = body
+                iid = d.get("id")
                 cur.execute(
-                    f"UPDATE {SCHEMA}.gosash_instructors SET name=%s, experience=%s, specialization=%s, photo_url=%s, is_top=%s, is_lady=%s, active=%s, sort_order=%s WHERE id=%s",
-                    (d.get("name",""), d.get("experience",""), d.get("specialization",""), d.get("photo_url",""), d.get("is_top",False), d.get("is_lady",False), d.get("active",True), d.get("sort_order",0), d.get("id"))
+                    f"UPDATE {SCHEMA}.gosash_instructors SET name=%s, photo=%s, experience=%s, cars=%s, rating=%s, reviews_count=%s, active=%s, sort_order=%s, updated_at=NOW() WHERE id=%s",
+                    (d.get("name",""), d.get("photo",""), d.get("experience",""), d.get("cars",""),
+                     d.get("rating",5.0), d.get("reviews_count",0), d.get("active",True), d.get("sort_order",0), iid)
                 )
                 conn.commit()
                 return json_response({"ok": True})
             if method == "DELETE":
-                iid = body.get("id") or (event.get("queryStringParameters") or {}).get("id")
+                iid = body.get("id") or qs.get("id")
                 cur.execute(f"DELETE FROM {SCHEMA}.gosash_instructors WHERE id=%s", (iid,))
                 conn.commit()
                 return json_response({"ok": True})
 
         # ── REVIEWS ───────────────────────────────────────────────────────────
-        if "/reviews" in path:
+        if action == "reviews":
             if method == "GET":
                 cur.execute(f"SELECT * FROM {SCHEMA}.gosash_reviews ORDER BY sort_order, id")
                 return json_response({"items": [dict(r) for r in cur.fetchall()]})
             if method == "POST":
                 d = body
                 cur.execute(
-                    f"INSERT INTO {SCHEMA}.gosash_reviews (author, text, rating, photo_url, source, active, sort_order) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
-                    (d.get("author",""), d.get("text",""), d.get("rating",5), d.get("photo_url",""), d.get("source",""), d.get("active",True), d.get("sort_order",0))
+                    f"INSERT INTO {SCHEMA}.gosash_reviews (name, photo, rating, text, date, active, sort_order) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
+                    (d.get("name",""), d.get("photo",""), d.get("rating",5), d.get("text",""),
+                     d.get("date",""), d.get("active",True), d.get("sort_order",0))
                 )
                 new_id = cur.fetchone()["id"]
                 conn.commit()
                 return json_response({"ok": True, "id": new_id})
             if method == "PUT":
                 d = body
+                rid = d.get("id")
                 cur.execute(
-                    f"UPDATE {SCHEMA}.gosash_reviews SET author=%s, text=%s, rating=%s, photo_url=%s, source=%s, active=%s, sort_order=%s WHERE id=%s",
-                    (d.get("author",""), d.get("text",""), d.get("rating",5), d.get("photo_url",""), d.get("source",""), d.get("active",True), d.get("sort_order",0), d.get("id"))
+                    f"UPDATE {SCHEMA}.gosash_reviews SET name=%s, photo=%s, rating=%s, text=%s, date=%s, active=%s, sort_order=%s, updated_at=NOW() WHERE id=%s",
+                    (d.get("name",""), d.get("photo",""), d.get("rating",5), d.get("text",""),
+                     d.get("date",""), d.get("active",True), d.get("sort_order",0), rid)
                 )
                 conn.commit()
                 return json_response({"ok": True})
             if method == "DELETE":
-                rid = body.get("id") or (event.get("queryStringParameters") or {}).get("id")
+                rid = body.get("id") or qs.get("id")
                 cur.execute(f"DELETE FROM {SCHEMA}.gosash_reviews WHERE id=%s", (rid,))
                 conn.commit()
                 return json_response({"ok": True})
 
         # ── PROMOS ────────────────────────────────────────────────────────────
-        if "/promos" in path:
+        if action == "promos":
             if method == "GET":
                 cur.execute(f"SELECT * FROM {SCHEMA}.gosash_promos ORDER BY sort_order, id")
                 return json_response({"items": [dict(r) for r in cur.fetchall()]})
             if method == "POST":
                 d = body
                 cur.execute(
-                    f"INSERT INTO {SCHEMA}.gosash_promos (title, subtitle, description, image_url, badge, active, sort_order) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
-                    (d.get("title",""), d.get("subtitle",""), d.get("description",""), d.get("image_url",""), d.get("badge",""), d.get("active",True), d.get("sort_order",0))
+                    f"INSERT INTO {SCHEMA}.gosash_promos (title, description, badge, active, sort_order) VALUES (%s,%s,%s,%s,%s) RETURNING id",
+                    (d.get("title",""), d.get("description",""), d.get("badge",""),
+                     d.get("active",True), d.get("sort_order",0))
                 )
                 new_id = cur.fetchone()["id"]
                 conn.commit()
                 return json_response({"ok": True, "id": new_id})
             if method == "PUT":
                 d = body
+                pid = d.get("id")
                 cur.execute(
-                    f"UPDATE {SCHEMA}.gosash_promos SET title=%s, subtitle=%s, description=%s, image_url=%s, badge=%s, active=%s, sort_order=%s WHERE id=%s",
-                    (d.get("title",""), d.get("subtitle",""), d.get("description",""), d.get("image_url",""), d.get("badge",""), d.get("active",True), d.get("sort_order",0), d.get("id"))
+                    f"UPDATE {SCHEMA}.gosash_promos SET title=%s, description=%s, badge=%s, active=%s, sort_order=%s, updated_at=NOW() WHERE id=%s",
+                    (d.get("title",""), d.get("description",""), d.get("badge",""),
+                     d.get("active",True), d.get("sort_order",0), pid)
                 )
                 conn.commit()
                 return json_response({"ok": True})
             if method == "DELETE":
-                pid = body.get("id") or (event.get("queryStringParameters") or {}).get("id")
+                pid = body.get("id") or qs.get("id")
                 cur.execute(f"DELETE FROM {SCHEMA}.gosash_promos WHERE id=%s", (pid,))
                 conn.commit()
                 return json_response({"ok": True})
 
-        return error("Маршрут не найден", 404)
+        return error("Неизвестный action", 404)
 
-    except Exception as e:
-        conn.rollback()
-        return error(str(e), 500)
     finally:
-        cur.close()
         conn.close()

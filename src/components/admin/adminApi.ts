@@ -2,10 +2,10 @@ import { useState, useCallback, useRef } from "react";
 
 export const ADMIN_API = "https://functions.poehali.dev/941d16d5-04a2-4995-833a-9b8becab97a8";
 
-export function api(path: string, method = "GET", body?: unknown, token?: string) {
+export function api(action: string, method = "GET", body?: unknown, token?: string) {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (token) headers["X-Admin-Token"] = token;
-  return fetch(`${ADMIN_API}${path}`, {
+  return fetch(`${ADMIN_API}?action=${action}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
@@ -32,7 +32,7 @@ export function useImageUpload(token: string, onChange: (url: string) => void) {
     const reader = new FileReader();
     reader.onload = async () => {
       const b64 = (reader.result as string).split(",")[1];
-      const res = await api("/upload", "POST", { image: b64, filename: file.name }, token);
+      const res = await api("upload", "POST", { image: b64, filename: file.name }, token);
       if (res.url) onChange(res.url);
       setUploading(false);
     };
