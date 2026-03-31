@@ -1,5 +1,5 @@
 import Icon from "@/components/ui/icon";
-import { instructors, LOGO_URL, PHONE, PHONE_DISPLAY, LeadForm } from "./shared";
+import { instructors, LOGO_URL, PHONE, PHONE_DISPLAY, LeadForm, ymGoal } from "./shared";
 import { FooterPolicyButtons } from "./PolicyModals";
 
 export default function InstructorsToFooter() {
@@ -56,7 +56,7 @@ export default function InstructorsToFooter() {
               <div className="space-y-3 text-white/70 text-sm">
                 <div className="flex items-center gap-3">
                   <Icon name="Phone" size={18} className="text-orange-400 flex-shrink-0" fallback="Circle" />
-                  <a href={`tel:${PHONE}`} className="text-orange-400 font-bold text-lg hover:text-orange-300">{PHONE_DISPLAY}</a>
+                  <a href={`tel:${PHONE}`} onClick={() => ymGoal("phone_click")} className="text-orange-400 font-bold text-lg hover:text-orange-300">{PHONE_DISPLAY}</a>
                 </div>
                 <div className="flex items-center gap-3">
                   <Icon name="MapPin" size={18} className="text-orange-400 flex-shrink-0" fallback="Circle" />

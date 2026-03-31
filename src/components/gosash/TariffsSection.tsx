@@ -1,5 +1,5 @@
 import Icon from "@/components/ui/icon";
-import { tariffs } from "./shared";
+import { tariffs, ymGoal } from "./shared";
 
 interface TariffsSectionProps {
   onTariffSelect: (tariffName: string) => void;
@@ -139,7 +139,7 @@ export default function TariffsSection({ onTariffSelect }: TariffsSectionProps) 
                   </a>
                 )}
                 <button
-                  onClick={() => onTariffSelect(t.name)}
+                  onClick={() => { ymGoal("tariff_select_click", { tariff: t.name }); onTariffSelect(t.name); }}
                   className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${
                     t.featured
                       ? "bg-orange-500 text-white hover:bg-orange-600"

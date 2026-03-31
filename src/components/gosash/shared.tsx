@@ -1,6 +1,17 @@
 import { useState, useCallback } from "react";
 import Icon from "@/components/ui/icon";
 
+declare global {
+  interface Window {
+    ym?: (counterId: number, method: string, target: string, params?: object) => void;
+  }
+}
+
+const YM_ID = 101026698;
+export function ymGoal(target: string, params?: object) {
+  window.ym?.(YM_ID, "reachGoal", target, params);
+}
+
 const SEND_LEAD_URL = "https://functions.poehali.dev/d8995d2d-80a5-44fe-b27d-99cdaca844e6";
 
 function getUtmParams() {
@@ -341,6 +352,7 @@ export function LeadForm({ title, subtitle, defaultTariff = "", dark = false }: 
     e.preventDefault();
     if (!name || !phone) return;
     setLoading(true);
+    ymGoal("lead_form_submit", { tariff: comment || "не указан" });
     await sendLead(name, phone, comment);
     setLoading(false);
     setSent(true);
@@ -412,6 +424,7 @@ export function CallbackModal({ onClose }: CallbackModalProps) {
   const handleSend = useCallback(async () => {
     if (!name || !phone) return;
     setLoading(true);
+    ymGoal("callback_request");
     await sendLead(name, phone, "Обратный звонок");
     setLoading(false);
     setSent(true);

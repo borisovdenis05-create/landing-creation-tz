@@ -1,4 +1,4 @@
-import { LOGO_URL, PHONE, PHONE_DISPLAY, LeadForm } from "./shared";
+import { LOGO_URL, PHONE, PHONE_DISPLAY, LeadForm, ymGoal } from "./shared";
 
 const BG_IMAGE = "https://cdn.poehali.dev/files/e3619330-6419-457e-8867-8459672dfecb.jpg";
 
@@ -26,14 +26,14 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
           </nav>
 
           <div className="hidden md:flex flex-col items-end gap-0.5">
-            <a href={`tel:${PHONE}`} className="text-orange-400 font-black text-base hover:text-orange-300 transition-colors tracking-wide">
+            <a href={`tel:${PHONE}`} onClick={() => ymGoal("phone_click")} className="text-orange-400 font-black text-base hover:text-orange-300 transition-colors tracking-wide">
               {PHONE_DISPLAY}
             </a>
             <span className="text-white/40 text-xs uppercase tracking-wider">Пн–Пт: 10:00–18:30</span>
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
-            <button onClick={onCallbackOpen} className="btn-accent text-xs sm:text-sm py-2 px-3 sm:px-5 whitespace-nowrap">
+            <button onClick={() => { ymGoal("header_callback_click"); onCallbackOpen(); }} className="btn-accent text-xs sm:text-sm py-2 px-3 sm:px-5 whitespace-nowrap">
               <span className="hidden sm:inline">Обратный звонок</span>
               <span className="sm:hidden">Перезвоните</span>
             </button>
@@ -85,10 +85,10 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
 
                 {/* Кнопки */}
                 <div className="hero-buttons flex flex-col sm:flex-row gap-3">
-                  <a href="#tariffs" className="btn-accent text-base py-4 px-8">
+                  <a href="#tariffs" onClick={() => ymGoal("hero_tariffs_click")} className="btn-accent text-base py-4 px-8">
                     Выбрать тариф
                   </a>
-                  <button onClick={onCallbackOpen} className="btn-outline-yellow text-base py-4 px-8">
+                  <button onClick={() => { ymGoal("hero_callback_click"); onCallbackOpen(); }} className="btn-outline-yellow text-base py-4 px-8">
                     Записаться на пробное
                   </button>
                 </div>

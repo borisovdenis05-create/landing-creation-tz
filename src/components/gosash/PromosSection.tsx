@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { api } from "@/components/admin/adminApi";
 import Icon from "@/components/ui/icon";
+import { ymGoal } from "@/components/gosash/shared";
 
 export type Promo = {
   id: number;
@@ -42,6 +43,7 @@ function LeadModal({ promo, onClose }: { promo: PromoCardData; onClose: () => vo
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    ymGoal("promo_form_submit", { promo: promo.title });
     try {
       await api("/leads", "POST", { name, phone, promo: promo.title });
       setSent(true);
@@ -239,7 +241,7 @@ export default function PromosSection() {
         {/* Карточки */}
         <div className="grid gap-6 grid-cols-1 md:grid-cols-3">
           {STATIC_PROMOS.map((promo) => (
-            <PromoCard key={promo.id} promo={promo} onApply={() => setSelected(promo)} />
+            <PromoCard key={promo.id} promo={promo} onApply={() => { ymGoal("promo_card_click", { promo: promo.title }); setSelected(promo); }} />
           ))}
         </div>
       </div>
