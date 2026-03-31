@@ -8,8 +8,12 @@ declare global {
 }
 
 const YM_ID = 101026698;
+const LEAD_GOALS = new Set(["lead_form_submit", "callback_request", "promo_form_submit"]);
 export function ymGoal(target: string, params?: object) {
   window.ym?.(YM_ID, "reachGoal", target, params);
+  if (LEAD_GOALS.has(target)) {
+    window.ym?.(YM_ID, "reachGoal", "lead", params);
+  }
 }
 
 const SEND_LEAD_URL = "https://functions.poehali.dev/d8995d2d-80a5-44fe-b27d-99cdaca844e6";
