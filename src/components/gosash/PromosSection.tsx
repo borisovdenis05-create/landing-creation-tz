@@ -142,7 +142,7 @@ function PromoCard({ promo, onApply }: { promo: PromoCardData; onApply: () => vo
         )}
 
         <h3 className="font-black text-gray-900 text-base leading-snug mb-2">{promo.title}</h3>
-        <p className="text-gray-500 text-sm leading-relaxed mb-4 flex-1">{promo.description}</p>
+        <p className="text-gray-500 text-sm leading-relaxed mb-4 flex-1 whitespace-pre-line">{promo.description}</p>
 
         {promo.condition && (
           <p className="text-gray-400 text-xs italic mb-3">{promo.condition}</p>
@@ -182,14 +182,14 @@ function PromoCard({ promo, onApply }: { promo: PromoCardData; onApply: () => vo
 const STATIC_PROMOS: PromoCardData[] = [
   {
     id: 1,
-    title: "Генеральная репетиция перед сдачей в ГАИ",
-    description: "Полное погружение в реальную атмосферу экзамена. 10 академических часов на экзаменационной машине с командой, которая знает маршрут и требования ГАИ изнутри.",
-    image_url: "https://cdn.poehali.dev/files/375bf488-40fb-4d56-8e8a-b68eb09cfcb2.jpg",
-    badge: "20–31 марта",
-    old_price: "17 000 ₽",
-    price: "15 000 ₽",
-    period: "20–31 марта",
-    button_label: "Записаться на репетицию",
+    title: "Категории две — выгода общая!",
+    description: "Запишитесь на обучение сразу на две категории — А + В и получите скидку 3 000 рублей!\n\nАкция действует ограниченное количество времени — успейте воспользоваться выгодным предложением уже сейчас.\n\nС автошколой ГОСАШ вам доступно больше:\n• обучение сразу на две категории;\n• удобное расписание, современный автопарк, внимательные инструкторы;\n• возможность оплаты в рассрочку или за счёт средств материнского капитала.\n\nОставляйте заявку прямо сейчас, чтобы зафиксировать свою выгоду!\nИзменили название, сохранили качество! Автошкола ГОСАШ — ваш самый короткий путь к правам!",
+    image_url: "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/bucket/e9260c5e-c233-4ebf-9949-15dff5306ae2.jpg",
+    badge: "Скидка 3 000 ₽",
+    old_price: undefined,
+    price: "Скидка 3 000 ₽",
+    period: undefined,
+    button_label: "Оставить заявку",
   },
   {
     id: 2,
