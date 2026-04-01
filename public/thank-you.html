@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Заявка принята — Автошкола ГОСАШ Симферополь</title>
+  <meta name="description" content="Ваша заявка принята! Наш менеджер свяжется с вами в ближайшее время. Автошкола ГОСАШ в Симферополе."/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <link rel="canonical" href="https://твоя.автошкола82.рф/thank-you"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+    (function (m, e, t, r, i, k, a) {
+      m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+      m[i].l = 1 * new Date();
+      for (var j = 0; j < document.scripts.length; j++) {
+        if (document.scripts[j].src === r) { return; }
+      }
+      k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+    })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(101026698, "init", {
+      trustedDomains: ["poehali.dev"],
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true,
+      trackHash: true
+    });
+
+    /* Цель «Страница благодарности» — срабатывает при загрузке */
+    window.addEventListener("load", function () {
+      ym(101026698, "reachGoal", "thank_you_page_view");
+    });
+  </script>
+  <noscript>
+    <div><img src="https://mc.yandex.ru/watch/101026698" style="position:absolute; left:-9999px;" alt=""/></div>
+  </noscript>
+  <!-- /Yandex.Metrika counter -->
+
+  <style>
+    /* ===========================
+       CSS-ПЕРЕМЕННЫЕ И СБРОС
+    =========================== */
+    :root {
+      --brand-dark:        #2e2e2e;
+      --brand-dark-deep:   #1e1e1e;
+      --brand-dark-light:  #3a3a3a;
+      --brand-orange:      #e8921a;
+      --brand-orange-dark: #c77a10;
+      --brand-bg:          #f4f4f4;
+      --brand-text:        #1a1a1a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Montserrat", sans-serif;
+      background-color: var(--brand-bg);
+      color: var(--brand-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+
+    /* ===========================
+       КНОПКИ
+    =========================== */
+    .btn-accent {
+      background-color: var(--brand-orange);
+      color: #ffffff;
+      font-weight: 900;
+      border-radius: 4px;
+      padding: 14px 32px;
+      transition: background-color 0.15s, transform 0.15s;
+      display: inline-block;
+      text-align: center;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-family: "Montserrat", sans-serif;
+      font-size: 0.9rem;
+      border: none;
+    }
+    .btn-accent:hover {
+      background-color: var(--brand-orange-dark);
+      transform: translateY(-1px);
+      color: #fff;
+    }
+
+    /* ===========================
+       HEADER
+    =========================== */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      background: var(--brand-dark);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .header-logo img {
+      height: 48px;
+      object-fit: contain;
+      filter: brightness(10);
+      display: block;
+    }
+    .header-nav {
+      display: none;
+      align-items: center;
+      gap: 16px;
+      list-style: none;
+    }
+    .header-nav a {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      transition: color 0.15s;
+      white-space: nowrap;
+    }
+    .header-nav a:hover { color: var(--brand-orange); }
+    .header-nav a.active { color: var(--brand-orange); }
+    .header-phone {
+      display: none;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+    .header-phone a {
+      color: var(--brand-orange);
+      font-weight: 900;
+      font-size: 1rem;
+      transition: color 0.15s;
+      letter-spacing: 0.04em;
+    }
+    .header-phone a:hover { color: #f5a93a; }
+    .header-phone span {
+      color: rgba(255,255,255,0.4);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .header-cta .btn-accent {
+      font-size: 11px;
+      padding: 8px 12px;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 768px) {
+      .header-phone { display: flex; }
+      .header-cta .btn-accent { font-size: 13px; padding: 8px 20px; }
+    }
+    @media (min-width: 1024px) {
+      .header-nav { display: flex; }
+    }
+
+    /* ===========================
+       ОСНОВНОЙ КОНТЕНТ
+    =========================== */
+    .main-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 16px 64px;
+    }
+    .thank-you-wrapper {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    /* Иконка чек */
+    .check-icon-wrap {
+      width: 96px;
+      height: 96px;
+      background: var(--brand-orange);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 32px;
+      box-shadow: 0 8px 32px rgba(232,146,26,0.35);
+      animation: popIn 0.6s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.6); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* Карточка */
+    .thank-you-card {
+      background: var(--brand-dark);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 40px 32px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+      animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.15s both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Бейдж */
+    .card-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--brand-orange);
+      background: rgba(232,146,26,0.12);
+      border: 1px solid rgba(232,146,26,0.28);
+      border-radius: 2px;
+      padding: 5px 16px;
+      margin-bottom: 24px;
+    }
+
+    /* Заголовок */
+    .card-h1 {
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 900;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .card-h1 .accent { color: var(--brand-orange); }
+
+    /* Подзаголовок */
+    .card-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: rgba(255,255,255,0.72);
+      line-height: 1.6;
+      font-weight: 500;
+      margin-bottom: 32px;
+    }
+
+    /* Инфо-блок */
+    .card-info {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      text-align: left;
+    }
+    .card-info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .card-info-row:last-child { margin-bottom: 0; }
+    .card-info-check {
+      color: var(--brand-orange);
+      font-weight: 900;
+      font-size: 1.1rem;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+    .card-info-text {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.6;
+    }
+    .card-info-text strong { color: #ffffff; }
+    .card-info-text a {
+      color: var(--brand-orange);
+      font-weight: 700;
+      transition: color 0.15s;
+    }
+    .card-info-text a:hover { color: #f5a93a; }
+
+    /* Подпись под карточкой */
+    .card-footnote {
+      margin-top: 24px;
+      font-size: 0.875rem;
+      color: #9ca3af;
+    }
+    .card-footnote a {
+      color: var(--brand-orange);
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+    .card-footnote a:hover { color: #f5a93a; }
+
+    /* ===========================
+       FOOTER
+    =========================== */
+    .site-footer {
+      background: var(--brand-dark-deep);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 40px 16px 24px;
+    }
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .footer-top {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+    @media (min-width: 768px) {
+      .footer-top {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+    }
+
+    .footer-logo img {
+      height: 40px;
+      object-fit: contain;
+      filter: brightness(10);
+      display: block;
+      margin-bottom: 16px;
+    }
+    .footer-phone {
+      color: var(--brand-orange);
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: block;
+      margin-bottom: 4px;
+      transition: color 0.15s;
+    }
+    .footer-phone:hover { color: #f5a93a; }
+    .footer-email {
+      color: rgba(255,255,255,0.45);
+      font-size: 0.875rem;
+      display: block;
+      transition: color 0.15s;
+    }
+    .footer-email:hover { color: rgba(255,255,255,0.8); }
+
+    .footer-col-title {
+      color: rgba(255,255,255,0.4);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    .footer-branches {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    @media (min-width: 480px) {
+      .footer-branches { grid-template-columns: 1fr 1fr; column-gap: 32px; }
+    }
+    .footer-branch {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.875rem;
+    }
+    .footer-branch .pin { color: var(--brand-orange); font-size: 11px; }
+    .footer-branch .bname { color: rgba(255,255,255,0.7); }
+    .footer-branch .baddr { color: rgba(255,255,255,0.4); }
+
+    .footer-nav { display: flex; flex-direction: column; gap: 8px; }
+    .footer-nav a {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.6);
+      transition: color 0.15s;
+    }
+    .footer-nav a:hover { color: var(--brand-orange); }
+
+    .footer-legal {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 20px;
+    }
+    .footer-legal-grid {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (min-width: 768px) {
+      .footer-legal-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .footer-legal-text {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      line-height: 1.7;
+    }
+    .footer-legal-text span { color: rgba(255,255,255,0.5); font-weight: 600; }
+    .footer-legal-text-right { text-align: left; }
+    @media (min-width: 768px) {
+      .footer-legal-text-right { text-align: right; }
+    }
+
+    .footer-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+    }
+    @media (min-width: 640px) {
+      .footer-bottom { flex-direction: row; justify-content: space-between; }
+    }
+    .footer-policy-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-policy-links a {
+      color: rgba(255,255,255,0.2);
+      font-size: 11px;
+      transition: color 0.15s;
+    }
+    .footer-policy-links a:hover { color: rgba(255,255,255,0.5); }
+
+    /* ===========================
+       АДАПТИВ ДЛЯ КАРТОЧКИ
+    =========================== */
+    @media (min-width: 640px) {
+      .thank-you-card { padding: 56px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="https://твоя.автошкола82.рф/" class="header-logo">
+        <img
+          src="https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/bucket/403b7c35-5e7e-4b24-939e-e08d2f087325.png"
+          alt="ГОСАШ Автошкола"
+        />
+      </a>
+
+      <nav class="header-nav">
+        <a href="https://твоя.автошкола82.рф/#tariffs">Тарифы</a>
+        <a href="https://твоя.автошкола82.рф/#promos" class="active">Акции</a>
+        <a href="https://автошкола82.рф/instruktory/" target="_blank" rel="noopener noreferrer">Инструкторы</a>
+        <a href="https://твоя.автошкола82.рф/#reviews">Отзывы</a>
+        <a href="https://твоя.автошкола82.рф/#about">Филиалы</a>
+        <a href="https://твоя.автошкола82.рф/#contacts">Контакты</a>
+      </nav>
+
+      <div class="header-phone">
+        <a href="tel:+79789937221" onclick="ym(101026698,'reachGoal','phone_click')">
+          +7 (978) 993 72 21
+        </a>
+        <span>Пн–Пт: 10:00–18:30</span>
+      </div>
+
+      <div class="header-cta">
+        <a href="https://твоя.автошкола82.рф/" class="btn-accent">
+          <span class="desktop-text" style="display:none;">На главную</span>
+          <span class="mobile-text">Главная</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ ОСНОВНОЙ КОНТЕНТ ============ -->
+  <main class="main-content">
+    <div class="thank-you-wrapper">
+
+      <!-- Иконка-чекмарк -->
+      <div class="check-icon-wrap">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 24L20 34L38 14" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <!-- Карточка -->
+      <div class="thank-you-card">
+        <div class="card-badge">Автошкола ГОСАШ · Симферополь</div>
+
+        <h1 class="card-h1">
+          Заявка <span class="accent">принята!</span>
+        </h1>
+
+        <p class="card-subtitle">
+          Спасибо за обращение. Наш менеджер свяжется с вами в ближайшее время.
+        </p>
+
+        <div class="card-info">
+          <div class="card-info-row">
+            <span class="card-info-check">✓</span>
+            <span class="card-info-text">
+              Обычно мы перезваниваем в течение <strong>15 минут</strong> в рабочее время
+            </span>
+          </div>
+          <div class="card-info-row">
+            <span class="card-info-check">✓</span>
+            <span class="card-info-text">
+              Если хотите связаться прямо сейчас — звоните:&nbsp;
+              <a href="tel:+79789937221" onclick="ym(101026698,'reachGoal','phone_click')">
+                +7 (978) 993 72 21
+              </a>
+            </span>
+          </div>
+          <div class="card-info-row">
+            <span class="card-info-check">✓</span>
+            <span class="card-info-text">
+              Режим работы: <strong>Пн–Пт: 10:00–18:30</strong>
+            </span>
+          </div>
+        </div>
+
+        <a
+          href="https://твоя.автошкола82.рф/"
+          class="btn-accent"
+          onclick="ym(101026698,'reachGoal','thank_you_back_to_main')"
+        >
+          Вернуться на главную
+        </a>
+      </div>
+
+      <!-- Подпись -->
+      <p class="card-footnote">
+        Ждём вас в одном из
+        <a href="https://твоя.автошкола82.рф/#about">6 филиалов</a>
+        автошколы ГОСАШ в Симферополе
+      </p>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+
+        <!-- Лого + контакты -->
+        <div class="footer-logo">
+          <img
+            src="https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/bucket/403b7c35-5e7e-4b24-939e-e08d2f087325.png"
+            alt="ГОСАШ"
+          />
+          <a href="tel:+79789937221" class="footer-phone">+7 (978) 993 72 21</a>
+          <a href="mailto:gosavtosimf+111385@mail.ru" class="footer-email">gosavtosimf+111385@mail.ru</a>
+        </div>
+
+        <!-- Филиалы -->
+        <div>
+          <p class="footer-col-title">Филиалы · Пн–Пт: 10:00–18:30</p>
+          <div class="footer-branches">
+            <div class="footer-branch"><span class="pin">📍</span><span class="bname">Гагарина:</span><span class="baddr">ул. Гагарина, 20А</span></div>
+            <div class="footer-branch"><span class="pin">📍</span><span class="bname">Киевская:</span><span class="baddr">Киевская ул., 41</span></div>
+            <div class="footer-branch"><span class="pin">📍</span><span class="bname">Залесская:</span><span class="baddr">Залесская ул., 121</span></div>
+            <div class="footer-branch"><span class="pin">📍</span><span class="bname">Самокиша:</span><span class="baddr">ул. Самокиша, 4</span></div>
+            <div class="footer-branch"><span class="pin">📍</span><span class="bname">Лермонтова:</span><span class="baddr">ул. Лермонтова, 13А</span></div>
+            <div class="footer-branch"><span class="pin">📍</span><span class="bname">Автодром Титова:</span><span class="baddr">ул. Титова, 77</span></div>
+          </div>
+        </div>
+
+        <!-- Навигация -->
+        <div>
+          <p class="footer-col-title">Навигация</p>
+          <nav class="footer-nav">
+            <a href="https://твоя.автошкола82.рф/#tariffs">Тарифы</a>
+            <a href="https://твоя.автошкола82.рф/#instructors">Инструкторы</a>
+            <a href="https://твоя.автошкола82.рф/#about">Филиалы</a>
+            <a href="https://твоя.автошкола82.рф/#finance">Рассрочка</a>
+            <a href="https://твоя.автошкола82.рф/">На главную</a>
+          </nav>
+        </div>
+
+      </div><!-- /footer-top -->
+
+      <!-- Юридическая информация -->
+      <div class="footer-legal">
+        <div class="footer-legal-grid">
+          <div class="footer-legal-text">
+            <p><span>Юр. лицо:</span> ООО «СВЕТОФОР»</p>
+            <p><span>ИНН:</span> 9102062316 · <span>КПП:</span> 910201001 · <span>ОГРН:</span> 1149102136875</p>
+            <p><span>Банк:</span> ФИЛИАЛ «ЦЕНТРАЛЬНЫЙ» БАНКА ВТБ (ПАО)</p>
+          </div>
+          <div class="footer-legal-text footer-legal-text-right">
+            <p>г. Симферополь, Киевская ул., 41</p>
+            <p>Городская. Открытая. Современная.</p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2026 Автошкола ГОСАШ · Все права защищены</p>
+          <div class="footer-policy-links">
+            <a href="https://твоя.автошкола82.рф/">Политика конфиденциальности</a>
+            <a href="https://твоя.автошкола82.рф/">Публичная оферта</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* Показываем «desktop» текст в кнопке хедера при ширине >= 640px */
+    (function () {
+      var d = document.querySelector('.header-cta .desktop-text');
+      var m = document.querySelector('.header-cta .mobile-text');
+      function update() {
+        if (window.innerWidth >= 640) {
+          d.style.display = 'inline';
+          m.style.display = 'none';
+        } else {
+          d.style.display = 'none';
+          m.style.display = 'inline';
+        }
+      }
+      update();
+      window.addEventListener('resize', update);
+    })();
+  </script>
+
+</body>
+</html>
