@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
-import { CallbackModal, LeadForm } from "@/components/gosash/shared";
+import { CallbackModal, LeadForm, tariffs } from "@/components/gosash/shared";
 import HeroSection from "@/components/gosash/HeroSection";
 import TariffsFinanceAbout from "@/components/gosash/TariffsFinanceAbout";
 import PromosSection from "@/components/gosash/PromosSection";
@@ -12,7 +12,9 @@ export default function Index() {
   const [showLeadModal, setShowLeadModal] = useState(false);
 
   const openTariffForm = (tariffName: string) => {
-    setSelectedTariff(`Интересует тариф: ${tariffName}`);
+    const tariff = tariffs.find((t) => t.name === tariffName);
+    const priceStr = tariff ? ` — ${tariff.price.toLocaleString("ru-RU")} ₽` : "";
+    setSelectedTariff(`Интересует тариф: ${tariffName}${priceStr}`);
     setShowLeadModal(true);
   };
 
