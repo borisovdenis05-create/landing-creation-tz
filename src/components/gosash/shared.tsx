@@ -59,7 +59,7 @@ export const tariffs = [
     extras: [] as string[],
     restrictions: ["Нет выбора инструктора", "Нет переноса занятий за 24 часа", "Теория только онлайн (офлайн недоступна)"],
     bonuses: [] as string[],
-    price: 45900,
+    price: 39900,
     gsm: 10000,
     featured: false,
     badge: "ОНЛАЙН" as string | null,
