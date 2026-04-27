@@ -22,11 +22,22 @@ export default function TariffsSection({ onTariffSelect }: TariffsSectionProps) 
             {tariffs.map((t) => (
               <div
                 key={t.id}
-                className={`tariff-card p-6 flex flex-col ${t.featured ? "featured" : ""} ${
+                className={`tariff-card p-6 flex flex-col relative overflow-hidden ${t.featured ? "featured" : ""} ${
                   t.color === "navy" ? "border-orange-400" : ""
                 } ${t.color === "pink" ? "border-pink-300" : ""}`}
                 style={{ background: "#2e2e2e" }}
               >
+                {"promo" in t && t.promo && (() => {
+                  const now = new Date();
+                  const from = new Date((t.promo as { label: string; from: string; to: string }).from);
+                  const to = new Date((t.promo as { label: string; from: string; to: string }).to);
+                  to.setHours(23, 59, 59);
+                  return now >= from && now <= to ? (
+                    <div className="absolute top-[18px] right-[-28px] rotate-45 bg-red-600 text-white text-[10px] font-black px-8 py-0.5 shadow-md tracking-widest z-10">
+                      {(t.promo as { label: string }).label}
+                    </div>
+                  ) : null;
+                })()}
                 <div className="flex items-start justify-between mb-4">
                   <h3 className="text-lg font-black text-white">{t.name}</h3>
                   {t.badge && (
@@ -110,9 +121,11 @@ export default function TariffsSection({ onTariffSelect }: TariffsSectionProps) 
                     <p className="text-2xl font-black text-white">
                       {t.price.toLocaleString("ru-RU")} ₽
                     </p>
-                    {t.gsm > 0 && (
+                    {"gsmIncluded" in t && t.gsmIncluded ? (
+                      <p className="text-green-400 text-xs mt-0.5 font-semibold">✓ ГСМ включён в стоимость</p>
+                    ) : t.gsm > 0 ? (
                       <p className="text-white/40 text-xs mt-0.5">+ ГСМ от {t.gsm.toLocaleString("ru-RU")} ₽</p>
-                    )}
+                    ) : null}
                   </div>
 
                   {t.installment && (
