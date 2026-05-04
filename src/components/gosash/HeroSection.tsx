@@ -63,7 +63,7 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
               {/* Левый блок — текст */}
               <div className="max-w-xl">
                 {/* Заголовок */}
-                <h1 className="hero-title text-5xl md:text-6xl lg:text-7xl font-black text-white leading-none mb-5 uppercase drop-shadow-lg" style={{ letterSpacing: "-0.02em" }}>
+                <h1 className="hero-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-none mb-5 uppercase drop-shadow-lg" style={{ letterSpacing: "-0.02em" }}>
                   Стань<br />
                   <span className="text-orange-400">уверенным</span><br />
                   водителем
