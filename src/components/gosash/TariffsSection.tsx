@@ -1,11 +1,20 @@
+import { useEffect, useState } from "react";
 import Icon from "@/components/ui/icon";
-import { tariffs, ymGoal } from "./shared";
+import { tariffs as fallbackTariffs, fetchTariffs, ymGoal, type Tariff } from "./shared";
 
 interface TariffsSectionProps {
-  onTariffSelect: (tariffName: string) => void;
+  onTariffSelect: (tariffName: string, price?: number) => void;
 }
 
 export default function TariffsSection({ onTariffSelect }: TariffsSectionProps) {
+  const [tariffs, setTariffs] = useState<Tariff[]>(fallbackTariffs);
+
+  useEffect(() => {
+    fetchTariffs().then(data => {
+      if (data && data.length) setTariffs(data);
+    });
+  }, []);
+
   return (
     <>
       {/* ============ TARIFFS ============ */}
@@ -152,7 +161,7 @@ export default function TariffsSection({ onTariffSelect }: TariffsSectionProps) 
                   </a>
                 )}
                 <button
-                  onClick={() => { ymGoal("tariff_select_click", { tariff: t.name }); onTariffSelect(t.name); }}
+                  onClick={() => { ymGoal("tariff_select_click", { tariff: t.name }); onTariffSelect(t.name, t.price); }}
                   className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${
                     t.featured
                       ? "bg-orange-500 text-white hover:bg-orange-600"

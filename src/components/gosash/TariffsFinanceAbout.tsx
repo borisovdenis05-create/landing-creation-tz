@@ -4,7 +4,7 @@ import FaqSection from "./FaqSection";
 import AboutSection from "./AboutSection";
 
 interface TariffsFinanceAboutProps {
-  onTariffSelect: (tariffName: string) => void;
+  onTariffSelect: (tariffName: string, price?: number) => void;
 }
 
 export default function TariffsFinanceAbout({ onTariffSelect }: TariffsFinanceAboutProps) {

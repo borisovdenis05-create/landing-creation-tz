@@ -15,6 +15,13 @@
       "expectedStatus": 401,
       "expectedBody": {"error": "Не авторизован"},
       "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET public tariffs (no auth)",
+      "method": "GET",
+      "path": "/?action=public-tariffs",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
     }
   ]
 }

@@ -17,6 +17,84 @@ export function ymGoal(target: string, params?: object) {
 }
 
 const SEND_LEAD_URL = "https://functions.poehali.dev/d8995d2d-80a5-44fe-b27d-99cdaca844e6";
+const ADMIN_API_URL = "https://functions.poehali.dev/941d16d5-04a2-4995-833a-9b8becab97a8";
+
+export type Tariff = {
+  id: string | number;
+  name: string;
+  hours: number;
+  hoursLabel: string;
+  theory: string;
+  instructor: string;
+  features: string[];
+  extras: string[];
+  restrictions: string[];
+  bonuses: string[];
+  price: number;
+  gsm: number;
+  gsmIncluded?: boolean;
+  promo?: { label: string; from: string; to: string };
+  featured: boolean;
+  badge: string | null;
+  color: string;
+  installment: string | null;
+  duration: string | null;
+  ladyUrl?: string | null;
+};
+
+type ApiTariff = {
+  id: number;
+  name: string;
+  hours: number;
+  hours_label: string;
+  theory: string;
+  instructor: string;
+  price: number;
+  gsm: number;
+  badge: string | null;
+  color: string;
+  featured: boolean;
+  installment: string | null;
+  duration: string | null;
+  features: string[];
+  restrictions: string[];
+  bonuses: string[];
+};
+
+function mapApiTariff(t: ApiTariff): Tariff {
+  return {
+    id: t.id,
+    name: t.name,
+    hours: t.hours,
+    hoursLabel: t.hours_label,
+    theory: t.theory,
+    instructor: t.instructor,
+    features: Array.isArray(t.features) ? t.features : [],
+    extras: [],
+    restrictions: Array.isArray(t.restrictions) ? t.restrictions : [],
+    bonuses: Array.isArray(t.bonuses) ? t.bonuses : [],
+    price: t.price,
+    gsm: t.gsm,
+    gsmIncluded: t.gsm === 0 && /онлайн/i.test(t.badge || ""),
+    featured: t.featured,
+    badge: t.badge,
+    color: t.color || "",
+    installment: t.installment,
+    duration: t.duration,
+  };
+}
+
+export async function fetchTariffs(): Promise<Tariff[] | null> {
+  try {
+    const res = await fetch(`${ADMIN_API_URL}?action=public-tariffs`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data?.items?.length) return null;
+    return (data.items as ApiTariff[]).map(mapApiTariff);
+  } catch {
+    return null;
+  }
+}
 
 function getUtmParams() {
   const params = new URLSearchParams(window.location.search);

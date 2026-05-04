@@ -76,6 +76,22 @@ def handler(event: dict, context) -> dict:
             parsed = parse_qs(raw_body)
             body = {k: v[0] for k, v in parsed.items()}
 
+    # ── PUBLIC: TARIFFS (без авторизации, только активные) ──────────────────
+    if action == "public-tariffs" and method == "GET":
+        conn_pub = get_db()
+        cur_pub = conn_pub.cursor(cursor_factory=RealDictCursor)
+        try:
+            cur_pub.execute(
+                f"SELECT id, name, hours, hours_label, theory, instructor, price, gsm, "
+                f"badge, color, featured, installment, duration, features, restrictions, bonuses "
+                f"FROM {SCHEMA}.gosash_tariffs WHERE active = TRUE ORDER BY sort_order, id"
+            )
+            items = [dict(r) for r in cur_pub.fetchall()]
+            return json_response({"items": items})
+        finally:
+            cur_pub.close()
+            conn_pub.close()
+
     # ── AUTH ──────────────────────────────────────────────────────────────────
     if action == "login":
         login = body.get("login", "")
