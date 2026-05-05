@@ -75,7 +75,6 @@ function mapApiTariff(t: ApiTariff): Tariff {
     bonuses: Array.isArray(t.bonuses) ? t.bonuses : [],
     price: t.price,
     gsm: t.gsm,
-    gsmIncluded: t.gsm === 0 && /онлайн/i.test(t.badge || ""),
     featured: t.featured,
     badge: t.badge,
     color: t.color || "",
