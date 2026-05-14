@@ -22,6 +22,55 @@
       "path": "/?action=public-tariffs",
       "expectedStatus": 200,
       "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET public faq (no auth)",
+      "method": "GET",
+      "path": "/?action=public-faq",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET public branches (no auth)",
+      "method": "GET",
+      "path": "/?action=public-branches",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET public stats (no auth)",
+      "method": "GET",
+      "path": "/?action=public-stats",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET public reviews (no auth)",
+      "method": "GET",
+      "path": "/?action=public-reviews",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET public settings (no auth)",
+      "method": "GET",
+      "path": "/?action=public-settings",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Leading slash normalization",
+      "method": "GET",
+      "path": "/?action=%2Fpublic-tariffs",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Unknown action",
+      "method": "GET",
+      "path": "/?action=zzz",
+      "expectedStatus": 401,
+      "bodyMatcher": "partial"
     }
   ]
 }

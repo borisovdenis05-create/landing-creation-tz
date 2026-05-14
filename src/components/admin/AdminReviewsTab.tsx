@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Icon from "@/components/ui/icon";
 import { api, useToast } from "./adminApi";
 import { Field, SaveBtn, Toast, ImageUpload } from "./AdminUi";
@@ -14,26 +14,27 @@ export function ReviewsTab({ token }: { token: string }) {
   const { toast, show } = useToast();
 
   const load = useCallback(() => {
-    api("/reviews", "GET", undefined, token).then(res => {
+    setLoading(true);
+    api("reviews", "GET", undefined, token).then(res => {
       setItems(res.items || []);
       setLoading(false);
     });
   }, [token]);
 
-  useState(() => { load(); });
+  useEffect(() => { load(); }, [load]);
 
   const save = async () => {
     if (!editing) return;
     setSaving(true);
-    const res = await api("/reviews", editing.id ? "PUT" : "POST", editing, token);
+    const res = await api("reviews", editing.id ? "PUT" : "POST", editing, token);
     if (res.ok) { show("Сохранено", "ok"); setEditing(null); load(); }
-    else show(res.error, "err");
+    else show(res.error || "Ошибка", "err");
     setSaving(false);
   };
 
   const del = async (id: number) => {
     if (!confirm("Удалить отзыв?")) return;
-    const res = await api("/reviews", "DELETE", { id }, token);
+    const res = await api("reviews", "DELETE", { id }, token);
     if (res.ok) { show("Удалено", "ok"); load(); }
   };
 

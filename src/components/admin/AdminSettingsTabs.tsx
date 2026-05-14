@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import { api, useToast } from "./adminApi";
-import { Field, SaveBtn, Toast } from "./AdminUi";
+import { Field, SaveBtn, Toast, ImageUpload } from "./AdminUi";
 
 // ─── Tab: Settings ────────────────────────────────────────────────────────────
 export function SettingsTab({ token }: { token: string }) {
@@ -10,19 +10,19 @@ export function SettingsTab({ token }: { token: string }) {
   const [saving, setSaving] = useState(false);
   const { toast, show } = useToast();
 
-  useState(() => {
-    api("/settings", "GET", undefined, token).then(res => {
-      setData(res);
+  useEffect(() => {
+    api("settings", "GET", undefined, token).then(res => {
+      setData(res || {});
       setLoading(false);
     });
-  });
+  }, [token]);
 
   const set = (key: string, value: string) => setData(d => ({ ...d, [key]: value }));
 
   const save = async () => {
     setSaving(true);
-    const res = await api("/settings", "POST", { data }, token);
-    show(res.ok ? "Настройки сохранены" : res.error, res.ok ? "ok" : "err");
+    const res = await api("settings", "POST", { data }, token);
+    show(res.ok ? "Настройки сохранены" : (res.error || "Ошибка"), res.ok ? "ok" : "err");
     setSaving(false);
   };
 
@@ -44,11 +44,38 @@ export function SettingsTab({ token }: { token: string }) {
 
       <div>
         <h3 className="text-white font-black text-sm uppercase mb-4 flex items-center gap-2">
-          <Icon name="Layout" size={14} className="text-orange-400" fallback="Circle" /> Первый экран
+          <Icon name="Image" size={14} className="text-orange-400" fallback="Circle" /> Логотип и фон Hero
         </h3>
         <div className="grid md:grid-cols-2 gap-4">
-          <Field label="Заголовок H1" value={data.hero_h1||""} onChange={v => set("hero_h1",v)} />
-          <Field label="Подзаголовок" value={data.hero_subtitle||""} onChange={v => set("hero_subtitle",v)} rows={2} />
+          <ImageUpload label="Логотип" value={data.logo_url||""} onChange={v => set("logo_url", v)} token={token} />
+          <ImageUpload label="Фон первого экрана" value={data.hero_bg_url||""} onChange={v => set("hero_bg_url", v)} token={token} />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-white font-black text-sm uppercase mb-4 flex items-center gap-2">
+          <Icon name="Layout" size={14} className="text-orange-400" fallback="Circle" /> Первый экран
+        </h3>
+        <div className="grid md:grid-cols-3 gap-4">
+          <Field label="H1 — 1-я строка" value={data.hero_h1_part1||""} onChange={v => set("hero_h1_part1",v)} />
+          <Field label="H1 — выделение (оранжевое)" value={data.hero_h1_accent||""} onChange={v => set("hero_h1_accent",v)} />
+          <Field label="H1 — 3-я строка" value={data.hero_h1_part2||""} onChange={v => set("hero_h1_part2",v)} />
+          <Field label="Описание под H1" value={data.hero_desc||""} onChange={v => set("hero_desc",v)} rows={2} />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-white font-black text-sm uppercase mb-4 flex items-center gap-2">
+          <Icon name="Heading" size={14} className="text-orange-400" fallback="Circle" /> Заголовки секций
+        </h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          <Field label="Заголовок «Тарифы»" value={data.tariffs_title||""} onChange={v => set("tariffs_title",v)} />
+          <Field label="Заголовок «Акции»" value={data.promos_title||""} onChange={v => set("promos_title",v)} />
+          <Field label="Заголовок «Финансы»" value={data.finance_title||""} onChange={v => set("finance_title",v)} />
+          <Field label="Подзаголовок «Финансы»" value={data.finance_subtitle||""} onChange={v => set("finance_subtitle",v)} />
+          <Field label="Заголовок «Статистика»" value={data.stats_title||""} onChange={v => set("stats_title",v)} />
+          <Field label="Заголовок «FAQ»" value={data.faq_title||""} onChange={v => set("faq_title",v)} />
+          <Field label="Заголовок «Отзывы»" value={data.reviews_title||""} onChange={v => set("reviews_title",v)} />
         </div>
       </div>
 
@@ -93,20 +120,20 @@ export function BlocksTab({ token }: { token: string }) {
   const [saving, setSaving] = useState(false);
   const { toast, show } = useToast();
 
-  useState(() => {
-    api("/settings", "GET", undefined, token).then(res => {
-      setData(res);
+  useEffect(() => {
+    api("settings", "GET", undefined, token).then(res => {
+      setData(res || {});
       setLoading(false);
     });
-  });
+  }, [token]);
 
-  const toggle = (key: string) => setData(d => ({ ...d, [key]: d[key] === "true" ? "false" : "true" }));
+  const toggle = (key: string) => setData(d => ({ ...d, [key]: d[key] === "false" ? "true" : "false" }));
 
   const save = async () => {
     setSaving(true);
     const blockData = Object.fromEntries(BLOCKS.map(b => [b.key, data[b.key] || "true"]));
-    const res = await api("/settings", "POST", { data: blockData }, token);
-    show(res.ok ? "Сохранено" : res.error, res.ok ? "ok" : "err");
+    const res = await api("settings", "POST", { data: blockData }, token);
+    show(res.ok ? "Сохранено" : (res.error || "Ошибка"), res.ok ? "ok" : "err");
     setSaving(false);
   };
 

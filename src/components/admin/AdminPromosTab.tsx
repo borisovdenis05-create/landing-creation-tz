@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Icon from "@/components/ui/icon";
 import { api, useToast } from "./adminApi";
 import { Field, SaveBtn, Toast, ImageUpload } from "./AdminUi";
@@ -14,7 +14,7 @@ function PromoEditor({ promo, onSave, onCancel, token }: { promo: Promo; onSave:
 
   const save = async () => {
     setSaving(true);
-    const res = await api("/promos", d.id ? "PUT" : "POST", d, token);
+    const res = await api("promos", d.id ? "PUT" : "POST", d, token);
     if (res.ok) { show("Сохранено", "ok"); setTimeout(onSave, 500); }
     else show(res.error || "Ошибка", "err");
     setSaving(false);
@@ -62,19 +62,19 @@ export function PromosTab({ token }: { token: string }) {
 
   const load = useCallback(() => {
     setLoading(true);
-    api("/promos", "GET", undefined, token).then(res => {
+    api("promos", "GET", undefined, token).then(res => {
       setItems(res.items || []);
       setLoading(false);
     });
   }, [token]);
 
-  useState(() => { load(); });
+  useEffect(() => { load(); }, [load]);
 
   const del = async (id: number) => {
     if (!confirm("Удалить акцию?")) return;
-    const res = await api("/promos", "DELETE", { id }, token);
+    const res = await api("promos", "DELETE", { id }, token);
     if (res.ok) { show("Удалено", "ok"); load(); }
-    else show(res.error, "err");
+    else show(res.error || "Ошибка", "err");
   };
 
   if (loading) return <div className="text-white/50 py-8 text-center">Загрузка...</div>;

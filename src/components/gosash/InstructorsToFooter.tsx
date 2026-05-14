@@ -1,47 +1,62 @@
 import Icon from "@/components/ui/icon";
 import { instructors, LOGO_URL, PHONE, PHONE_DISPLAY, LeadForm, ymGoal } from "./shared";
 import { FooterPolicyButtons } from "./PolicyModals";
+import { usePublicList, usePublicSettings } from "./shared/publicApi";
+
+type DbReview = { id: number; author: string; text: string; rating: number; photo_url: string; source: string };
+
+const FALLBACK_REVIEWS: DbReview[] = [
+  { id: 1, author: "Мавиле Хашимова", source: "Яндекс карты", photo_url: "", rating: 5, text: "Хочу выразить искреннюю благодарность автошколе за качественное обучение и профессиональный подход. Занятия по теории проходили понятно и интересно, материал объяснялся доступно, с примерами из реальных дорожных ситуаций." },
+  { id: 2, author: "Анжела К.", source: "Яндекс карты", photo_url: "", rating: 5, text: "Лучшая автошкола! Много лет хотела сесть за руль, боялась... Но девочки администраторы всё рассказали, объяснили. Инструктор по теории Павел Михайлович и инструктор по вождению Рейнгард Илья просто супер люди!" },
+  { id: 3, author: "Валентина Власенко", source: "Яндекс карты", photo_url: "", rating: 5, text: "Идеальное сочетание профессионализма и человеческого подхода! Я прошла обучение в данной автошколе и могу с уверенностью сказать: это был лучший выбор!" },
+  { id: 4, author: "Алина Тодорская", source: "Яндекс карты", photo_url: "", rating: 5, text: "Хочется выразить благодарность Госавтошколе за высокий уровень профессионализма! Ни капли не пожалела, что выбрала именно эту школу." },
+];
 
 export default function InstructorsToFooter() {
+  const { items: reviewsDb } = usePublicList<DbReview>("public-reviews");
+  const { settings } = usePublicSettings();
+  const reviews = reviewsDb && reviewsDb.length > 0 ? reviewsDb : FALLBACK_REVIEWS;
+  const reviewsTitle = settings.reviews_title || "Довольные выпускники о нас";
 
   return (
     <>
 
 
       {/* ============ REVIEWS ============ */}
-      <section id="reviews" className="py-20" style={{ background: "#f4f4f4" }}>
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 uppercase">Довольные выпускники о нас</h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-6">
-            {[
-              { name: "Мавиле Хашимова", source: "Яндекс карты", text: "Хочу выразить искреннюю благодарность автошколе за качественное обучение и профессиональный подход. Занятия по теории проходили понятно и интересно, материал объяснялся доступно, с примерами из реальных дорожных ситуаций. Практические занятия были особенно полезными: инструктор терпеливый, внимательный, всегда поддерживал и помогал разобраться в сложных моментах. Благодаря такому обучению я почувствовала уверенность за рулём и успешно сдала экзамены. Очень рада, что выбрала именно эту автошколу!", stars: 5 },
-              { name: "Анжела К.", source: "Яндекс карты", text: "Лучшая автошкола! Много лет хотела сесть за руль, боялась... Но девочки администраторы всё рассказали, объяснили. Инструктор по теории Павел Михайлович и инструктор по вождению Рейнгард Илья просто супер люди! Всё настолько понятно и доходчиво объясняли, сдала экзамен и теорию и практику с первого раза только благодаря этим супер людям! Очень благодарна ГОСАВТОШКОЛЕ, я езжу за рулём каждый день. Вы молодцы, хорошее дело делаете!", stars: 5 },
-              { name: "Валентина Власенко", source: "Яндекс карты", text: "Идеальное сочетание профессионализма и человеческого подхода! Я прошла обучение в данной автошколе и могу с уверенностью сказать: это был лучший выбор! Организация на высоте — это заслуга менеджера Кузнецовой Анны Игоревны. Отдельная похвала преподавателю теории Юрса Богдану Юлиановичу — ПДД превратились в простую и понятную логику. Настоящий восторг — инструктор по вождению Ускач Андрей Михайлович! Процесс обучения был максимально комфортным, и я полюбила водить автомобиль!", stars: 5 },
-              { name: "Алина Тодорская", source: "Яндекс карты", text: "Хочется выразить благодарность Госавтошколе за высокий уровень профессионализма! Ни капли не пожалела, что выбрала именно эту школу. Спасибо большое Богдану Юлиановичу — ни одну тему я не заучивала, всё просто запоминалось благодаря примерам и интересному объяснению! Отдельное огромнейшее спасибо инструктору Ускач Андрей Михайлович — это человек с даром от бога обучать людей вождению. Благодаря ему я не боюсь ездить!", stars: 5 },
-            ].map((r) => (
-              <div key={r.name} className="border border-white/10 rounded-2xl p-6" style={{ background: "#2e2e2e" }}>
-                <div className="flex gap-1 mb-3">
-                  {Array.from({ length: r.stars }).map((_, i) => (
-                    <span key={i} className="text-orange-400 text-lg">★</span>
-                  ))}
-                </div>
-                <p className="text-white/60 text-sm leading-relaxed mb-5">"{r.text}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                    {r.name[0]}
+      {settings.block_reviews !== "false" && (
+        <section id="reviews" className="py-20" style={{ background: "#f4f4f4" }}>
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 uppercase">{reviewsTitle}</h2>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              {reviews.map((r) => (
+                <div key={r.id} className="border border-white/10 rounded-2xl p-6" style={{ background: "#2e2e2e" }}>
+                  <div className="flex gap-1 mb-3">
+                    {Array.from({ length: r.rating || 5 }).map((_, i) => (
+                      <span key={i} className="text-orange-400 text-lg">★</span>
+                    ))}
                   </div>
-                  <div>
-                    <p className="font-bold text-white text-sm">{r.name}</p>
-                    <p className="text-white/40 text-xs">{r.source}</p>
+                  <p className="text-white/60 text-sm leading-relaxed mb-5 whitespace-pre-line">"{r.text}"</p>
+                  <div className="flex items-center gap-3">
+                    {r.photo_url ? (
+                      <img src={r.photo_url} alt={r.author} className="w-10 h-10 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        {r.author[0]}
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-bold text-white text-sm">{r.author}</p>
+                      {r.source && <p className="text-white/40 text-xs">{r.source}</p>}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ============ LEAD FORM (FOOTER CTA) ============ */}
       <section id="lead-form" className="py-20" style={{ background: "#2e2e2e" }}>

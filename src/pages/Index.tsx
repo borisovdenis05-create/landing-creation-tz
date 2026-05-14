@@ -5,11 +5,27 @@ import HeroSection from "@/components/gosash/HeroSection";
 import TariffsFinanceAbout from "@/components/gosash/TariffsFinanceAbout";
 import PromosSection from "@/components/gosash/PromosSection";
 import InstructorsToFooter from "@/components/gosash/InstructorsToFooter";
+import { usePublicList } from "@/components/gosash/shared/publicApi";
+
+type MarqueeItem = { id: number; label: string; shape: string };
+const FALLBACK_MARQUEE: MarqueeItem[] = [
+  { id: 1, label: "Обучение ПДД", shape: "circle" },
+  { id: 2, label: "Безопасное вождение", shape: "triangle" },
+  { id: 3, label: "Категория B", shape: "circle" },
+  { id: 4, label: "Автодром", shape: "square" },
+  { id: 5, label: "Практика вождения", shape: "triangle" },
+  { id: 6, label: "Симферополь", shape: "circle" },
+  { id: 7, label: "6 филиалов", shape: "square" },
+];
 
 export default function Index() {
   const [showCallback, setShowCallback] = useState(false);
   const [selectedTariff, setSelectedTariff] = useState("");
   const [showLeadModal, setShowLeadModal] = useState(false);
+  const { items: marqueeDb } = usePublicList<MarqueeItem>("public-marquee");
+  const marqueeBase = marqueeDb && marqueeDb.length > 0 ? marqueeDb : FALLBACK_MARQUEE;
+  // Дублируем для бесшовной анимации
+  const marquee = [...marqueeBase, ...marqueeBase];
 
   const openTariffForm = (tariffName: string, price?: number) => {
     const priceStr = price ? ` — ${price.toLocaleString("ru-RU")} ₽` : "";
@@ -43,23 +59,8 @@ export default function Index() {
       {/* Разделитель с дорожными знаками */}
       <div className="border-y border-black/10 py-4 overflow-hidden" style={{ background: "#e8e8e8" }}>
         <div className="flex items-center gap-10 animate-[marquee_30s_linear_infinite] whitespace-nowrap w-max">
-          {[
-            { shape: "circle", label: "Обучение ПДД" },
-            { shape: "triangle", label: "Безопасное вождение" },
-            { shape: "circle", label: "Категория B" },
-            { shape: "square", label: "Автодром" },
-            { shape: "triangle", label: "Практика вождения" },
-            { shape: "circle", label: "Симферополь" },
-            { shape: "square", label: "6 филиалов" },
-            { shape: "circle", label: "Обучение ПДД" },
-            { shape: "triangle", label: "Безопасное вождение" },
-            { shape: "circle", label: "Категория B" },
-            { shape: "square", label: "Автодром" },
-            { shape: "triangle", label: "Практика вождения" },
-            { shape: "circle", label: "Симферополь" },
-            { shape: "square", label: "6 филиалов" },
-          ].map((item, i) => (
-            <span key={i} className="inline-flex items-center gap-2 text-black/30 text-xs font-bold uppercase tracking-widest flex-shrink-0">
+          {marquee.map((item, i) => (
+            <span key={`${item.id}-${i}`} className="inline-flex items-center gap-2 text-black/30 text-xs font-bold uppercase tracking-widest flex-shrink-0">
               {item.shape === "circle" && (
                 <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="none" stroke="currentColor" strokeWidth="2.5"/><line x1="5" y1="11" x2="17" y2="11" stroke="currentColor" strokeWidth="2.5"/></svg>
               )}

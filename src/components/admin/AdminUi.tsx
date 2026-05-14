@@ -48,24 +48,27 @@ export function Toast({ msg, type }: { msg: string; type: "ok" | "err" }) {
 }
 
 // ─── ImageUpload ──────────────────────────────────────────────────────────────
-export function ImageUpload({ value, onChange, token }: { value: string; onChange: (url: string) => void; token: string }) {
+export function ImageUpload({ value, onChange, token, label }: { value: string; onChange: (url: string) => void; token: string; label?: string }) {
   const { inputRef, uploading, handleFile } = useImageUpload(token, onChange);
 
   return (
-    <div className="flex items-center gap-3">
-      {value && <img src={value} alt="" className="w-12 h-12 rounded-lg object-cover border border-white/10" />}
-      <button type="button" onClick={() => inputRef.current?.click()}
-        className="px-3 py-2 rounded-lg border border-white/15 text-white/70 text-xs hover:border-orange-400 hover:text-white transition-colors flex items-center gap-1.5"
-        style={{ background: "#3a3a3a" }}>
-        <Icon name="Upload" size={12} fallback="Circle" />
-        {uploading ? "Загрузка..." : "Загрузить фото"}
-      </button>
-      <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
-      {value && (
-        <input value={value} onChange={e => onChange(e.target.value)}
-          className="flex-1 px-3 py-2 rounded-lg border border-white/10 text-white/60 text-xs outline-none"
-          style={{ background: "#3a3a3a" }} placeholder="URL фото" />
-      )}
+    <div>
+      {label && <label className="text-white/60 text-xs uppercase tracking-wide block mb-1.5">{label}</label>}
+      <div className="flex items-center gap-3 flex-wrap">
+        {value && <img src={value} alt="" className="w-12 h-12 rounded-lg object-cover border border-white/10" />}
+        <button type="button" onClick={() => inputRef.current?.click()}
+          className="px-3 py-2 rounded-lg border border-white/15 text-white/70 text-xs hover:border-orange-400 hover:text-white transition-colors flex items-center gap-1.5"
+          style={{ background: "#3a3a3a" }}>
+          <Icon name="Upload" size={12} fallback="Circle" />
+          {uploading ? "Загрузка..." : "Загрузить фото"}
+        </button>
+        <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+        {value && (
+          <input value={value} onChange={e => onChange(e.target.value)}
+            className="flex-1 min-w-[120px] px-3 py-2 rounded-lg border border-white/10 text-white/60 text-xs outline-none"
+            style={{ background: "#3a3a3a" }} placeholder="URL фото" />
+        )}
+      </div>
     </div>
   );
 }

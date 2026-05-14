@@ -15,6 +15,7 @@ export function ymGoal(target: string, params?: object) {
 }
 
 const SEND_LEAD_URL = "https://functions.poehali.dev/d8995d2d-80a5-44fe-b27d-99cdaca844e6";
+const ADMIN_API_URL = "https://functions.poehali.dev/941d16d5-04a2-4995-833a-9b8becab97a8";
 
 function getUtmParams() {
   const params = new URLSearchParams(window.location.search);
@@ -28,9 +29,24 @@ function getUtmParams() {
 }
 
 export async function sendLead(name: string, phone: string, comment = "") {
-  await fetch(SEND_LEAD_URL, {
+  const utm = getUtmParams();
+  // 1) Уведомление менеджера (существующая функция)
+  const sendNotify = fetch(SEND_LEAD_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, phone, comment, ...getUtmParams() }),
-  });
+    body: JSON.stringify({ name, phone, comment, ...utm }),
+  }).catch(() => null);
+  // 2) Сохранение в БД для админки
+  const saveDb = fetch(`${ADMIN_API_URL}?action=lead`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name,
+      phone,
+      tariff: comment.startsWith("Интересует тариф") ? comment : "",
+      note: comment.startsWith("Интересует тариф") ? "" : comment,
+      source: utm.utm_source || "site",
+    }),
+  }).catch(() => null);
+  await Promise.all([sendNotify, saveDb]);
 }

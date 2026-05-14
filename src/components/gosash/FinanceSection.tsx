@@ -1,66 +1,90 @@
 import Icon from "@/components/ui/icon";
+import { usePublicList, usePublicSettings } from "./shared/publicApi";
+
+type DbFinance = {
+  id: number;
+  title: string;
+  subtitle: string;
+  icon: string;
+  rows: [string, string][] | string;
+};
+
+const FALLBACK: DbFinance[] = [
+  {
+    id: 1, title: "Рассрочка 0%", subtitle: "Выгодно — без переплат", icon: "Percent",
+    rows: [
+      ["Срок", "3, 4 или 6 месяцев"],
+      ["Переплата", "0% — платит школа"],
+      ["Первый платёж", "Через месяц"],
+      ["Дата платежа", "Любая удобная"],
+      ["Доступно для", "Приоритет, Углублённый, ВИП"],
+    ],
+  },
+  {
+    id: 2, title: "Кредит", subtitle: "Гибко — минимальный платёж", icon: "CreditCard",
+    rows: [
+      ["Срок", "до 24 месяцев"],
+      ["Сумма", "от 3 000 до 500 000 ₽"],
+      ["Решение", "За несколько минут"],
+      ["Доступно", "На всех тарифах"],
+      ["Платёж", "Минимальный ежемесячный"],
+    ],
+  },
+];
+
+function parseRows(rows: DbFinance["rows"]): [string, string][] {
+  if (Array.isArray(rows)) return rows as [string, string][];
+  try {
+    const parsed = JSON.parse(rows as string);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
 
 export default function FinanceSection() {
+  const { items } = usePublicList<DbFinance>("public-finance");
+  const { settings } = usePublicSettings();
+
+  if (settings.block_finance === "false") return null;
+
+  const data = items && items.length > 0 ? items : FALLBACK;
+  const title = settings.finance_title || "Платите как удобно";
+  const subtitle = settings.finance_subtitle || "Рассрочка 0% или кредит от Т-Банка";
+
   return (
     <section id="finance" className="py-20 text-white" style={{ background: "#2e2e2e" }}>
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-black mb-3 uppercase">Платите как удобно</h2>
-          <p className="text-white/70 max-w-xl mx-auto">Рассрочка 0% или кредит от Т-Банка</p>
+          <h2 className="text-3xl md:text-4xl font-black mb-3 uppercase">{title}</h2>
+          <p className="text-white/70 max-w-xl mx-auto">{subtitle}</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <div className="rounded-2xl p-8 border border-white/15" style={{ background: "#3a3a3a" }}>
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
-                <Icon name="Percent" size={22} className="text-white" fallback="Star" />
-              </div>
-              <div>
-                <h3 className="text-xl font-black">Рассрочка 0%</h3>
-                <p className="text-white/60 text-sm">Выгодно — без переплат</p>
-              </div>
-            </div>
-            <div className="space-y-3 mb-6">
-              {[
-                ["Срок", "3, 4 или 6 месяцев"],
-                ["Переплата", "0% — платит школа"],
-                ["Первый платёж", "Через месяц"],
-                ["Дата платежа", "Любая удобная"],
-                ["Доступно для", "Приоритет, Углублённый, ВИП"],
-              ].map(([k, v]) => (
-                <div key={k} className="flex justify-between items-start text-sm border-b border-white/10 pb-2">
-                  <span className="text-white/60">{k}</span>
-                  <span className="text-white font-semibold text-right ml-4">{v}</span>
+        <div className={`grid ${data.length === 1 ? "md:grid-cols-1" : "md:grid-cols-2"} gap-8 mb-12`}>
+          {data.map(block => {
+            const rows = parseRows(block.rows);
+            return (
+              <div key={block.id} className="rounded-2xl p-8 border border-white/15" style={{ background: "#3a3a3a" }}>
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
+                    <Icon name={block.icon as Parameters<typeof Icon>[0]["name"]} size={22} className="text-white" fallback="Percent" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-black">{block.title}</h3>
+                    <p className="text-white/60 text-sm">{block.subtitle}</p>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-2xl p-8 border border-white/15" style={{ background: "#3a3a3a" }}>
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
-                <Icon name="CreditCard" size={22} className="text-white" fallback="Star" />
-              </div>
-              <div>
-                <h3 className="text-xl font-black">Кредит</h3>
-                <p className="text-white/60 text-sm">Гибко — минимальный платёж</p>
-              </div>
-            </div>
-            <div className="space-y-3 mb-6">
-              {[
-                ["Срок", "до 24 месяцев"],
-                ["Сумма", "от 3 000 до 500 000 ₽"],
-                ["Решение", "За несколько минут"],
-                ["Доступно", "На всех тарифах"],
-                ["Платёж", "Минимальный ежемесячный"],
-              ].map(([k, v]) => (
-                <div key={k} className="flex justify-between items-start text-sm border-b border-white/10 pb-2">
-                  <span className="text-white/60">{k}</span>
-                  <span className="text-white font-semibold text-right ml-4">{v}</span>
+                <div className="space-y-3 mb-6">
+                  {rows.map(([k, v], i) => (
+                    <div key={`${k}-${i}`} className="flex justify-between items-start text-sm border-b border-white/10 pb-2">
+                      <span className="text-white/60">{k}</span>
+                      <span className="text-white font-semibold text-right ml-4">{v}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            );
+          })}
         </div>
 
         <div className="rounded-2xl p-8 border border-white/15 mb-8" style={{ background: "#3a3a3a" }}>

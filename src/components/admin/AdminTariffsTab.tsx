@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Icon from "@/components/ui/icon";
 import { api, useToast } from "./adminApi";
 import { Field, SaveBtn, Toast } from "./AdminUi";
@@ -36,9 +36,9 @@ function TariffEditor({ tariff, onSave, onCancel, token }: {
 
   const save = async () => {
     setSaving(true);
-    const res = await api("/tariffs", d.id ? "PUT" : "POST", d, token);
+    const res = await api("tariffs", d.id ? "PUT" : "POST", d, token);
     if (res.ok) { show("Сохранено", "ok"); setTimeout(onSave, 500); }
-    else show(res.error, "err");
+    else show(res.error || "Ошибка", "err");
     setSaving(false);
   };
 
@@ -106,19 +106,19 @@ export function TariffsTab({ token }: { token: string }) {
 
   const load = useCallback(() => {
     setLoading(true);
-    api("/tariffs", "GET", undefined, token).then(res => {
+    api("tariffs", "GET", undefined, token).then(res => {
       setItems(res.items || []);
       setLoading(false);
     });
   }, [token]);
 
-  useState(() => { load(); });
+  useEffect(() => { load(); }, [load]);
 
   const del = async (id: number) => {
     if (!confirm("Удалить тариф?")) return;
-    const res = await api("/tariffs", "DELETE", { id }, token);
+    const res = await api("tariffs", "DELETE", { id }, token);
     if (res.ok) { show("Удалено", "ok"); load(); }
-    else show(res.error, "err");
+    else show(res.error || "Ошибка", "err");
   };
 
   if (loading) return <div className="text-white/50 py-8 text-center">Загрузка...</div>;

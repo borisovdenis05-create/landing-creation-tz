@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Icon from "@/components/ui/icon";
 import { api, useToast } from "./adminApi";
 import { Field, SaveBtn, Toast } from "./AdminUi";
@@ -14,28 +14,29 @@ export function BranchesTab({ token }: { token: string }) {
   const { toast, show } = useToast();
 
   const load = useCallback(() => {
-    api("/branches", "GET", undefined, token).then(res => {
+    setLoading(true);
+    api("branches", "GET", undefined, token).then(res => {
       setItems(res.items || []);
       setLoading(false);
     });
   }, [token]);
 
-  useState(() => { load(); });
+  useEffect(() => { load(); }, [load]);
 
   const save = async () => {
     if (!editing) return;
     setSaving(true);
-    const res = await api("/branches", editing.id ? "PUT" : "POST", editing, token);
+    const res = await api("branches", editing.id ? "PUT" : "POST", editing, token);
     if (res.ok) { show("Сохранено", "ok"); setEditing(null); load(); }
-    else show(res.error, "err");
+    else show(res.error || "Ошибка", "err");
     setSaving(false);
   };
 
   const del = async (id: number) => {
     if (!confirm("Удалить филиал?")) return;
-    const res = await api("/branches", "DELETE", { id }, token);
+    const res = await api("branches", "DELETE", { id }, token);
     if (res.ok) { show("Удалено", "ok"); load(); }
-    else show(res.error, "err");
+    else show(res.error || "Ошибка", "err");
   };
 
   if (loading) return <div className="text-white/50 py-8 text-center">Загрузка...</div>;

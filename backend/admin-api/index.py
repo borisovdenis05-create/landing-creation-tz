@@ -1,7 +1,8 @@
 """
 Административный API для лендинга ГОСАШ.
-Поддерживает: авторизацию, управление настройками, тарифами, филиалами, инструкторами, отзывами, загрузку фото.
-Маршрутизация через ?action= (path-based не поддерживается платформой).
+Поддерживает: авторизацию, настройки, тарифы, акции, филиалы, инструкторы, отзывы,
+FAQ, статистику, финансы, бегущую строку, hero-преимущества, заявки, загрузку фото.
+Маршрутизация через ?action=. Допускается ведущий слэш (нормализуется).
 """
 import json
 import os
@@ -14,7 +15,6 @@ from psycopg2.extras import RealDictCursor
 
 ADMIN_LOGIN = "gosash_admin"
 ADMIN_PASSWORD_HASH = hashlib.sha256("Gosash2024!".encode()).hexdigest()
-SCHEMA = os.environ.get("MAIN_DB_SCHEMA", "public")
 
 CORS_HEADERS = {
     "Access-Control-Allow-Origin": "*",
@@ -23,10 +23,12 @@ CORS_HEADERS = {
     "Access-Control-Max-Age": "86400",
 }
 
+
 def get_db():
     conn = psycopg2.connect(os.environ["DATABASE_URL"])
     conn.autocommit = False
     return conn
+
 
 def json_response(data, status=200):
     return {
@@ -35,13 +37,18 @@ def json_response(data, status=200):
         "body": json.dumps(data, ensure_ascii=False, default=str),
     }
 
+
 def error(msg, status=400):
     return json_response({"error": msg}, status)
 
+
 def check_auth(event):
-    token = event.get("headers", {}).get("X-Admin-Token", "")
+    headers = event.get("headers", {}) or {}
+    # Cloud provider может менять регистр заголовков
+    token = headers.get("X-Admin-Token") or headers.get("x-admin-token") or ""
     expected = hashlib.sha256(f"{ADMIN_LOGIN}:{ADMIN_PASSWORD_HASH}".encode()).hexdigest()
     return token == expected
+
 
 def upload_image(b64_data: str, filename: str) -> str:
     s3 = boto3.client(
@@ -58,13 +65,26 @@ def upload_image(b64_data: str, filename: str) -> str:
     cdn_url = f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{key}"
     return cdn_url
 
+
+def to_json_field(value):
+    """Pydantic-like безопасное приведение к JSON для jsonb-полей."""
+    if value is None:
+        return json.dumps([], ensure_ascii=False)
+    if isinstance(value, str):
+        return value
+    return json.dumps(value, ensure_ascii=False)
+
+
 def handler(event: dict, context) -> dict:
+    """Главный обработчик. Маршрутизация по ?action=."""
     if event.get("httpMethod") == "OPTIONS":
         return {"statusCode": 200, "headers": CORS_HEADERS, "body": ""}
 
     method = event.get("httpMethod", "GET")
     qs = event.get("queryStringParameters") or {}
-    action = qs.get("action", "")
+    raw_action = qs.get("action", "") or ""
+    # Нормализуем: убираем ведущие слэши на случай "/tariffs"
+    action = raw_action.lstrip("/").strip()
 
     body = {}
     raw_body = event.get("body", "") or ""
@@ -76,21 +96,86 @@ def handler(event: dict, context) -> dict:
             parsed = parse_qs(raw_body)
             body = {k: v[0] for k, v in parsed.items()}
 
-    # ── PUBLIC: TARIFFS (без авторизации, только активные) ──────────────────
+    # ── PUBLIC: TARIFFS ──────────────────────────────────────────────────────
     if action == "public-tariffs" and method == "GET":
         conn_pub = get_db()
         cur_pub = conn_pub.cursor(cursor_factory=RealDictCursor)
         try:
             cur_pub.execute(
-                f"SELECT id, name, hours, hours_label, theory, instructor, price, gsm, "
-                f"badge, color, featured, installment, duration, features, restrictions, bonuses "
-                f"FROM {SCHEMA}.gosash_tariffs WHERE active = TRUE ORDER BY sort_order, id"
+                "SELECT id, name, hours, hours_label, theory, instructor, price, gsm, "
+                "badge, color, featured, installment, duration, features, restrictions, bonuses "
+                "FROM gosash_tariffs WHERE active = TRUE ORDER BY sort_order, id"
             )
             items = [dict(r) for r in cur_pub.fetchall()]
             return json_response({"items": items})
         finally:
             cur_pub.close()
             conn_pub.close()
+
+    # ── PUBLIC: PROMOS ───────────────────────────────────────────────────────
+    if action == "public-promos" and method == "GET":
+        conn_p = get_db()
+        cur_p = conn_p.cursor(cursor_factory=RealDictCursor)
+        try:
+            cur_p.execute(
+                "SELECT id, title, subtitle, description, image_url, badge "
+                "FROM gosash_promos WHERE active = TRUE ORDER BY sort_order, id"
+            )
+            return json_response({"items": [dict(r) for r in cur_p.fetchall()]})
+        finally:
+            cur_p.close()
+            conn_p.close()
+
+    # ── PUBLIC: BRANCHES / INSTRUCTORS / REVIEWS / FAQ / STATS / FINANCE / MARQUEE / HERO ──
+    public_map = {
+        "public-branches": ("gosash_branches", "id, name, addr, rating, map_url"),
+        "public-instructors": ("gosash_instructors", "id, name, experience, specialization, photo_url, is_top, is_lady"),
+        "public-reviews": ("gosash_reviews", "id, author, text, rating, photo_url, source"),
+        "public-faq": ("gosash_faq", "id, question, answer"),
+        "public-stats": ("gosash_stats", "id, value, label, icon"),
+        "public-finance": ("gosash_finance", "id, title, subtitle, icon, rows"),
+        "public-marquee": ("gosash_marquee", "id, label, shape"),
+        "public-hero-features": ("gosash_hero_features", "id, label"),
+    }
+    if action in public_map and method == "GET":
+        table, cols = public_map[action]
+        conn_x = get_db()
+        cur_x = conn_x.cursor(cursor_factory=RealDictCursor)
+        try:
+            cur_x.execute(f"SELECT {cols} FROM {table} WHERE active = TRUE ORDER BY sort_order, id")
+            return json_response({"items": [dict(r) for r in cur_x.fetchall()]})
+        finally:
+            cur_x.close()
+            conn_x.close()
+
+    # ── PUBLIC: SETTINGS ──────────────────────────────────────────────────────
+    if action == "public-settings" and method == "GET":
+        conn_s = get_db()
+        cur_s = conn_s.cursor(cursor_factory=RealDictCursor)
+        try:
+            cur_s.execute("SELECT key, value FROM gosash_settings")
+            rows = cur_s.fetchall()
+            return json_response({r["key"]: r["value"] for r in rows})
+        finally:
+            cur_s.close()
+            conn_s.close()
+
+    # ── PUBLIC: LEAD ──────────────────────────────────────────────────────────
+    if action == "lead" and method == "POST":
+        conn_l = get_db()
+        cur_l = conn_l.cursor()
+        try:
+            cur_l.execute(
+                "INSERT INTO gosash_leads (name, phone, tariff, promo, source, note) "
+                "VALUES (%s,%s,%s,%s,%s,%s) RETURNING id",
+                (body.get("name", ""), body.get("phone", ""), body.get("tariff", ""),
+                 body.get("promo", ""), body.get("source", ""), body.get("note", ""))
+            )
+            conn_l.commit()
+            return json_response({"ok": True})
+        finally:
+            cur_l.close()
+            conn_l.close()
 
     # ── AUTH ──────────────────────────────────────────────────────────────────
     if action == "login":
@@ -120,15 +205,14 @@ def handler(event: dict, context) -> dict:
         # ── SETTINGS ──────────────────────────────────────────────────────────
         if action == "settings":
             if method == "GET":
-                cur.execute(f"SELECT key, value FROM {SCHEMA}.gosash_settings ORDER BY key")
+                cur.execute("SELECT key, value FROM gosash_settings ORDER BY key")
                 rows = cur.fetchall()
-                result = {r["key"]: r["value"] for r in rows}
-                return json_response(result)
+                return json_response({r["key"]: r["value"] for r in rows})
             if method == "POST":
                 data = body.get("data", {})
                 for k, v in data.items():
                     cur.execute(
-                        f"INSERT INTO {SCHEMA}.gosash_settings (key, value, updated_at) VALUES (%s, %s, NOW()) "
+                        "INSERT INTO gosash_settings (key, value, updated_at) VALUES (%s, %s, NOW()) "
                         "ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()",
                         (k, str(v))
                     )
@@ -138,21 +222,21 @@ def handler(event: dict, context) -> dict:
         # ── TARIFFS ───────────────────────────────────────────────────────────
         if action == "tariffs":
             if method == "GET":
-                cur.execute(f"SELECT * FROM {SCHEMA}.gosash_tariffs ORDER BY sort_order, id")
+                cur.execute("SELECT * FROM gosash_tariffs ORDER BY sort_order, id")
                 return json_response({"items": [dict(r) for r in cur.fetchall()]})
             if method == "POST":
                 d = body
                 cur.execute(
-                    f"INSERT INTO {SCHEMA}.gosash_tariffs "
+                    "INSERT INTO gosash_tariffs "
                     "(name, hours, hours_label, theory, instructor, price, gsm, badge, color, featured, installment, duration, features, restrictions, bonuses, sort_order, active) "
                     "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id",
                     (d.get("name",""), d.get("hours",56), d.get("hours_label",""), d.get("theory",""),
                      d.get("instructor",""), d.get("price",0), d.get("gsm",0), d.get("badge"),
-                     d.get("color",""), d.get("featured",False), d.get("installment"), d.get("duration"),
-                     json.dumps(d.get("features",[]), ensure_ascii=False),
-                     json.dumps(d.get("restrictions",[]), ensure_ascii=False),
-                     json.dumps(d.get("bonuses",[]), ensure_ascii=False),
-                     d.get("sort_order",0), d.get("active",True))
+                     d.get("color",""), bool(d.get("featured", False)), d.get("installment"), d.get("duration"),
+                     to_json_field(d.get("features", [])),
+                     to_json_field(d.get("restrictions", [])),
+                     to_json_field(d.get("bonuses", [])),
+                     d.get("sort_order",0), bool(d.get("active", True)))
                 )
                 new_id = cur.fetchone()["id"]
                 conn.commit()
@@ -161,35 +245,36 @@ def handler(event: dict, context) -> dict:
                 d = body
                 tid = d.get("id")
                 cur.execute(
-                    f"UPDATE {SCHEMA}.gosash_tariffs SET name=%s, hours=%s, hours_label=%s, theory=%s, instructor=%s, "
+                    "UPDATE gosash_tariffs SET name=%s, hours=%s, hours_label=%s, theory=%s, instructor=%s, "
                     "price=%s, gsm=%s, badge=%s, color=%s, featured=%s, installment=%s, duration=%s, "
                     "features=%s, restrictions=%s, bonuses=%s, sort_order=%s, active=%s, updated_at=NOW() WHERE id=%s",
                     (d.get("name",""), d.get("hours",56), d.get("hours_label",""), d.get("theory",""),
                      d.get("instructor",""), d.get("price",0), d.get("gsm",0), d.get("badge"),
-                     d.get("color",""), d.get("featured",False), d.get("installment"), d.get("duration"),
-                     json.dumps(d.get("features",[]), ensure_ascii=False),
-                     json.dumps(d.get("restrictions",[]), ensure_ascii=False),
-                     json.dumps(d.get("bonuses",[]), ensure_ascii=False),
-                     d.get("sort_order",0), d.get("active",True), tid)
+                     d.get("color",""), bool(d.get("featured", False)), d.get("installment"), d.get("duration"),
+                     to_json_field(d.get("features", [])),
+                     to_json_field(d.get("restrictions", [])),
+                     to_json_field(d.get("bonuses", [])),
+                     d.get("sort_order",0), bool(d.get("active", True)), tid)
                 )
                 conn.commit()
                 return json_response({"ok": True})
             if method == "DELETE":
                 tid = body.get("id") or qs.get("id")
-                cur.execute(f"DELETE FROM {SCHEMA}.gosash_tariffs WHERE id=%s", (tid,))
+                cur.execute("DELETE FROM gosash_tariffs WHERE id=%s", (tid,))
                 conn.commit()
                 return json_response({"ok": True})
 
         # ── BRANCHES ──────────────────────────────────────────────────────────
         if action == "branches":
             if method == "GET":
-                cur.execute(f"SELECT * FROM {SCHEMA}.gosash_branches ORDER BY sort_order, id")
+                cur.execute("SELECT * FROM gosash_branches ORDER BY sort_order, id")
                 return json_response({"items": [dict(r) for r in cur.fetchall()]})
             if method == "POST":
                 d = body
                 cur.execute(
-                    f"INSERT INTO {SCHEMA}.gosash_branches (name, addr, rating, map_url, active, sort_order) VALUES (%s,%s,%s,%s,%s,%s) RETURNING id",
-                    (d.get("name",""), d.get("addr",""), d.get("rating",5.0), d.get("map_url",""), d.get("active",True), d.get("sort_order",0))
+                    "INSERT INTO gosash_branches (name, addr, rating, map_url, active, sort_order) VALUES (%s,%s,%s,%s,%s,%s) RETURNING id",
+                    (d.get("name",""), d.get("addr",""), d.get("rating",5.0), d.get("map_url",""),
+                     bool(d.get("active", True)), d.get("sort_order",0))
                 )
                 new_id = cur.fetchone()["id"]
                 conn.commit()
@@ -198,28 +283,31 @@ def handler(event: dict, context) -> dict:
                 d = body
                 bid = d.get("id")
                 cur.execute(
-                    f"UPDATE {SCHEMA}.gosash_branches SET name=%s, addr=%s, rating=%s, map_url=%s, active=%s, sort_order=%s, updated_at=NOW() WHERE id=%s",
-                    (d.get("name",""), d.get("addr",""), d.get("rating",5.0), d.get("map_url",""), d.get("active",True), d.get("sort_order",0), bid)
+                    "UPDATE gosash_branches SET name=%s, addr=%s, rating=%s, map_url=%s, active=%s, sort_order=%s WHERE id=%s",
+                    (d.get("name",""), d.get("addr",""), d.get("rating",5.0), d.get("map_url",""),
+                     bool(d.get("active", True)), d.get("sort_order",0), bid)
                 )
                 conn.commit()
                 return json_response({"ok": True})
             if method == "DELETE":
                 bid = body.get("id") or qs.get("id")
-                cur.execute(f"DELETE FROM {SCHEMA}.gosash_branches WHERE id=%s", (bid,))
+                cur.execute("DELETE FROM gosash_branches WHERE id=%s", (bid,))
                 conn.commit()
                 return json_response({"ok": True})
 
         # ── INSTRUCTORS ───────────────────────────────────────────────────────
         if action == "instructors":
             if method == "GET":
-                cur.execute(f"SELECT * FROM {SCHEMA}.gosash_instructors ORDER BY sort_order, id")
+                cur.execute("SELECT * FROM gosash_instructors ORDER BY sort_order, id")
                 return json_response({"items": [dict(r) for r in cur.fetchall()]})
             if method == "POST":
                 d = body
                 cur.execute(
-                    f"INSERT INTO {SCHEMA}.gosash_instructors (name, photo, experience, cars, rating, reviews_count, active, sort_order) VALUES (%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id",
-                    (d.get("name",""), d.get("photo",""), d.get("experience",""), d.get("cars",""),
-                     d.get("rating",5.0), d.get("reviews_count",0), d.get("active",True), d.get("sort_order",0))
+                    "INSERT INTO gosash_instructors (name, experience, specialization, photo_url, is_top, is_lady, active, sort_order) "
+                    "VALUES (%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id",
+                    (d.get("name",""), d.get("experience",""), d.get("specialization",""),
+                     d.get("photo_url",""), bool(d.get("is_top", False)), bool(d.get("is_lady", False)),
+                     bool(d.get("active", True)), d.get("sort_order",0))
                 )
                 new_id = cur.fetchone()["id"]
                 conn.commit()
@@ -228,29 +316,31 @@ def handler(event: dict, context) -> dict:
                 d = body
                 iid = d.get("id")
                 cur.execute(
-                    f"UPDATE {SCHEMA}.gosash_instructors SET name=%s, photo=%s, experience=%s, cars=%s, rating=%s, reviews_count=%s, active=%s, sort_order=%s, updated_at=NOW() WHERE id=%s",
-                    (d.get("name",""), d.get("photo",""), d.get("experience",""), d.get("cars",""),
-                     d.get("rating",5.0), d.get("reviews_count",0), d.get("active",True), d.get("sort_order",0), iid)
+                    "UPDATE gosash_instructors SET name=%s, experience=%s, specialization=%s, photo_url=%s, is_top=%s, is_lady=%s, active=%s, sort_order=%s WHERE id=%s",
+                    (d.get("name",""), d.get("experience",""), d.get("specialization",""),
+                     d.get("photo_url",""), bool(d.get("is_top", False)), bool(d.get("is_lady", False)),
+                     bool(d.get("active", True)), d.get("sort_order",0), iid)
                 )
                 conn.commit()
                 return json_response({"ok": True})
             if method == "DELETE":
                 iid = body.get("id") or qs.get("id")
-                cur.execute(f"DELETE FROM {SCHEMA}.gosash_instructors WHERE id=%s", (iid,))
+                cur.execute("DELETE FROM gosash_instructors WHERE id=%s", (iid,))
                 conn.commit()
                 return json_response({"ok": True})
 
         # ── REVIEWS ───────────────────────────────────────────────────────────
         if action == "reviews":
             if method == "GET":
-                cur.execute(f"SELECT * FROM {SCHEMA}.gosash_reviews ORDER BY sort_order, id")
+                cur.execute("SELECT * FROM gosash_reviews ORDER BY sort_order, id")
                 return json_response({"items": [dict(r) for r in cur.fetchall()]})
             if method == "POST":
                 d = body
                 cur.execute(
-                    f"INSERT INTO {SCHEMA}.gosash_reviews (name, photo, rating, text, date, active, sort_order) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
-                    (d.get("name",""), d.get("photo",""), d.get("rating",5), d.get("text",""),
-                     d.get("date",""), d.get("active",True), d.get("sort_order",0))
+                    "INSERT INTO gosash_reviews (author, text, rating, photo_url, source, active, sort_order) "
+                    "VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
+                    (d.get("author",""), d.get("text",""), d.get("rating",5), d.get("photo_url",""),
+                     d.get("source",""), bool(d.get("active", True)), d.get("sort_order",0))
                 )
                 new_id = cur.fetchone()["id"]
                 conn.commit()
@@ -259,29 +349,31 @@ def handler(event: dict, context) -> dict:
                 d = body
                 rid = d.get("id")
                 cur.execute(
-                    f"UPDATE {SCHEMA}.gosash_reviews SET name=%s, photo=%s, rating=%s, text=%s, date=%s, active=%s, sort_order=%s, updated_at=NOW() WHERE id=%s",
-                    (d.get("name",""), d.get("photo",""), d.get("rating",5), d.get("text",""),
-                     d.get("date",""), d.get("active",True), d.get("sort_order",0), rid)
+                    "UPDATE gosash_reviews SET author=%s, text=%s, rating=%s, photo_url=%s, source=%s, active=%s, sort_order=%s WHERE id=%s",
+                    (d.get("author",""), d.get("text",""), d.get("rating",5), d.get("photo_url",""),
+                     d.get("source",""), bool(d.get("active", True)), d.get("sort_order",0), rid)
                 )
                 conn.commit()
                 return json_response({"ok": True})
             if method == "DELETE":
                 rid = body.get("id") or qs.get("id")
-                cur.execute(f"DELETE FROM {SCHEMA}.gosash_reviews WHERE id=%s", (rid,))
+                cur.execute("DELETE FROM gosash_reviews WHERE id=%s", (rid,))
                 conn.commit()
                 return json_response({"ok": True})
 
         # ── PROMOS ────────────────────────────────────────────────────────────
         if action == "promos":
             if method == "GET":
-                cur.execute(f"SELECT * FROM {SCHEMA}.gosash_promos ORDER BY sort_order, id")
+                cur.execute("SELECT * FROM gosash_promos ORDER BY sort_order, id")
                 return json_response({"items": [dict(r) for r in cur.fetchall()]})
             if method == "POST":
                 d = body
                 cur.execute(
-                    f"INSERT INTO {SCHEMA}.gosash_promos (title, description, badge, active, sort_order) VALUES (%s,%s,%s,%s,%s) RETURNING id",
-                    (d.get("title",""), d.get("description",""), d.get("badge",""),
-                     d.get("active",True), d.get("sort_order",0))
+                    "INSERT INTO gosash_promos (title, subtitle, description, image_url, badge, active, sort_order) "
+                    "VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
+                    (d.get("title",""), d.get("subtitle",""), d.get("description",""),
+                     d.get("image_url",""), d.get("badge",""),
+                     bool(d.get("active", True)), d.get("sort_order",0))
                 )
                 new_id = cur.fetchone()["id"]
                 conn.commit()
@@ -290,19 +382,194 @@ def handler(event: dict, context) -> dict:
                 d = body
                 pid = d.get("id")
                 cur.execute(
-                    f"UPDATE {SCHEMA}.gosash_promos SET title=%s, description=%s, badge=%s, active=%s, sort_order=%s, updated_at=NOW() WHERE id=%s",
-                    (d.get("title",""), d.get("description",""), d.get("badge",""),
-                     d.get("active",True), d.get("sort_order",0), pid)
+                    "UPDATE gosash_promos SET title=%s, subtitle=%s, description=%s, image_url=%s, badge=%s, active=%s, sort_order=%s WHERE id=%s",
+                    (d.get("title",""), d.get("subtitle",""), d.get("description",""),
+                     d.get("image_url",""), d.get("badge",""),
+                     bool(d.get("active", True)), d.get("sort_order",0), pid)
                 )
                 conn.commit()
                 return json_response({"ok": True})
             if method == "DELETE":
                 pid = body.get("id") or qs.get("id")
-                cur.execute(f"DELETE FROM {SCHEMA}.gosash_promos WHERE id=%s", (pid,))
+                cur.execute("DELETE FROM gosash_promos WHERE id=%s", (pid,))
                 conn.commit()
                 return json_response({"ok": True})
 
-        return error("Неизвестный action", 404)
+        # ── FAQ ────────────────────────────────────────────────────────────────
+        if action == "faq":
+            if method == "GET":
+                cur.execute("SELECT * FROM gosash_faq ORDER BY sort_order, id")
+                return json_response({"items": [dict(r) for r in cur.fetchall()]})
+            if method == "POST":
+                d = body
+                cur.execute(
+                    "INSERT INTO gosash_faq (question, answer, active, sort_order) VALUES (%s,%s,%s,%s) RETURNING id",
+                    (d.get("question",""), d.get("answer",""), bool(d.get("active", True)), d.get("sort_order",0))
+                )
+                new_id = cur.fetchone()["id"]
+                conn.commit()
+                return json_response({"ok": True, "id": new_id})
+            if method == "PUT":
+                d = body
+                fid = d.get("id")
+                cur.execute(
+                    "UPDATE gosash_faq SET question=%s, answer=%s, active=%s, sort_order=%s WHERE id=%s",
+                    (d.get("question",""), d.get("answer",""), bool(d.get("active", True)), d.get("sort_order",0), fid)
+                )
+                conn.commit()
+                return json_response({"ok": True})
+            if method == "DELETE":
+                fid = body.get("id") or qs.get("id")
+                cur.execute("DELETE FROM gosash_faq WHERE id=%s", (fid,))
+                conn.commit()
+                return json_response({"ok": True})
+
+        # ── STATS ──────────────────────────────────────────────────────────────
+        if action == "stats":
+            if method == "GET":
+                cur.execute("SELECT * FROM gosash_stats ORDER BY sort_order, id")
+                return json_response({"items": [dict(r) for r in cur.fetchall()]})
+            if method == "POST":
+                d = body
+                cur.execute(
+                    "INSERT INTO gosash_stats (value, label, icon, active, sort_order) VALUES (%s,%s,%s,%s,%s) RETURNING id",
+                    (d.get("value",""), d.get("label",""), d.get("icon","Star"),
+                     bool(d.get("active", True)), d.get("sort_order",0))
+                )
+                new_id = cur.fetchone()["id"]
+                conn.commit()
+                return json_response({"ok": True, "id": new_id})
+            if method == "PUT":
+                d = body
+                sid = d.get("id")
+                cur.execute(
+                    "UPDATE gosash_stats SET value=%s, label=%s, icon=%s, active=%s, sort_order=%s WHERE id=%s",
+                    (d.get("value",""), d.get("label",""), d.get("icon","Star"),
+                     bool(d.get("active", True)), d.get("sort_order",0), sid)
+                )
+                conn.commit()
+                return json_response({"ok": True})
+            if method == "DELETE":
+                sid = body.get("id") or qs.get("id")
+                cur.execute("DELETE FROM gosash_stats WHERE id=%s", (sid,))
+                conn.commit()
+                return json_response({"ok": True})
+
+        # ── FINANCE ────────────────────────────────────────────────────────────
+        if action == "finance":
+            if method == "GET":
+                cur.execute("SELECT * FROM gosash_finance ORDER BY sort_order, id")
+                return json_response({"items": [dict(r) for r in cur.fetchall()]})
+            if method == "POST":
+                d = body
+                cur.execute(
+                    "INSERT INTO gosash_finance (title, subtitle, icon, rows, active, sort_order) VALUES (%s,%s,%s,%s,%s,%s) RETURNING id",
+                    (d.get("title",""), d.get("subtitle",""), d.get("icon","Percent"),
+                     to_json_field(d.get("rows", [])),
+                     bool(d.get("active", True)), d.get("sort_order",0))
+                )
+                new_id = cur.fetchone()["id"]
+                conn.commit()
+                return json_response({"ok": True, "id": new_id})
+            if method == "PUT":
+                d = body
+                fid = d.get("id")
+                cur.execute(
+                    "UPDATE gosash_finance SET title=%s, subtitle=%s, icon=%s, rows=%s, active=%s, sort_order=%s WHERE id=%s",
+                    (d.get("title",""), d.get("subtitle",""), d.get("icon","Percent"),
+                     to_json_field(d.get("rows", [])),
+                     bool(d.get("active", True)), d.get("sort_order",0), fid)
+                )
+                conn.commit()
+                return json_response({"ok": True})
+            if method == "DELETE":
+                fid = body.get("id") or qs.get("id")
+                cur.execute("DELETE FROM gosash_finance WHERE id=%s", (fid,))
+                conn.commit()
+                return json_response({"ok": True})
+
+        # ── MARQUEE ────────────────────────────────────────────────────────────
+        if action == "marquee":
+            if method == "GET":
+                cur.execute("SELECT * FROM gosash_marquee ORDER BY sort_order, id")
+                return json_response({"items": [dict(r) for r in cur.fetchall()]})
+            if method == "POST":
+                d = body
+                cur.execute(
+                    "INSERT INTO gosash_marquee (label, shape, active, sort_order) VALUES (%s,%s,%s,%s) RETURNING id",
+                    (d.get("label",""), d.get("shape","circle"),
+                     bool(d.get("active", True)), d.get("sort_order",0))
+                )
+                new_id = cur.fetchone()["id"]
+                conn.commit()
+                return json_response({"ok": True, "id": new_id})
+            if method == "PUT":
+                d = body
+                mid = d.get("id")
+                cur.execute(
+                    "UPDATE gosash_marquee SET label=%s, shape=%s, active=%s, sort_order=%s WHERE id=%s",
+                    (d.get("label",""), d.get("shape","circle"),
+                     bool(d.get("active", True)), d.get("sort_order",0), mid)
+                )
+                conn.commit()
+                return json_response({"ok": True})
+            if method == "DELETE":
+                mid = body.get("id") or qs.get("id")
+                cur.execute("DELETE FROM gosash_marquee WHERE id=%s", (mid,))
+                conn.commit()
+                return json_response({"ok": True})
+
+        # ── HERO FEATURES ──────────────────────────────────────────────────────
+        if action == "hero-features":
+            if method == "GET":
+                cur.execute("SELECT * FROM gosash_hero_features ORDER BY sort_order, id")
+                return json_response({"items": [dict(r) for r in cur.fetchall()]})
+            if method == "POST":
+                d = body
+                cur.execute(
+                    "INSERT INTO gosash_hero_features (label, active, sort_order) VALUES (%s,%s,%s) RETURNING id",
+                    (d.get("label",""), bool(d.get("active", True)), d.get("sort_order",0))
+                )
+                new_id = cur.fetchone()["id"]
+                conn.commit()
+                return json_response({"ok": True, "id": new_id})
+            if method == "PUT":
+                d = body
+                hid = d.get("id")
+                cur.execute(
+                    "UPDATE gosash_hero_features SET label=%s, active=%s, sort_order=%s WHERE id=%s",
+                    (d.get("label",""), bool(d.get("active", True)), d.get("sort_order",0), hid)
+                )
+                conn.commit()
+                return json_response({"ok": True})
+            if method == "DELETE":
+                hid = body.get("id") or qs.get("id")
+                cur.execute("DELETE FROM gosash_hero_features WHERE id=%s", (hid,))
+                conn.commit()
+                return json_response({"ok": True})
+
+        # ── LEADS ──────────────────────────────────────────────────────────────
+        if action == "leads":
+            if method == "GET":
+                cur.execute("SELECT * FROM gosash_leads ORDER BY created_at DESC, id DESC LIMIT 500")
+                return json_response({"items": [dict(r) for r in cur.fetchall()]})
+            if method == "PUT":
+                d = body
+                lid = d.get("id")
+                cur.execute(
+                    "UPDATE gosash_leads SET status=%s, note=%s WHERE id=%s",
+                    (d.get("status","new"), d.get("note",""), lid)
+                )
+                conn.commit()
+                return json_response({"ok": True})
+            if method == "DELETE":
+                lid = body.get("id") or qs.get("id")
+                cur.execute("DELETE FROM gosash_leads WHERE id=%s", (lid,))
+                conn.commit()
+                return json_response({"ok": True})
+
+        return error(f"Неизвестный action: {action}", 404)
 
     finally:
+        cur.close()
         conn.close()

@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { api } from "@/components/admin/adminApi";
 import Icon from "@/components/ui/icon";
 import { ymGoal } from "@/components/gosash/shared";
+import { usePublicList, usePublicSettings } from "@/components/gosash/shared/publicApi";
+
+type DbPromo = { id: number; title: string; subtitle: string; description: string; image_url: string; badge: string };
 
 export type Promo = {
   id: number;
@@ -45,7 +48,7 @@ function LeadModal({ promo, onClose }: { promo: PromoCardData; onClose: () => vo
     setLoading(true);
     ymGoal("promo_form_submit", { promo: promo.title });
     try {
-      await api("/leads", "POST", { name, phone, promo: promo.title });
+      await api("lead", "POST", { name, phone, promo: promo.title, source: "promo" });
       setSent(true);
     } catch {
       setSent(true);
@@ -210,24 +213,35 @@ const STATIC_PROMOS: PromoCardData[] = [
   },
 ];
 
-export default function PromosSection() {
-  const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState<PromoCardData | null>(null);
+function dbToCard(p: DbPromo): PromoCardData {
+  return {
+    id: p.id,
+    title: p.title,
+    description: p.description,
+    image_url: p.image_url,
+    badge: p.badge || undefined,
+    price: p.subtitle || undefined,
+    button_label: "Оставить заявку",
+  };
+}
 
-  useEffect(() => {
-    api("/promos", "GET")
-      .catch(() => null)
-      .finally(() => setLoading(false));
-  }, []);
+export default function PromosSection() {
+  const [selected, setSelected] = useState<PromoCardData | null>(null);
+  const { items: dbPromos, loading } = usePublicList<DbPromo>("public-promos");
+  const { settings } = usePublicSettings();
 
   if (loading) return null;
+  if (settings.block_promos === "false") return null;
+
+  const promos: PromoCardData[] = dbPromos && dbPromos.length > 0
+    ? dbPromos.map(dbToCard)
+    : STATIC_PROMOS;
 
   return (
     <section id="promos" className="py-16" style={{ background: "#f4f4f4" }}>
       {selected && <LeadModal promo={selected} onClose={() => setSelected(null)} />}
 
       <div className="max-w-7xl mx-auto px-4">
-        {/* Заголовок по центру */}
         <div className="mb-10 text-center">
           <p className="text-orange-500 font-black text-xs uppercase tracking-[0.2em] mb-2">Специальные предложения</p>
           <h2 className="text-3xl md:text-4xl font-black text-black uppercase leading-tight">
@@ -236,9 +250,8 @@ export default function PromosSection() {
           </h2>
         </div>
 
-        {/* Карточки */}
         <div className="grid gap-6 grid-cols-1 md:grid-cols-3">
-          {STATIC_PROMOS.map((promo) => (
+          {promos.map((promo) => (
             <PromoCard key={promo.id} promo={promo} onApply={() => { ymGoal("promo_card_click", { promo: promo.title }); setSelected(promo); }} />
           ))}
         </div>

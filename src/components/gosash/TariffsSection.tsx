@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Icon from "@/components/ui/icon";
 import { tariffs as fallbackTariffs, fetchTariffs, ymGoal, type Tariff } from "./shared";
+import { usePublicSettings } from "./shared/publicApi";
 
 interface TariffsSectionProps {
   onTariffSelect: (tariffName: string, price?: number) => void;
@@ -8,6 +9,7 @@ interface TariffsSectionProps {
 
 export default function TariffsSection({ onTariffSelect }: TariffsSectionProps) {
   const [tariffs, setTariffs] = useState<Tariff[]>(fallbackTariffs);
+  const { settings } = usePublicSettings();
 
   useEffect(() => {
     fetchTariffs().then(data => {
@@ -15,13 +17,16 @@ export default function TariffsSection({ onTariffSelect }: TariffsSectionProps) 
     });
   }, []);
 
+  if (settings.block_tariffs === "false") return null;
+  const tariffsTitle = settings.tariffs_title || "Выберите свою программу обучения";
+
   return (
     <>
       {/* ============ TARIFFS ============ */}
       <section id="tariffs" className="py-20 section-alt">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3 uppercase">Выберите свою программу обучения</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3 uppercase">{tariffsTitle}</h2>
             <p className="text-gray-600 max-w-xl mx-auto">
               Все цены фиксируются в договоре. Никаких скрытых платежей.
             </p>
