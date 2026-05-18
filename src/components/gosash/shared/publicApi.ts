@@ -2,15 +2,19 @@ import { useEffect, useState } from "react";
 
 export const PUBLIC_API = "https://functions.poehali.dev/941d16d5-04a2-4995-833a-9b8becab97a8";
 
-export async function fetchPublic<T>(action: string): Promise<T | null> {
-  try {
-    const res = await fetch(`${PUBLIC_API}?action=${action}`);
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data as T;
-  } catch {
-    return null;
+export async function fetchPublic<T>(action: string, retries = 2): Promise<T | null> {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(`${PUBLIC_API}?action=${action}`, { cache: "no-store" });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data as T;
+    } catch {
+      if (attempt === retries) return null;
+      await new Promise(r => setTimeout(r, 300 * (attempt + 1)));
+    }
   }
+  return null;
 }
 
 /** Грузит коллекцию из публичного эндпоинта. При ошибке/пустом ответе — null. */
