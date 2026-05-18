@@ -33,14 +33,23 @@ export default function TariffsSection({ onTariffSelect }: TariffsSectionProps) 
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tariffs.map((t) => (
+            {tariffs.map((t) => {
+              const isSpecial = typeof t.badge === "string" && t.badge.toUpperCase().includes("СПЕЦПРЕДЛОЖЕНИЕ");
+              return (
               <div
                 key={t.id}
                 className={`tariff-card p-6 flex flex-col relative overflow-hidden ${t.featured ? "featured" : ""} ${
                   t.color === "navy" ? "border-orange-400" : ""
-                } ${t.color === "pink" ? "border-pink-300" : ""}`}
+                } ${t.color === "pink" ? "border-pink-300" : ""} ${
+                  isSpecial ? "border-2 border-red-500 shadow-[0_0_24px_rgba(239,68,68,0.45)] ring-2 ring-red-500/40" : ""
+                }`}
                 style={{ background: "#2e2e2e" }}
               >
+                {isSpecial && (
+                  <div className="absolute -top-px left-0 right-0 bg-gradient-to-r from-red-600 via-orange-500 to-red-600 text-white text-[10px] font-black text-center py-1 tracking-widest uppercase z-10">
+                    🔥 Спецпредложение
+                  </div>
+                )}
                 {"promo" in t && t.promo && (() => {
                   const now = new Date();
                   const from = new Date((t.promo as { label: string; from: string; to: string }).from);
@@ -52,7 +61,7 @@ export default function TariffsSection({ onTariffSelect }: TariffsSectionProps) 
                     </div>
                   ) : null;
                 })()}
-                <div className="flex items-start justify-between mb-4">
+                <div className={`flex items-start justify-between mb-4 ${isSpecial ? "mt-4" : ""}`}>
                   <h3 className="text-lg font-black text-white">{t.name}</h3>
                   {t.badge && (
                     <span className={`badge-hit flex-shrink-0 ml-2 ${
@@ -181,7 +190,8 @@ export default function TariffsSection({ onTariffSelect }: TariffsSectionProps) 
                   Выбрать тариф
                 </button>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

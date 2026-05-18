@@ -32,6 +32,7 @@ type ApiTariff = {
   theory: string;
   instructor: string;
   price: number;
+  old_price?: number | null;
   gsm: number;
   badge: string | null;
   color: string;
@@ -56,6 +57,7 @@ function mapApiTariff(t: ApiTariff): Tariff {
     restrictions: Array.isArray(t.restrictions) ? t.restrictions : [],
     bonuses: Array.isArray(t.bonuses) ? t.bonuses : [],
     price: t.price,
+    oldPrice: t.old_price ?? undefined,
     gsm: t.gsm,
     featured: t.featured,
     badge: t.badge,

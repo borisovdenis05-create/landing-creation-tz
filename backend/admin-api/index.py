@@ -102,7 +102,7 @@ def handler(event: dict, context) -> dict:
         cur_pub = conn_pub.cursor(cursor_factory=RealDictCursor)
         try:
             cur_pub.execute(
-                "SELECT id, name, hours, hours_label, theory, instructor, price, gsm, "
+                "SELECT id, name, hours, hours_label, theory, instructor, price, old_price, gsm, "
                 "badge, color, featured, installment, duration, features, restrictions, bonuses "
                 "FROM gosash_tariffs WHERE active = TRUE ORDER BY sort_order, id"
             )
@@ -228,10 +228,10 @@ def handler(event: dict, context) -> dict:
                 d = body
                 cur.execute(
                     "INSERT INTO gosash_tariffs "
-                    "(name, hours, hours_label, theory, instructor, price, gsm, badge, color, featured, installment, duration, features, restrictions, bonuses, sort_order, active) "
-                    "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id",
+                    "(name, hours, hours_label, theory, instructor, price, old_price, gsm, badge, color, featured, installment, duration, features, restrictions, bonuses, sort_order, active) "
+                    "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id",
                     (d.get("name",""), d.get("hours",56), d.get("hours_label",""), d.get("theory",""),
-                     d.get("instructor",""), d.get("price",0), d.get("gsm",0), d.get("badge"),
+                     d.get("instructor",""), d.get("price",0), d.get("old_price"), d.get("gsm",0), d.get("badge"),
                      d.get("color",""), bool(d.get("featured", False)), d.get("installment"), d.get("duration"),
                      to_json_field(d.get("features", [])),
                      to_json_field(d.get("restrictions", [])),
@@ -246,10 +246,10 @@ def handler(event: dict, context) -> dict:
                 tid = d.get("id")
                 cur.execute(
                     "UPDATE gosash_tariffs SET name=%s, hours=%s, hours_label=%s, theory=%s, instructor=%s, "
-                    "price=%s, gsm=%s, badge=%s, color=%s, featured=%s, installment=%s, duration=%s, "
+                    "price=%s, old_price=%s, gsm=%s, badge=%s, color=%s, featured=%s, installment=%s, duration=%s, "
                     "features=%s, restrictions=%s, bonuses=%s, sort_order=%s, active=%s, updated_at=NOW() WHERE id=%s",
                     (d.get("name",""), d.get("hours",56), d.get("hours_label",""), d.get("theory",""),
-                     d.get("instructor",""), d.get("price",0), d.get("gsm",0), d.get("badge"),
+                     d.get("instructor",""), d.get("price",0), d.get("old_price"), d.get("gsm",0), d.get("badge"),
                      d.get("color",""), bool(d.get("featured", False)), d.get("installment"), d.get("duration"),
                      to_json_field(d.get("features", [])),
                      to_json_field(d.get("restrictions", [])),
