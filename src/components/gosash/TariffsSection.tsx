@@ -132,6 +132,11 @@ export default function TariffsSection({ onTariffSelect }: TariffsSectionProps) 
                   )}
 
                   <div className="pt-3">
+                    {"oldPrice" in t && t.oldPrice && (
+                      <p className="text-sm text-white/40 line-through font-semibold">
+                        {(t.oldPrice as number).toLocaleString("ru-RU")} ₽
+                      </p>
+                    )}
                     <p className="text-2xl font-black text-white">
                       {t.price.toLocaleString("ru-RU")} ₽
                     </p>
