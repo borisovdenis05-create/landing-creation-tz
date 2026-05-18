@@ -1,7 +1,7 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 export type Tariff = {
   id?: number; name: string; hours: number; hours_label: string;
-  theory: string; instructor: string; price: number; gsm: number;
+  theory: string; instructor: string; price: number; old_price?: number | null; gsm: number;
   badge: string; color: string; featured: boolean; installment: string;
   duration: string; features: string[]; restrictions: string[]; bonuses: string[];
   sort_order: number; active: boolean;

@@ -6,7 +6,7 @@ import type { Tariff } from "./AdminCrudTabs";
 
 const EMPTY_TARIFF: Tariff = {
   name: "", hours: 56, hours_label: "56 часов вождения", theory: "Онлайн/офлайн",
-  instructor: "Без выбора инструктора", price: 0, gsm: 0, badge: "", color: "",
+  instructor: "Без выбора инструктора", price: 0, old_price: null, gsm: 0, badge: "", color: "",
   featured: false, installment: "", duration: "", features: [], restrictions: [],
   bonuses: [], sort_order: 0, active: true,
 };
@@ -58,6 +58,7 @@ function TariffEditor({ tariff, onSave, onCancel, token }: {
           <Field label="Теория" value={d.theory} onChange={v => set("theory", v)} />
           <Field label="Инструктор" value={d.instructor} onChange={v => set("instructor", v)} />
           <Field label="Цена (₽)" value={String(d.price)} onChange={v => set("price", parseInt(v)||0)} type="number" />
+          <Field label="Старая цена (₽, пусто = без скидки)" value={d.old_price ? String(d.old_price) : ""} onChange={v => set("old_price", v ? parseInt(v) : null)} type="number" />
           <Field label="ГСМ (₽, 0 = включено)" value={String(d.gsm)} onChange={v => set("gsm", parseInt(v)||0)} type="number" />
           <Field label="Рассрочка" value={d.installment || ""} onChange={v => set("installment", v)} />
           <Field label="Срок обучения" value={d.duration || ""} onChange={v => set("duration", v)} />
@@ -121,6 +122,12 @@ export function TariffsTab({ token }: { token: string }) {
     else show(res.error || "Ошибка", "err");
   };
 
+  const toggleActive = async (t: Tariff) => {
+    const res = await api("tariffs", "PUT", { ...t, active: !t.active }, token);
+    if (res.ok) { show(t.active ? "Скрыто" : "Показано", "ok"); load(); }
+    else show(res.error || "Ошибка", "err");
+  };
+
   if (loading) return <div className="text-white/50 py-8 text-center">Загрузка...</div>;
 
   return (
@@ -144,9 +151,25 @@ export function TariffsTab({ token }: { token: string }) {
                 {!t.active && <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-400">Скрыт</span>}
                 {t.featured && <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400">Хит</span>}
               </div>
-              <p className="text-white/50 text-xs mt-0.5">{t.hours_label} · {t.price.toLocaleString("ru-RU")} ₽</p>
+              <p className="text-white/50 text-xs mt-0.5">
+                {t.hours_label} ·{" "}
+                {t.old_price ? (
+                  <span className="line-through text-white/30 mr-1">{t.old_price.toLocaleString("ru-RU")} ₽</span>
+                ) : null}
+                <span className={t.old_price ? "text-orange-400 font-semibold" : ""}>{t.price.toLocaleString("ru-RU")} ₽</span>
+              </p>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                onClick={() => toggleActive(t)}
+                title={t.active ? "Скрыть карточку" : "Показать карточку"}
+                className={`p-2 rounded-lg border transition-colors ${
+                  t.active
+                    ? "border-white/10 text-white/60 hover:text-yellow-400 hover:border-yellow-400/40"
+                    : "border-red-400/40 text-red-400 hover:text-green-400 hover:border-green-400/40"
+                }`}>
+                <Icon name={t.active ? "Eye" : "EyeOff"} size={14} fallback="Circle" />
+              </button>
               <button onClick={() => setEditing(t)} className="p-2 rounded-lg border border-white/10 text-white/60 hover:text-orange-400 hover:border-orange-400/40 transition-colors">
                 <Icon name="Pencil" size={14} fallback="Circle" />
               </button>
