@@ -50,7 +50,7 @@ def check_auth(event):
     return token == expected
 
 
-def upload_image(b64_data: str, filename: str) -> str:
+def upload_image(b64_data: str, filename: str):
     s3 = boto3.client(
         "s3",
         endpoint_url="https://bucket.poehali.dev",
@@ -63,7 +63,24 @@ def upload_image(b64_data: str, filename: str) -> str:
     img_bytes = base64.b64decode(b64_data)
     s3.put_object(Bucket="files", Key=key, Body=img_bytes, ContentType=content_type)
     cdn_url = f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{key}"
-    return cdn_url
+    return {
+        "url": cdn_url,
+        "key": key,
+        "size": len(img_bytes),
+        "content_type": content_type,
+    }
+
+
+def s3_delete(key: str):
+    if not key:
+        return
+    s3 = boto3.client(
+        "s3",
+        endpoint_url="https://bucket.poehali.dev",
+        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+    )
+    s3.delete_object(Bucket="files", Key=key)
 
 
 def to_json_field(value):
@@ -199,8 +216,17 @@ def handler(event: dict, context) -> dict:
         if action == "upload":
             img_b64 = body.get("image", "")
             filename = body.get("filename", "photo.jpg")
-            url = upload_image(img_b64, filename)
-            return json_response({"url": url})
+            info = upload_image(img_b64, filename)
+            try:
+                cur.execute(
+                    "INSERT INTO gosash_media (url, filename, s3_key, size_bytes, mime_type, alt, tag) "
+                    "VALUES (%s,%s,%s,%s,%s,%s,%s)",
+                    (info["url"], filename, info["key"], info["size"], info["content_type"], "", body.get("tag", ""))
+                )
+                conn.commit()
+            except Exception:
+                conn.rollback()
+            return json_response({"url": info["url"]})
 
         # ── SETTINGS ──────────────────────────────────────────────────────────
         if action == "settings":
@@ -581,6 +607,47 @@ def handler(event: dict, context) -> dict:
             if method == "DELETE":
                 lid = body.get("id") or qs.get("id")
                 cur.execute("DELETE FROM gosash_leads WHERE id=%s", (lid,))
+                conn.commit()
+                return json_response({"ok": True})
+
+        # ── MEDIA LIBRARY ─────────────────────────────────────────────────────
+        if action == "media":
+            if method == "GET":
+                tag = qs.get("tag", "")
+                if tag:
+                    cur.execute("SELECT * FROM gosash_media WHERE tag=%s ORDER BY created_at DESC, id DESC LIMIT 500", (tag,))
+                else:
+                    cur.execute("SELECT * FROM gosash_media ORDER BY created_at DESC, id DESC LIMIT 500")
+                return json_response({"items": [dict(r) for r in cur.fetchall()]})
+            if method == "POST":
+                d = body
+                cur.execute(
+                    "INSERT INTO gosash_media (url, filename, s3_key, size_bytes, mime_type, alt, tag) "
+                    "VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
+                    (d.get("url",""), d.get("filename","external"), d.get("s3_key"), d.get("size_bytes",0),
+                     d.get("mime_type","image/jpeg"), d.get("alt",""), d.get("tag",""))
+                )
+                new_id = cur.fetchone()["id"]
+                conn.commit()
+                return json_response({"ok": True, "id": new_id})
+            if method == "PUT":
+                d = body
+                cur.execute(
+                    "UPDATE gosash_media SET alt=%s, tag=%s WHERE id=%s",
+                    (d.get("alt",""), d.get("tag",""), d.get("id"))
+                )
+                conn.commit()
+                return json_response({"ok": True})
+            if method == "DELETE":
+                mid = body.get("id") or qs.get("id")
+                cur.execute("SELECT s3_key FROM gosash_media WHERE id=%s", (mid,))
+                row = cur.fetchone()
+                if row and row.get("s3_key"):
+                    try:
+                        s3_delete(row["s3_key"])
+                    except Exception:
+                        pass
+                cur.execute("DELETE FROM gosash_media WHERE id=%s", (mid,))
                 conn.commit()
                 return json_response({"ok": True})
 

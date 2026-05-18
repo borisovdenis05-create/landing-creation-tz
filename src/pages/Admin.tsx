@@ -8,9 +8,15 @@ import { StatsTab } from "@/components/admin/AdminStatsTab";
 import { FinanceTab } from "@/components/admin/AdminFinanceTab";
 import { MarqueeTab, HeroFeaturesTab } from "@/components/admin/AdminListTabs";
 import { LeadsTab } from "@/components/admin/AdminLeadsTab";
+import { ContentTab } from "@/components/admin/AdminContentTab";
+import { SeoTab } from "@/components/admin/AdminSeoTab";
+import { MediaTab } from "@/components/admin/AdminMediaTab";
 
 const TABS = [
   { id: "leads", label: "Заявки", icon: "Inbox" },
+  { id: "content", label: "Контент", icon: "FileText" },
+  { id: "seo", label: "SEO", icon: "Search" },
+  { id: "media", label: "Медиатека", icon: "Image" },
   { id: "settings", label: "Настройки сайта", icon: "Settings" },
   { id: "blocks", label: "Видимость блоков", icon: "Layout" },
   { id: "tariffs", label: "Тарифы", icon: "Tag" },
@@ -40,6 +46,9 @@ export default function Admin() {
   const renderTab = () => {
     switch (activeTab) {
       case "leads": return <LeadsTab token={token} />;
+      case "content": return <ContentTab onNavigate={(t) => setActiveTab(t)} />;
+      case "seo": return <SeoTab token={token} />;
+      case "media": return <MediaTab token={token} />;
       case "settings": return <SettingsTab token={token} />;
       case "blocks": return <BlocksTab token={token} />;
       case "tariffs": return <TariffsTab token={token} />;
