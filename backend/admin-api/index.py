@@ -264,6 +264,22 @@ def handler(event: dict, context) -> dict:
                 conn.commit()
                 return json_response({"ok": True})
 
+        if action == "tariffs-reorder" and method == "POST":
+            order = body.get("order", [])
+            if not isinstance(order, list):
+                return error("order must be a list of ids")
+            for idx, raw_id in enumerate(order):
+                try:
+                    tid = int(raw_id)
+                except (TypeError, ValueError):
+                    continue
+                cur.execute(
+                    "UPDATE gosash_tariffs SET sort_order=%s, updated_at=NOW() WHERE id=%s",
+                    ((idx + 1) * 10, tid),
+                )
+            conn.commit()
+            return json_response({"ok": True})
+
         # ── BRANCHES ──────────────────────────────────────────────────────────
         if action == "branches":
             if method == "GET":

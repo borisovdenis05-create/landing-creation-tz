@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Icon from "@/components/ui/icon";
 import { api, useToast } from "./adminApi";
 import { Field, SaveBtn, Toast } from "./AdminUi";
@@ -128,6 +128,27 @@ export function TariffsTab({ token }: { token: string }) {
     else show(res.error || "Ошибка", "err");
   };
 
+  const dragId = useRef<number | null>(null);
+  const [dragOverId, setDragOverId] = useState<number | null>(null);
+
+  const handleDrop = async (targetId: number) => {
+    const fromId = dragId.current;
+    dragId.current = null;
+    setDragOverId(null);
+    if (fromId == null || fromId === targetId) return;
+    const fromIdx = items.findIndex(x => x.id === fromId);
+    const toIdx = items.findIndex(x => x.id === targetId);
+    if (fromIdx < 0 || toIdx < 0) return;
+    const next = [...items];
+    const [moved] = next.splice(fromIdx, 1);
+    next.splice(toIdx, 0, moved);
+    setItems(next);
+    const order = next.map(t => t.id!).filter(Boolean);
+    const res = await api("tariffs-reorder", "POST", { order }, token);
+    if (res.ok) show("Порядок обновлён", "ok");
+    else { show(res.error || "Ошибка", "err"); load(); }
+  };
+
   if (loading) return <div className="text-white/50 py-8 text-center">Загрузка...</div>;
 
   return (
@@ -141,9 +162,27 @@ export function TariffsTab({ token }: { token: string }) {
           <Icon name="Plus" size={14} fallback="Circle" /> Добавить тариф
         </button>
       </div>
+      <p className="text-white/40 text-xs mb-3 flex items-center gap-2">
+        <Icon name="GripVertical" size={12} fallback="Circle" />
+        Перетаскивайте карточки за ручку слева, чтобы изменить порядок отображения на сайте
+      </p>
       <div className="space-y-3">
         {items.map(t => (
-          <div key={t.id} className="flex items-center gap-4 p-4 rounded-xl border border-white/10 hover:border-white/20 transition-colors" style={{ background: "#3a3a3a" }}>
+          <div
+            key={t.id}
+            draggable
+            onDragStart={() => { dragId.current = t.id!; }}
+            onDragOver={e => { e.preventDefault(); if (dragOverId !== t.id) setDragOverId(t.id!); }}
+            onDragLeave={() => { if (dragOverId === t.id) setDragOverId(null); }}
+            onDrop={() => handleDrop(t.id!)}
+            onDragEnd={() => { dragId.current = null; setDragOverId(null); }}
+            className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
+              dragOverId === t.id ? "border-orange-400 bg-orange-500/10" : "border-white/10 hover:border-white/20"
+            }`}
+            style={{ background: dragOverId === t.id ? undefined : "#3a3a3a" }}>
+            <div className="cursor-grab active:cursor-grabbing text-white/30 hover:text-white/70 transition-colors" title="Перетащить">
+              <Icon name="GripVertical" size={18} fallback="Circle" />
+            </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <p className="text-white font-bold text-sm">{t.name}</p>
