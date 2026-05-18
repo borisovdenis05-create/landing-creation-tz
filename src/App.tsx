@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import ThankYou from "./pages/ThankYou";
+import SeoHead from "./components/SeoHead";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      {!isAdmin && <SeoHead />}
       {isAdmin ? <Admin /> : (
         <BrowserRouter>
           <Routes>
