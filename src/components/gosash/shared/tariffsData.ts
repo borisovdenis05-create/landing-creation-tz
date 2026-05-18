@@ -84,7 +84,7 @@ export const PHONE_DISPLAY = "+7 (978) 993 72 21";
 export const tariffs = [
   {
     id: "base-online",
-    name: "БАЗОВЫЙ ОНЛАЙН",
+    name: "СТАНДАРТ+ ОНЛАЙН",
     hours: 58,
     hoursLabel: "58 ч. МКПП и 56 АКПП",
     theory: "Онлайн формат",

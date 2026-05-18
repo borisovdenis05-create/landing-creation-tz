@@ -1,0 +1,1 @@
+UPDATE gosash_tariffs SET name = 'СТАНДАРТ+ ОНЛАЙН' WHERE name = 'БАЗОВЫЙ ОНЛАЙН';
