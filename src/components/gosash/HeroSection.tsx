@@ -35,12 +35,12 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
     <>
       {/* ============ HEADER ============ */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10" style={{ background: "#2e2e2e" }}>
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <a href="#hero" className="flex-shrink-0">
-            <img src={logo} alt="ГОСАШ Автошкола" className="h-12 object-contain" />
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 flex items-center justify-between gap-2 sm:gap-3">
+          <a href="#hero" className="flex-shrink-0 min-w-0">
+            <img src={logo} alt="ГОСАШ Автошкола" className="h-9 sm:h-12 object-contain" />
           </a>
 
-          <nav className="hidden lg:flex items-center gap-4 text-xs font-bold text-white/70 uppercase tracking-wide">
+          <nav className="hidden lg:flex items-center gap-4 text-xs font-bold text-white/70 uppercase tracking-wide flex-shrink min-w-0">
             <a href="#tariffs" className="hover:text-orange-400 transition-colors whitespace-nowrap">Тарифы</a>
             <a href="#promos" className="hover:text-orange-400 transition-colors whitespace-nowrap text-orange-400">Акции</a>
             <a href="https://автошкола82.рф/instruktory/" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors whitespace-nowrap">Инструкторы</a>
@@ -49,20 +49,23 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
             <a href="#contacts" className="hover:text-orange-400 transition-colors whitespace-nowrap">Контакты</a>
           </nav>
 
-          <div className="hidden md:flex flex-col items-end gap-0.5">
+          <div className="hidden md:flex flex-col items-end gap-0.5 flex-shrink-0 whitespace-nowrap">
             {phoneCaption && (
-              <span className="text-white/50 text-[10px] tracking-wide leading-tight">{phoneCaption}</span>
+              <span className="text-white/50 text-[10px] tracking-wide leading-tight whitespace-nowrap">{phoneCaption}</span>
             )}
-            <a href={`tel:${phone}`} onClick={() => ymGoal("phone_click")} className="text-orange-400 font-black text-base hover:text-orange-300 transition-colors tracking-wide">
+            <a href={`tel:${phone}`} onClick={() => ymGoal("phone_click")} className="text-orange-400 font-black text-base hover:text-orange-300 transition-colors tracking-wide whitespace-nowrap">
               {phoneDisplay}
             </a>
-            <span className="text-white/40 text-xs uppercase tracking-wider">{workHours}</span>
+            <span className="text-white/40 text-xs uppercase tracking-wider whitespace-nowrap">{workHours}</span>
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
-            <button onClick={() => { ymGoal("header_callback_click"); onCallbackOpen(); }} className="btn-accent text-xs sm:text-sm py-2 px-3 sm:px-5 whitespace-nowrap">
+            <button
+              onClick={() => { ymGoal("header_callback_click"); onCallbackOpen(); }}
+              className="btn-accent whitespace-nowrap !text-[11px] sm:!text-sm !py-2 !px-3 sm:!px-5 leading-tight"
+            >
               <span className="hidden sm:inline">Обратный звонок</span>
-              <span className="sm:hidden">Перезвоните</span>
+              <span className="sm:hidden">Звонок</span>
             </button>
           </div>
         </div>
