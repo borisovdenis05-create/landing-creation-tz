@@ -30,8 +30,6 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
   const phone = settings.phone || PHONE;
   const workHours = settings.work_hours || "Пн–Пт: 10:00–18:30";
   const phoneCaption = settings.phone_caption || "";
-  const infoUrl = settings.info_url || "";
-  const infoLabel = settings.info_label || "Сведения об образовательной организации";
 
   return (
     <>
@@ -49,9 +47,6 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
             <a href="#reviews" className="hover:text-orange-400 transition-colors whitespace-nowrap">Отзывы</a>
             <a href="#about" className="hover:text-orange-400 transition-colors whitespace-nowrap">Филиалы</a>
             <a href="#contacts" className="hover:text-orange-400 transition-colors whitespace-nowrap">Контакты</a>
-            {infoUrl && (
-              <a href={infoUrl} target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors whitespace-nowrap">{infoLabel}</a>
-            )}
           </nav>
 
           <div className="hidden md:flex flex-col items-end gap-0.5">
