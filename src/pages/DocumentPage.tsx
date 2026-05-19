@@ -3,6 +3,7 @@ import { useLocation, Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { fetchPublic } from "@/components/gosash/shared/publicApi";
 import { DOC_META, getDocDefault, type DocSlug } from "@/components/gosash/shared/documentDefaults";
+import CookieBanner from "@/components/gosash/CookieBanner";
 
 type DbDoc = { id: number; slug: string; title: string; content: string };
 
@@ -68,6 +69,7 @@ export default function DocumentPage() {
           ))}
         </div>
       </div>
+      <CookieBanner />
     </div>
   );
 }

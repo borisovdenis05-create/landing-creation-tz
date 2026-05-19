@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import Icon from "@/components/ui/icon";
 import { ymGoal, sendLead } from "./analytics";
 import { usePublicSettings } from "./publicApi";
+import { ConsentCheckboxes, DEFAULT_CONSENTS, consentAllGiven, type ConsentState } from "./ConsentCheckboxes";
 
 export interface CallbackModalProps {
   onClose: () => void;
@@ -12,17 +13,21 @@ export function CallbackModal({ onClose }: CallbackModalProps) {
   const [phone, setPhone] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [consents, setConsents] = useState<ConsentState>(DEFAULT_CONSENTS);
+  const [showConsentError, setShowConsentError] = useState(false);
   const { settings } = usePublicSettings();
   const submitLabel = settings.btn_callback_submit || "Жду звонка";
 
   const handleSend = useCallback(async () => {
     if (!name || !phone) return;
+    if (!consentAllGiven(consents)) { setShowConsentError(true); return; }
+    setShowConsentError(false);
     setLoading(true);
     ymGoal("callback_request");
     await sendLead(name, phone, "Обратный звонок");
     setLoading(false);
     setSent(true);
-  }, [name, phone]);
+  }, [name, phone, consents]);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -49,6 +54,10 @@ export function CallbackModal({ onClose }: CallbackModalProps) {
               <button onClick={handleSend} disabled={loading} className="btn-primary w-full text-base py-4 disabled:opacity-60">
                 {loading ? "Отправка..." : submitLabel}
               </button>
+              <ConsentCheckboxes value={consents} onChange={v => { setConsents(v); setShowConsentError(false); }} />
+              {showConsentError && (
+                <p className="text-red-500 text-[11px] text-center font-semibold">Для отправки необходимо подтвердить все согласия выше.</p>
+              )}
             </div>
           </>
         )}

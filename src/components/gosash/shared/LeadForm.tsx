@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { ymGoal, sendLead } from "./analytics";
 import { usePublicSettings } from "./publicApi";
+import { ConsentCheckboxes, DEFAULT_CONSENTS, consentAllGiven, type ConsentState } from "./ConsentCheckboxes";
 
 export interface LeadFormProps {
   title?: string;
@@ -15,18 +16,22 @@ export function LeadForm({ title, subtitle, defaultTariff = "", dark = false }: 
   const [comment, setComment] = useState(defaultTariff);
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [consents, setConsents] = useState<ConsentState>(DEFAULT_CONSENTS);
+  const [showConsentError, setShowConsentError] = useState(false);
   const { settings } = usePublicSettings();
   const submitLabel = settings.btn_lead_submit || "Записаться на обучение →";
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !phone) return;
+    if (!consentAllGiven(consents)) { setShowConsentError(true); return; }
+    setShowConsentError(false);
     setLoading(true);
     ymGoal("lead_form_submit", { tariff: comment || "не указан" });
     await sendLead(name, phone, comment);
     setLoading(false);
     setSent(true);
-  }, [name, phone, comment]);
+  }, [name, phone, comment, consents]);
 
   const inputClass = `w-full rounded-lg px-4 py-3 text-sm font-medium outline-none transition-colors border-2 ${
     dark
@@ -74,9 +79,10 @@ export function LeadForm({ title, subtitle, defaultTariff = "", dark = false }: 
       <button type="submit" disabled={loading} className="btn-accent w-full text-base py-4 font-bold disabled:opacity-60">
         {loading ? "Отправка..." : submitLabel}
       </button>
-      <p className={`text-xs text-center ${dark ? "text-white/40" : "text-gray-400"}`}>
-        Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
-      </p>
+      <ConsentCheckboxes value={consents} onChange={v => { setConsents(v); setShowConsentError(false); }} dark={dark} />
+      {showConsentError && (
+        <p className="text-red-500 text-[11px] text-center font-semibold">Для отправки заявки необходимо подтвердить все согласия выше.</p>
+      )}
     </form>
   );
 }

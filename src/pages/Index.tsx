@@ -5,6 +5,7 @@ import HeroSection from "@/components/gosash/HeroSection";
 import TariffsFinanceAbout from "@/components/gosash/TariffsFinanceAbout";
 import PromosSection from "@/components/gosash/PromosSection";
 import InstructorsToFooter from "@/components/gosash/InstructorsToFooter";
+import CookieBanner from "@/components/gosash/CookieBanner";
 import { usePublicList } from "@/components/gosash/shared/publicApi";
 
 type MarqueeItem = { id: number; label: string; shape: string };
@@ -79,6 +80,7 @@ export default function Index() {
       <TariffsFinanceAbout onTariffSelect={openTariffForm} />
       <PromosSection />
       <InstructorsToFooter />
+      <CookieBanner />
     </div>
   );
 }
