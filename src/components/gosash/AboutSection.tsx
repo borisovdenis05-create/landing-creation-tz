@@ -3,8 +3,10 @@ import Icon from "@/components/ui/icon";
 import { PHONE, PHONE_DISPLAY } from "./shared";
 import { usePublicList, usePublicSettings } from "./shared/publicApi";
 
-type DbBranch = { id: number; name: string; addr: string; rating: number; map_url: string };
+type DbBranch = { id: number; name: string; addr: string; rating: number; map_url: string; type?: string; embed_url?: string };
 type DbStat = { id: number; value: string; label: string; icon: string };
+
+type MapBranch = { name: string; addr: string; type: string; mapUrl: string; embedUrl: string };
 
 const FALLBACK_BRANCHES_MAP = [
   { name: "Гагарина", addr: "ул. Гагарина, 20А", type: "Учебный класс", mapUrl: "https://yandex.ru/maps/-/CPBAb-1K", embedUrl: "https://yandex.ru/map-widget/v1/?ll=34.0993%2C44.9354&z=17&pt=34.0993,44.9354,pm2rdm" },
@@ -32,17 +34,19 @@ const FALLBACK_STATS: DbStat[] = [
   { id: 6, value: "122", label: "ученика в год обучает каждый инструктор", icon: "BookOpen" },
 ];
 
-function BranchMap() {
+function BranchMap({ branches }: { branches: MapBranch[] }) {
   const [active, setActive] = useState(0);
-  const branch = FALLBACK_BRANCHES_MAP[active];
+  if (!branches.length) return null;
+  const idx = Math.min(active, branches.length - 1);
+  const branch = branches[idx];
   return (
     <div className="rounded-2xl overflow-hidden border border-white/10" style={{ background: "#2e2e2e" }}>
       <div className="md:hidden overflow-x-auto flex gap-0 border-b border-white/10" style={{ background: "#3a3a3a" }}>
-        {FALLBACK_BRANCHES_MAP.map((b, i) => (
+        {branches.map((b, i) => (
           <button
             key={b.name}
             onClick={() => setActive(i)}
-            className={`flex-shrink-0 px-3 py-2.5 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${active === i ? "border-orange-400 text-white bg-orange-500/10" : "border-transparent text-white/50 hover:text-white/80"}`}
+            className={`flex-shrink-0 px-3 py-2.5 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${idx === i ? "border-orange-400 text-white bg-orange-500/10" : "border-transparent text-white/50 hover:text-white/80"}`}
           >
             {b.name}
           </button>
@@ -50,16 +54,16 @@ function BranchMap() {
       </div>
       <div className="flex flex-col md:flex-row" style={{ height: "480px" }}>
         <div className="hidden md:flex md:w-64 flex-shrink-0 overflow-y-auto border-r border-white/10 flex-col" style={{ background: "#3a3a3a" }}>
-          {FALLBACK_BRANCHES_MAP.map((b, i) => (
+          {branches.map((b, i) => (
             <button
               key={b.name}
               onClick={() => setActive(i)}
-              className={`text-left px-4 py-3.5 border-b border-white/10 last:border-b-0 transition-all flex items-start gap-3 ${active === i ? "border-l-4 border-l-orange-400" : "hover:bg-white/5 border-l-4 border-l-transparent"}`}
-              style={active === i ? { background: "rgba(232,146,26,0.08)" } : undefined}
+              className={`text-left px-4 py-3.5 border-b border-white/10 last:border-b-0 transition-all flex items-start gap-3 ${idx === i ? "border-l-4 border-l-orange-400" : "hover:bg-white/5 border-l-4 border-l-transparent"}`}
+              style={idx === i ? { background: "rgba(232,146,26,0.08)" } : undefined}
             >
               <span className="text-base mt-0.5">{b.type === "Автодром" ? "🏁" : "🏫"}</span>
               <div>
-                <p className={`font-bold text-sm ${active === i ? "text-white" : "text-white/70"}`}>{b.name}</p>
+                <p className={`font-bold text-sm ${idx === i ? "text-white" : "text-white/70"}`}>{b.name}</p>
                 <p className="text-white/40 text-xs mt-0.5">{b.addr}</p>
                 <span className={`text-xs px-1.5 py-0.5 rounded-full mt-1 inline-block ${b.type === "Автодром" ? "bg-orange-500/10 text-orange-400" : "bg-white/10 text-white/60"}`}>{b.type}</span>
               </div>
@@ -67,25 +71,33 @@ function BranchMap() {
           ))}
         </div>
         <div className="flex-1 relative">
-          <iframe
-            key={branch.embedUrl}
-            src={branch.embedUrl}
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            title={branch.name}
-            allowFullScreen
-          />
-          <a
-            href={branch.mapUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="absolute bottom-3 right-3 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-md hover:shadow-lg flex items-center gap-1.5 transition-all border border-white/10"
-            style={{ background: "#2e2e2e" }}
-          >
-            <Icon name="ExternalLink" size={12} fallback="Circle" />
-            Открыть в Яндекс Картах
-          </a>
+          {branch.embedUrl ? (
+            <iframe
+              key={branch.embedUrl}
+              src={branch.embedUrl}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              title={branch.name}
+              allowFullScreen
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center text-white/40 text-sm px-4 text-center">
+              Карта не указана. Добавьте «Ссылку на встроенную карту» в админке.
+            </div>
+          )}
+          {branch.mapUrl && (
+            <a
+              href={branch.mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute bottom-3 right-3 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-md hover:shadow-lg flex items-center gap-1.5 transition-all border border-white/10"
+              style={{ background: "#2e2e2e" }}
+            >
+              <Icon name="ExternalLink" size={12} fallback="Circle" />
+              Открыть в Яндекс Картах
+            </a>
+          )}
         </div>
       </div>
     </div>
@@ -100,6 +112,18 @@ export default function AboutSection() {
   const branches = branchesDb && branchesDb.length > 0 ? branchesDb : FALLBACK_BRANCH_CARDS;
   const stats = statsDb && statsDb.length > 0 ? statsDb : FALLBACK_STATS;
   const statsTitle = settings.stats_title || "ГОСАШ в цифрах";
+
+  const mapBranches: MapBranch[] = branchesDb && branchesDb.length > 0
+    ? branchesDb
+        .filter(b => b.embed_url)
+        .map(b => ({
+          name: b.name,
+          addr: b.addr,
+          type: b.type || "Учебный класс",
+          mapUrl: b.map_url || "",
+          embedUrl: b.embed_url || "",
+        }))
+    : FALLBACK_BRANCHES_MAP.map(b => ({ name: b.name, addr: b.addr, type: b.type, mapUrl: b.mapUrl, embedUrl: b.embedUrl }));
 
   return (
     <>
@@ -149,7 +173,7 @@ export default function AboutSection() {
               </div>
             </div>
 
-            <BranchMap />
+            {mapBranches.length > 0 && <BranchMap branches={mapBranches} />}
           </div>
         </section>
       )}

@@ -9,7 +9,8 @@ export type Tariff = {
 
 export type Branch = {
   id?: number; name: string; addr: string; rating: number;
-  map_url: string; active: boolean; sort_order: number;
+  map_url: string; type: string; embed_url: string;
+  active: boolean; sort_order: number;
 };
 
 export type Instructor = {

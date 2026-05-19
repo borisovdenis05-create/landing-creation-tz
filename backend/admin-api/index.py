@@ -145,7 +145,7 @@ def handler(event: dict, context) -> dict:
 
     # ── PUBLIC: BRANCHES / INSTRUCTORS / REVIEWS / FAQ / STATS / FINANCE / MARQUEE / HERO ──
     public_map = {
-        "public-branches": ("gosash_branches", "id, name, addr, rating, map_url"),
+        "public-branches": ("gosash_branches", "id, name, addr, rating, map_url, type, embed_url"),
         "public-instructors": ("gosash_instructors", "id, name, experience, specialization, photo_url, is_top, is_lady"),
         "public-reviews": ("gosash_reviews", "id, author, text, rating, photo_url, source"),
         "public-faq": ("gosash_faq", "id, question, answer"),
@@ -314,8 +314,10 @@ def handler(event: dict, context) -> dict:
             if method == "POST":
                 d = body
                 cur.execute(
-                    "INSERT INTO gosash_branches (name, addr, rating, map_url, active, sort_order) VALUES (%s,%s,%s,%s,%s,%s) RETURNING id",
+                    "INSERT INTO gosash_branches (name, addr, rating, map_url, type, embed_url, active, sort_order) "
+                    "VALUES (%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id",
                     (d.get("name",""), d.get("addr",""), d.get("rating",5.0), d.get("map_url",""),
+                     d.get("type","Учебный класс"), d.get("embed_url",""),
                      bool(d.get("active", True)), d.get("sort_order",0))
                 )
                 new_id = cur.fetchone()["id"]
@@ -325,8 +327,9 @@ def handler(event: dict, context) -> dict:
                 d = body
                 bid = d.get("id")
                 cur.execute(
-                    "UPDATE gosash_branches SET name=%s, addr=%s, rating=%s, map_url=%s, active=%s, sort_order=%s WHERE id=%s",
+                    "UPDATE gosash_branches SET name=%s, addr=%s, rating=%s, map_url=%s, type=%s, embed_url=%s, active=%s, sort_order=%s WHERE id=%s",
                     (d.get("name",""), d.get("addr",""), d.get("rating",5.0), d.get("map_url",""),
+                     d.get("type","Учебный класс"), d.get("embed_url",""),
                      bool(d.get("active", True)), d.get("sort_order",0), bid)
                 )
                 conn.commit()
