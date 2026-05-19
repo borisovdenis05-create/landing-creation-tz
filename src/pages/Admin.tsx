@@ -11,6 +11,7 @@ import { LeadsTab } from "@/components/admin/AdminLeadsTab";
 import { ContentTab } from "@/components/admin/AdminContentTab";
 import { SeoTab } from "@/components/admin/AdminSeoTab";
 import { MediaTab } from "@/components/admin/AdminMediaTab";
+import { DocumentsTab } from "@/components/admin/AdminDocumentsTab";
 
 const TABS = [
   { id: "leads", label: "Заявки", icon: "Inbox" },
@@ -29,6 +30,7 @@ const TABS = [
   { id: "finance", label: "Финансы", icon: "Percent" },
   { id: "marquee", label: "Бегущая строка", icon: "TextCursor" },
   { id: "hero_features", label: "Hero — преимущества", icon: "Sparkles" },
+  { id: "documents", label: "Документы", icon: "FileText" },
 ] as const;
 
 export default function Admin() {
@@ -61,6 +63,7 @@ export default function Admin() {
       case "finance": return <FinanceTab token={token} />;
       case "marquee": return <MarqueeTab token={token} />;
       case "hero_features": return <HeroFeaturesTab token={token} />;
+      case "documents": return <DocumentsTab token={token} />;
       default: return null;
     }
   };

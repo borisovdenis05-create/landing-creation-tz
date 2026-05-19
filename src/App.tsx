@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import ThankYou from "./pages/ThankYou";
+import DocumentPage from "./pages/DocumentPage";
 import SeoHead from "./components/SeoHead";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,11 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/thank-you" element={<ThankYou />} />
             <Route path="/spasibo" element={<ThankYou />} />
+            <Route path="/offer" element={<DocumentPage />} />
+            <Route path="/privacy-policy" element={<DocumentPage />} />
+            <Route path="/user-consent" element={<DocumentPage />} />
+            <Route path="/cookie-policy" element={<DocumentPage />} />
+            <Route path="/terms-of-use" element={<DocumentPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

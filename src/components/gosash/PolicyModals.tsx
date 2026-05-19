@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { usePublicSettings } from "./shared/publicApi";
+import { DOC_META } from "./shared/documentDefaults";
 
 interface ModalProps {
   isOpen: boolean;
@@ -183,28 +184,19 @@ export function ConsentModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
 }
 
 export function FooterPolicyButtons() {
-  const [privacyOpen, setPrivacyOpen] = useState(false);
-  const [consentOpen, setConsentOpen] = useState(false);
-  const { settings } = usePublicSettings();
-  const privacyLabel = settings.policy_privacy_title || "Политика конфиденциальности";
-  const consentLabel = settings.policy_consent_title || "Согласие на обработку ПД";
-
   return (
     <>
-      <button
-        onClick={() => setPrivacyOpen(true)}
-        className="hover:text-white/60 transition-colors text-left"
-      >
-        {privacyLabel}
-      </button>
-      <button
-        onClick={() => setConsentOpen(true)}
-        className="hover:text-white/60 transition-colors text-left"
-      >
-        {consentLabel}
-      </button>
-      <PrivacyPolicyModal isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} />
-      <ConsentModal isOpen={consentOpen} onClose={() => setConsentOpen(false)} />
+      {DOC_META.map(d => (
+        <a
+          key={d.slug}
+          href={`/${d.slug}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-white/60 transition-colors text-left"
+        >
+          {d.short}
+        </a>
+      ))}
     </>
   );
 }

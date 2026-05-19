@@ -153,6 +153,7 @@ def handler(event: dict, context) -> dict:
         "public-finance": ("gosash_finance", "id, title, subtitle, icon, rows"),
         "public-marquee": ("gosash_marquee", "id, label, shape"),
         "public-hero-features": ("gosash_hero_features", "id, label"),
+        "public-documents": ("gosash_documents", "id, slug, title, content"),
     }
     if action in public_map and method == "GET":
         table, cols = public_map[action]
@@ -437,6 +438,38 @@ def handler(event: dict, context) -> dict:
             if method == "DELETE":
                 pid = body.get("id") or qs.get("id")
                 cur.execute("DELETE FROM gosash_promos WHERE id=%s", (pid,))
+                conn.commit()
+                return json_response({"ok": True})
+
+        # ── DOCUMENTS ─────────────────────────────────────────────────────────
+        if action == "documents":
+            if method == "GET":
+                cur.execute("SELECT * FROM gosash_documents ORDER BY sort_order, id")
+                return json_response({"items": [dict(r) for r in cur.fetchall()]})
+            if method == "POST":
+                d = body
+                cur.execute(
+                    "INSERT INTO gosash_documents (slug, title, content, active, sort_order) "
+                    "VALUES (%s,%s,%s,%s,%s) RETURNING id",
+                    (d.get("slug",""), d.get("title",""), d.get("content",""),
+                     bool(d.get("active", True)), d.get("sort_order",0))
+                )
+                new_id = cur.fetchone()["id"]
+                conn.commit()
+                return json_response({"ok": True, "id": new_id})
+            if method == "PUT":
+                d = body
+                did = d.get("id")
+                cur.execute(
+                    "UPDATE gosash_documents SET slug=%s, title=%s, content=%s, active=%s, sort_order=%s, updated_at=NOW() WHERE id=%s",
+                    (d.get("slug",""), d.get("title",""), d.get("content",""),
+                     bool(d.get("active", True)), d.get("sort_order",0), did)
+                )
+                conn.commit()
+                return json_response({"ok": True})
+            if method == "DELETE":
+                did = body.get("id") or qs.get("id")
+                cur.execute("DELETE FROM gosash_documents WHERE id=%s", (did,))
                 conn.commit()
                 return json_response({"ok": True})
 
