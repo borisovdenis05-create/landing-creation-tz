@@ -17,6 +17,12 @@ export default function InstructorsToFooter() {
   const { settings } = usePublicSettings();
   const reviews = reviewsDb && reviewsDb.length > 0 ? reviewsDb : FALLBACK_REVIEWS;
   const reviewsTitle = settings.reviews_title || "Довольные выпускники о нас";
+  const logo = settings.logo_url || LOGO_URL;
+  const phone = settings.phone || PHONE;
+  const phoneDisplay = settings.phone_display || PHONE_DISPLAY;
+  const phoneCaption = settings.phone_caption || "";
+  const infoUrl = settings.info_url || "";
+  const infoLabel = settings.info_label || "Сведения об образовательной организации";
 
   return (
     <>
@@ -69,9 +75,12 @@ export default function InstructorsToFooter() {
                 <span className="text-orange-400">Запишитесь</span> на бесплатную консультацию
               </h2>
               <div className="space-y-3 text-white/70 text-sm">
+                {phoneCaption && (
+                  <p className="text-white/50 text-xs">{phoneCaption}</p>
+                )}
                 <div className="flex items-center gap-3">
                   <Icon name="Phone" size={18} className="text-orange-400 flex-shrink-0" fallback="Circle" />
-                  <a href={`tel:${PHONE}`} onClick={() => ymGoal("phone_click")} className="text-orange-400 font-bold text-lg hover:text-orange-300">{PHONE_DISPLAY}</a>
+                  <a href={`tel:${phone}`} onClick={() => ymGoal("phone_click")} className="text-orange-400 font-bold text-lg hover:text-orange-300">{phoneDisplay}</a>
                 </div>
                 <div className="flex items-center gap-3">
                   <Icon name="MapPin" size={18} className="text-orange-400 flex-shrink-0" fallback="Circle" />
@@ -100,13 +109,27 @@ export default function InstructorsToFooter() {
           <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
             {/* Logo + contact */}
             <div className="flex-shrink-0">
-              <img src={LOGO_URL} alt="ГОСАШ" className="h-10 object-contain mb-4" style={{ filter: "brightness(10)" }} />
-              <a href={`tel:${PHONE}`} className="text-orange-400 font-bold text-lg hover:text-orange-300 transition-colors block mb-1">
-                {PHONE_DISPLAY}
+              <img src={logo} alt="ГОСАШ" className="h-10 object-contain mb-4" />
+              {phoneCaption && (
+                <p className="text-white/50 text-xs mb-1">{phoneCaption}</p>
+              )}
+              <a href={`tel:${phone}`} className="text-orange-400 font-bold text-lg hover:text-orange-300 transition-colors block mb-1">
+                {phoneDisplay}
               </a>
-              <a href="mailto:gosavtosimf+111385@mail.ru" className="text-white/50 text-sm hover:text-white/80 transition-colors block">
+              <a href="mailto:gosavtosimf+111385@mail.ru" className="text-white/50 text-sm hover:text-white/80 transition-colors block mb-3">
                 gosavtosimf+111385@mail.ru
               </a>
+              {infoUrl && (
+                <a
+                  href={infoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-orange-400 hover:text-orange-300 transition-colors uppercase tracking-wide border border-orange-400/40 rounded-md px-3 py-1.5"
+                >
+                  <Icon name="FileText" size={12} fallback="Info" />
+                  {infoLabel}
+                </a>
+              )}
             </div>
 
             {/* Branches */}

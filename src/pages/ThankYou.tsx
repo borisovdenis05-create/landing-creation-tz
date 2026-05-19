@@ -1,7 +1,7 @@
 import { ymGoal } from "@/components/gosash/shared";
 
 const LOGO_URL =
-  "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/bucket/403b7c35-5e7e-4b24-939e-e08d2f087325.png";
+  "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/bucket/184ab2ba-1e40-4542-989a-d62d95c2301c.png";
 const PHONE = "+79789937221";
 const PHONE_DISPLAY = "+7 (978) 993 72 21";
 const HOME_URL = "https://твоя.автошкола82.рф/";
@@ -23,7 +23,6 @@ export default function ThankYou() {
               src={LOGO_URL}
               alt="ГОСАШ Автошкола"
               className="h-12 object-contain"
-              style={{ filter: "brightness(10)" }}
             />
           </a>
 

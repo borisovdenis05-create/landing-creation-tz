@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
+import { usePublicSettings } from "./shared/publicApi";
 
 interface ModalProps {
   isOpen: boolean;
@@ -35,8 +36,18 @@ function DocModal({ isOpen, onClose, title, children }: ModalProps) {
 }
 
 export function PrivacyPolicyModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const { settings } = usePublicSettings();
+  const customTitle = settings.policy_privacy_title || "Политика конфиденциальности";
+  const customText = (settings.policy_privacy_text || "").trim();
+  if (customText) {
+    return (
+      <DocModal isOpen={isOpen} onClose={onClose} title={customTitle}>
+        <div className="prose prose-sm max-w-none whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: customText }} />
+      </DocModal>
+    );
+  }
   return (
-    <DocModal isOpen={isOpen} onClose={onClose} title="Политика конфиденциальности">
+    <DocModal isOpen={isOpen} onClose={onClose} title={customTitle}>
       <h3 className="font-bold text-gray-900 text-base">1. Общие положения</h3>
       <p>Настоящая политика обработки персональных данных составлена в соответствии с требованиями Федерального закона от 27.07.2006 № 152-ФЗ «О персональных данных» и определяет порядок обработки персональных данных и меры по обеспечению безопасности персональных данных, предпринимаемые Обществом с ограниченной ответственностью «СВЕТОФОР» (далее — Оператор).</p>
       <p><strong>1.1.</strong> Оператор ставит своей важнейшей целью и условием осуществления своей деятельности соблюдение прав и свобод человека и гражданина при обработке его персональных данных, в том числе защиты прав на неприкосновенность частной жизни, личную и семейную тайну.</p>
@@ -135,8 +146,18 @@ export function PrivacyPolicyModal({ isOpen, onClose }: { isOpen: boolean; onClo
 }
 
 export function ConsentModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const { settings } = usePublicSettings();
+  const customTitle = settings.policy_consent_title || "Согласие на обработку персональных данных";
+  const customText = (settings.policy_consent_text || "").trim();
+  if (customText) {
+    return (
+      <DocModal isOpen={isOpen} onClose={onClose} title={customTitle}>
+        <div className="prose prose-sm max-w-none whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: customText }} />
+      </DocModal>
+    );
+  }
   return (
-    <DocModal isOpen={isOpen} onClose={onClose} title="Согласие на обработку персональных данных">
+    <DocModal isOpen={isOpen} onClose={onClose} title={customTitle}>
       <p>Действуя свободно, своей волей и в своем интересе, даю (предоставляю) Обществу с ограниченной ответственностью «СВЕТОФОР» (ООО «СВЕТОФОР»), ОГРН 1149102136875, ИНН 9102062316, юридический адрес и адрес для корреспонденции: 295026, РЕСПУБЛИКА КРЫМ, ГОРОД СИМФЕРОПОЛЬ, УЛИЦА ГАГАРИНА, ДОМ 20А, ЭТАЖ 4, ПОМЕЩЕНИЕ 415, адрес электронной почты: <a href="mailto:svetoforschool@bk.ru" className="text-red-500 hover:underline">svetoforschool@bk.ru</a> (далее по тексту — Оператор), в соответствии со статьей 9 Федерального закона от 27.07.2006 № 152-ФЗ «О персональных данных», согласие на обработку следующих персональных данных:</p>
       <ul className="list-disc pl-5 space-y-1">
         <li>фамилия, имя, отчество;</li>
@@ -164,6 +185,9 @@ export function ConsentModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
 export function FooterPolicyButtons() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [consentOpen, setConsentOpen] = useState(false);
+  const { settings } = usePublicSettings();
+  const privacyLabel = settings.policy_privacy_title || "Политика конфиденциальности";
+  const consentLabel = settings.policy_consent_title || "Согласие на обработку ПД";
 
   return (
     <>
@@ -171,13 +195,13 @@ export function FooterPolicyButtons() {
         onClick={() => setPrivacyOpen(true)}
         className="hover:text-white/60 transition-colors text-left"
       >
-        Политика конфиденциальности
+        {privacyLabel}
       </button>
       <button
         onClick={() => setConsentOpen(true)}
         className="hover:text-white/60 transition-colors text-left"
       >
-        Согласие на обработку ПД
+        {consentLabel}
       </button>
       <PrivacyPolicyModal isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} />
       <ConsentModal isOpen={consentOpen} onClose={() => setConsentOpen(false)} />

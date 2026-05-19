@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { ymGoal, sendLead } from "./analytics";
+import { usePublicSettings } from "./publicApi";
 
 export interface LeadFormProps {
   title?: string;
@@ -14,6 +15,8 @@ export function LeadForm({ title, subtitle, defaultTariff = "", dark = false }: 
   const [comment, setComment] = useState(defaultTariff);
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { settings } = usePublicSettings();
+  const submitLabel = settings.btn_lead_submit || "Записаться на обучение →";
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +72,7 @@ export function LeadForm({ title, subtitle, defaultTariff = "", dark = false }: 
         className={inputClass}
       />
       <button type="submit" disabled={loading} className="btn-accent w-full text-base py-4 font-bold disabled:opacity-60">
-        {loading ? "Отправка..." : "Записаться на обучение →"}
+        {loading ? "Отправка..." : submitLabel}
       </button>
       <p className={`text-xs text-center ${dark ? "text-white/40" : "text-gray-400"}`}>
         Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности

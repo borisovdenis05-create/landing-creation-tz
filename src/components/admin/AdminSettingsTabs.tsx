@@ -84,12 +84,56 @@ export function SettingsTab({ token }: { token: string }) {
           <Icon name="Phone" size={14} className="text-orange-400" fallback="Circle" /> Контакты
         </h3>
         <div className="grid md:grid-cols-2 gap-4">
+          <Field label="Фраза над телефоном" value={data.phone_caption||""} onChange={v => set("phone_caption",v)} />
           <Field label="Телефон (числа)" value={data.phone||""} onChange={v => set("phone",v)} />
           <Field label="Телефон (отображение)" value={data.phone_display||""} onChange={v => set("phone_display",v)} />
           <Field label="Email" value={data.email||""} onChange={v => set("email",v)} />
           <Field label="Режим работы" value={data.work_hours||""} onChange={v => set("work_hours",v)} />
           <Field label="ВКонтакте (ссылка)" value={data.vk_url||""} onChange={v => set("vk_url",v)} />
           <Field label="Telegram (ссылка)" value={data.tg_url||""} onChange={v => set("tg_url",v)} />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-white font-black text-sm uppercase mb-4 flex items-center gap-2">
+          <Icon name="ExternalLink" size={14} className="text-orange-400" fallback="Circle" /> Кнопка «Сведения об образовательной организации»
+        </h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          <Field label="Текст кнопки" value={data.info_label||""} onChange={v => set("info_label",v)} />
+          <Field label="Ссылка (URL)" value={data.info_url||""} onChange={v => set("info_url",v)} />
+        </div>
+        <p className="text-white/40 text-xs mt-2">Если поле «Ссылка» пустое, кнопка не отображается.</p>
+      </div>
+
+      <div>
+        <h3 className="text-white font-black text-sm uppercase mb-4 flex items-center gap-2">
+          <Icon name="MousePointerClick" size={14} className="text-orange-400" fallback="Circle" /> Кнопки модальных форм
+        </h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          <Field label="Кнопка отправки заявки (LeadForm)" value={data.btn_lead_submit||""} onChange={v => set("btn_lead_submit",v)} />
+          <Field label="Кнопка «Обратный звонок» (модалка)" value={data.btn_callback_submit||""} onChange={v => set("btn_callback_submit",v)} />
+          <Field label="Кнопка карточки акции" value={data.btn_promo_apply||""} onChange={v => set("btn_promo_apply",v)} />
+          <Field label="Кнопка отправки в модалке акции" value={data.btn_promo_submit||""} onChange={v => set("btn_promo_submit",v)} />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-white font-black text-sm uppercase mb-4 flex items-center gap-2">
+          <Icon name="Shield" size={14} className="text-orange-400" fallback="Circle" /> Политика конфиденциальности
+        </h3>
+        <div className="grid grid-cols-1 gap-4">
+          <Field label="Заголовок (текст ссылки в футере)" value={data.policy_privacy_title||""} onChange={v => set("policy_privacy_title",v)} />
+          <Field label="Текст (HTML разрешён). Оставьте пустым для дефолтного текста." value={data.policy_privacy_text||""} onChange={v => set("policy_privacy_text",v)} rows={10} />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-white font-black text-sm uppercase mb-4 flex items-center gap-2">
+          <Icon name="FileCheck" size={14} className="text-orange-400" fallback="Circle" /> Согласие на обработку ПД
+        </h3>
+        <div className="grid grid-cols-1 gap-4">
+          <Field label="Заголовок (текст ссылки в футере)" value={data.policy_consent_title||""} onChange={v => set("policy_consent_title",v)} />
+          <Field label="Текст (HTML разрешён). Оставьте пустым для дефолтного текста." value={data.policy_consent_text||""} onChange={v => set("policy_consent_text",v)} rows={10} />
         </div>
       </div>
 

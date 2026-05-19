@@ -79,7 +79,7 @@ export async function fetchTariffs(): Promise<Tariff[] | null> {
   }
 }
 
-export const LOGO_URL = "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/bucket/403b7c35-5e7e-4b24-939e-e08d2f087325.png";
+export const LOGO_URL = "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/bucket/184ab2ba-1e40-4542-989a-d62d95c2301c.png";
 export const HERO_IMAGE = "https://cdn.poehali.dev/projects/dc9c6050-1ae8-4fec-9c2b-93988f0a3169/files/a7e92214-2540-48e3-9a58-cd09b5c9a74b.jpg";
 export const PHONE = "+79789937221";
 export const PHONE_DISPLAY = "+7 (978) 993 72 21";

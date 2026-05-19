@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import Icon from "@/components/ui/icon";
 import { ymGoal, sendLead } from "./analytics";
+import { usePublicSettings } from "./publicApi";
 
 export interface CallbackModalProps {
   onClose: () => void;
@@ -11,6 +12,8 @@ export function CallbackModal({ onClose }: CallbackModalProps) {
   const [phone, setPhone] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { settings } = usePublicSettings();
+  const submitLabel = settings.btn_callback_submit || "Жду звонка";
 
   const handleSend = useCallback(async () => {
     if (!name || !phone) return;
@@ -44,7 +47,7 @@ export function CallbackModal({ onClose }: CallbackModalProps) {
               <input type="tel" placeholder="+7 (___) ___ __ __" value={phone} onChange={e => setPhone(e.target.value)}
                 className="w-full rounded-lg px-4 py-3 text-sm border-2 border-gray-200 outline-none focus:border-yellow-400" />
               <button onClick={handleSend} disabled={loading} className="btn-primary w-full text-base py-4 disabled:opacity-60">
-                {loading ? "Отправка..." : "Жду звонка"}
+                {loading ? "Отправка..." : submitLabel}
               </button>
             </div>
           </>

@@ -35,6 +35,8 @@ function LeadModal({ promo, onClose }: { promo: PromoCardData; onClose: () => vo
   const [phone, setPhone] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { settings } = usePublicSettings();
+  const submitLabel = settings.btn_promo_submit || "Отправить заявку";
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -112,7 +114,7 @@ function LeadModal({ promo, onClose }: { promo: PromoCardData; onClose: () => vo
                   disabled={loading}
                   className="w-full py-3 rounded-xl bg-orange-500 text-white font-black text-sm hover:bg-orange-600 transition-colors disabled:opacity-60"
                 >
-                  {loading ? "Отправляем..." : "Отправить заявку"}
+                  {loading ? "Отправляем..." : submitLabel}
                 </button>
               </form>
               <p className="text-white/30 text-xs text-center mt-3">Нажимая кнопку, вы соглашаетесь на обработку персональных данных</p>
@@ -213,7 +215,7 @@ const STATIC_PROMOS: PromoCardData[] = [
   },
 ];
 
-function dbToCard(p: DbPromo): PromoCardData {
+function dbToCard(p: DbPromo, applyLabel: string): PromoCardData {
   return {
     id: p.id,
     title: p.title,
@@ -221,7 +223,7 @@ function dbToCard(p: DbPromo): PromoCardData {
     image_url: p.image_url,
     badge: p.badge || undefined,
     price: p.subtitle || undefined,
-    button_label: "Оставить заявку",
+    button_label: applyLabel,
   };
 }
 
@@ -229,13 +231,14 @@ export default function PromosSection() {
   const [selected, setSelected] = useState<PromoCardData | null>(null);
   const { items: dbPromos, loading } = usePublicList<DbPromo>("public-promos");
   const { settings } = usePublicSettings();
+  const applyLabel = settings.btn_promo_apply || "Оставить заявку";
 
   if (loading) return null;
   if (settings.block_promos === "false") return null;
 
   const promos: PromoCardData[] = dbPromos && dbPromos.length > 0
-    ? dbPromos.map(dbToCard)
-    : STATIC_PROMOS;
+    ? dbPromos.map(p => dbToCard(p, applyLabel))
+    : STATIC_PROMOS.map(p => ({ ...p, button_label: applyLabel }));
 
   return (
     <section id="promos" className="py-16" style={{ background: "#f4f4f4" }}>

@@ -29,6 +29,9 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
   const phoneDisplay = settings.phone_display || PHONE_DISPLAY;
   const phone = settings.phone || PHONE;
   const workHours = settings.work_hours || "Пн–Пт: 10:00–18:30";
+  const phoneCaption = settings.phone_caption || "";
+  const infoUrl = settings.info_url || "";
+  const infoLabel = settings.info_label || "Сведения об образовательной организации";
 
   return (
     <>
@@ -36,7 +39,7 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10" style={{ background: "#2e2e2e" }}>
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <a href="#hero" className="flex-shrink-0">
-            <img src={logo} alt="ГОСАШ Автошкола" className="h-12 object-contain" style={{ filter: "brightness(10)" }} />
+            <img src={logo} alt="ГОСАШ Автошкола" className="h-12 object-contain" />
           </a>
 
           <nav className="hidden lg:flex items-center gap-4 text-xs font-bold text-white/70 uppercase tracking-wide">
@@ -46,9 +49,15 @@ export default function HeroSection({ onCallbackOpen }: HeroSectionProps) {
             <a href="#reviews" className="hover:text-orange-400 transition-colors whitespace-nowrap">Отзывы</a>
             <a href="#about" className="hover:text-orange-400 transition-colors whitespace-nowrap">Филиалы</a>
             <a href="#contacts" className="hover:text-orange-400 transition-colors whitespace-nowrap">Контакты</a>
+            {infoUrl && (
+              <a href={infoUrl} target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors whitespace-nowrap">{infoLabel}</a>
+            )}
           </nav>
 
           <div className="hidden md:flex flex-col items-end gap-0.5">
+            {phoneCaption && (
+              <span className="text-white/50 text-[10px] tracking-wide leading-tight">{phoneCaption}</span>
+            )}
             <a href={`tel:${phone}`} onClick={() => ymGoal("phone_click")} className="text-orange-400 font-black text-base hover:text-orange-300 transition-colors tracking-wide">
               {phoneDisplay}
             </a>
