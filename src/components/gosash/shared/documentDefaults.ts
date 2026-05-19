@@ -6,7 +6,7 @@ export const DOC_META: { slug: DocSlug; title: string; short: string }[] = [
   { slug: "user-consent",       title: "Согласие пользователя",                                short: "Согласие на обработку ПД" },
   { slug: "cookie-policy",      title: "Политика использования cookie",                        short: "Cookie" },
   { slug: "terms-of-use",       title: "Пользовательское соглашение",                          short: "Пользовательское соглашение" },
-  { slug: "marketing-consent",  title: "Согласие на получение рекламных СМС, звонков и рассылок", short: "Согласие на рекламу" },
+  { slug: "marketing-consent",  title: "Согласие на получение рекламных СМС, звонков и рассылок", short: "Согласие на получение рекламных СМС, звонков и рассылок" },
 ];
 
 export const DOC_DEFAULTS: Record<DocSlug, string> = {
