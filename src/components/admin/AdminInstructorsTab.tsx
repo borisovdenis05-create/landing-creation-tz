@@ -15,11 +15,14 @@ export function InstructorsTab({ token }: { token: string }) {
 
   const load = useCallback(() => {
     setLoading(true);
-    api("instructors", "GET", undefined, token).then(res => {
-      setItems(res.items || []);
-      setLoading(false);
-    });
-  }, [token]);
+    api("instructors", "GET", undefined, token)
+      .then(res => {
+        setItems(Array.isArray(res?.items) ? res.items : []);
+        if (res?.error) show(res.error, "err");
+      })
+      .catch(err => show(String(err), "err"))
+      .finally(() => setLoading(false));
+  }, [token, show]);
 
   useEffect(() => { load(); }, [load]);
 

@@ -11,11 +11,15 @@ export function SettingsTab({ token }: { token: string }) {
   const { toast, show } = useToast();
 
   useEffect(() => {
-    api("settings", "GET", undefined, token).then(res => {
-      setData(res || {});
-      setLoading(false);
-    });
-  }, [token]);
+    setLoading(true);
+    api("settings", "GET", undefined, token)
+      .then(res => {
+        setData(res && typeof res === "object" ? res : {});
+        if (res?.error) show(res.error, "err");
+      })
+      .catch(err => show(String(err), "err"))
+      .finally(() => setLoading(false));
+  }, [token, show]);
 
   const set = (key: string, value: string) => setData(d => ({ ...d, [key]: value }));
 
@@ -165,11 +169,15 @@ export function BlocksTab({ token }: { token: string }) {
   const { toast, show } = useToast();
 
   useEffect(() => {
-    api("settings", "GET", undefined, token).then(res => {
-      setData(res || {});
-      setLoading(false);
-    });
-  }, [token]);
+    setLoading(true);
+    api("settings", "GET", undefined, token)
+      .then(res => {
+        setData(res && typeof res === "object" ? res : {});
+        if (res?.error) show(res.error, "err");
+      })
+      .catch(err => show(String(err), "err"))
+      .finally(() => setLoading(false));
+  }, [token, show]);
 
   const toggle = (key: string) => setData(d => ({ ...d, [key]: d[key] === "false" ? "true" : "false" }));
 

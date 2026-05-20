@@ -15,11 +15,14 @@ export function BranchesTab({ token }: { token: string }) {
 
   const load = useCallback(() => {
     setLoading(true);
-    api("branches", "GET", undefined, token).then(res => {
-      setItems(res.items || []);
-      setLoading(false);
-    });
-  }, [token]);
+    api("branches", "GET", undefined, token)
+      .then(res => {
+        setItems(Array.isArray(res?.items) ? res.items : []);
+        if (res?.error) show(res.error, "err");
+      })
+      .catch(err => show(String(err), "err"))
+      .finally(() => setLoading(false));
+  }, [token, show]);
 
   useEffect(() => { load(); }, [load]);
 

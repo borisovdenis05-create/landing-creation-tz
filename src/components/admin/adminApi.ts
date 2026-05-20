@@ -2,15 +2,35 @@ import { useState, useCallback, useRef, useEffect } from "react";
 
 export const ADMIN_API = "https://functions.poehali.dev/941d16d5-04a2-4995-833a-9b8becab97a8";
 
-export function api(action: string, method = "GET", body?: unknown, token?: string) {
+export async function api(action: string, method = "GET", body?: unknown, token?: string) {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (token) headers["X-Admin-Token"] = token;
   const cleanAction = action.replace(/^\/+/, "");
-  return fetch(`${ADMIN_API}?action=${cleanAction}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  }).then((r) => r.json());
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const r = await fetch(`${ADMIN_API}?action=${cleanAction}`, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+      signal: controller.signal,
+    });
+    const text = await r.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      return { error: `Невалидный ответ сервера (HTTP ${r.status})`, _raw: text };
+    }
+  } catch (err) {
+    const msg = err instanceof DOMException && err.name === "AbortError"
+      ? "Превышено время ожидания (15с)"
+      : `Сетевая ошибка: ${String(err)}`;
+    return { error: msg, _networkError: true };
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export function useToast() {
@@ -47,17 +67,29 @@ export function useImageUpload(token: string, onChange: (url: string) => void) {
 export function useAdminList<T>(action: string, token: string) {
   const [items, setItems] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
   const reload = useCallback(() => setRefreshKey(k => k + 1), []);
 
   useEffect(() => {
+    let cancelled = false;
     setLoading(true);
-    api(action, "GET", undefined, token).then(res => {
-      setItems(res.items || []);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    setError(null);
+    api(action, "GET", undefined, token)
+      .then(res => {
+        if (cancelled) return;
+        if (res?.error) setError(res.error);
+        setItems(Array.isArray(res?.items) ? res.items : []);
+      })
+      .catch(err => {
+        if (!cancelled) setError(String(err));
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
   }, [action, token, refreshKey]);
 
-  return { items, loading, reload };
+  return { items, loading, error, reload };
 }

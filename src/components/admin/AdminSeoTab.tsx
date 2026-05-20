@@ -38,15 +38,18 @@ export function SeoTab({ token }: { token: string }) {
 
   const load = useCallback(() => {
     setLoading(true);
-    api("settings", "GET", undefined, token).then((res) => {
-      const merged: SeoSettings = { ...DEFAULT_SEO };
-      (Object.keys(DEFAULT_SEO) as (keyof SeoSettings)[]).forEach((k) => {
-        if (res && typeof res[k] === "string") merged[k] = res[k] as string;
-      });
-      setD(merged);
-      setLoading(false);
-    });
-  }, [token]);
+    api("settings", "GET", undefined, token)
+      .then((res) => {
+        const merged: SeoSettings = { ...DEFAULT_SEO };
+        (Object.keys(DEFAULT_SEO) as (keyof SeoSettings)[]).forEach((k) => {
+          if (res && typeof res[k] === "string") merged[k] = res[k] as string;
+        });
+        setD(merged);
+        if (res?.error) show(res.error, "err");
+      })
+      .catch((err) => show(String(err), "err"))
+      .finally(() => setLoading(false));
+  }, [token, show]);
 
   useEffect(() => { load(); }, [load]);
 

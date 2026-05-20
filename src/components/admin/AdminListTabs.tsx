@@ -25,11 +25,14 @@ function SimpleListTab({
 
   const load = useCallback(() => {
     setLoading(true);
-    api(action, "GET", undefined, token).then(res => {
-      setItems(res.items || []);
-      setLoading(false);
-    });
-  }, [token, action]);
+    api(action, "GET", undefined, token)
+      .then(res => {
+        setItems(Array.isArray(res?.items) ? res.items : []);
+        if (res?.error) show(res.error, "err");
+      })
+      .catch(err => show(String(err), "err"))
+      .finally(() => setLoading(false));
+  }, [token, action, show]);
 
   useEffect(() => { load(); }, [load]);
 
