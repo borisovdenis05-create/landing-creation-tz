@@ -61,18 +61,38 @@ def handler(event: dict, context) -> dict:
         params["FIELDS[UTM_TERM]"] = utm_term
 
     url = BITRIX_WEBHOOK + "crm.lead.add.json?" + urllib.parse.urlencode(params)
-    req = urllib.request.Request(url, method="GET")
-    with urllib.request.urlopen(req, timeout=10) as resp:
-        result = json.loads(resp.read())
+    print(f"[BITRIX] -> {url}")
 
-    lead_id = result.get("result")
-
-
-
-
+    result = {}
+    lead_id = None
+    bitrix_error = None
+    try:
+        req = urllib.request.Request(url, method="GET")
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+            print(f"[BITRIX] <- {resp.status} {raw[:500]}")
+            result = json.loads(raw)
+        lead_id = result.get("result")
+        if not lead_id:
+            bitrix_error = result.get("error_description") or result.get("error") or "Битрикс не вернул lead_id"
+            print(f"[BITRIX] ERROR: {bitrix_error}")
+    except urllib.error.HTTPError as e:
+        body_text = e.read().decode("utf-8", errors="replace")
+        bitrix_error = f"HTTP {e.code}: {body_text[:300]}"
+        print(f"[BITRIX] HTTPError: {bitrix_error}")
+    except urllib.error.URLError as e:
+        bitrix_error = f"URLError: {e.reason}"
+        print(f"[BITRIX] URLError: {bitrix_error}")
+    except Exception as e:
+        bitrix_error = f"{type(e).__name__}: {e}"
+        print(f"[BITRIX] Exception: {bitrix_error}")
 
     return {
         "statusCode": 200,
-        "headers": {"Access-Control-Allow-Origin": "*"},
-        "body": json.dumps({"ok": True, "lead_id": lead_id}),
+        "headers": {"Access-Control-Allow-Origin": "*", "Content-Type": "application/json"},
+        "body": json.dumps({
+            "ok": lead_id is not None,
+            "lead_id": lead_id,
+            "bitrix_error": bitrix_error,
+        }),
     }

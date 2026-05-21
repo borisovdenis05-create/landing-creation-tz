@@ -13,7 +13,7 @@
         "utm_campaign": "avto2026"
       },
       "expectedStatus": 200,
-      "expectedBody": { "ok": true },
+      "expectedBody": { "lead_id": "any" },
       "bodyMatcher": "partial"
     }
   ]

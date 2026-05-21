@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { api } from "@/components/admin/adminApi";
 import Icon from "@/components/ui/icon";
-import { ymGoal } from "@/components/gosash/shared";
+import { ymGoal, sendLead } from "@/components/gosash/shared/analytics";
 import { usePublicList, usePublicSettings } from "@/components/gosash/shared/publicApi";
 
 type DbPromo = { id: number; title: string; subtitle: string; description: string; image_url: string; badge: string };
@@ -50,7 +49,7 @@ function LeadModal({ promo, onClose }: { promo: PromoCardData; onClose: () => vo
     setLoading(true);
     ymGoal("promo_form_submit", { promo: promo.title });
     try {
-      await api("lead", "POST", { name, phone, promo: promo.title, source: "promo" });
+      await sendLead(name, phone, `Акция: ${promo.title}`);
       setSent(true);
     } catch {
       setSent(true);
